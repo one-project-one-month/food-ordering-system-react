@@ -2,13 +2,15 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 
+
 const MainLayout = () => {
   return (
     <div className="w-full">
       <Header />
-      <main className="p-4 container mx-auto">
+      <main className=" container mx-auto">
         <Outlet />
       </main>
+       
     </div>
   );
 };
