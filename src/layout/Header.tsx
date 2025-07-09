@@ -8,6 +8,7 @@ import { Menu, ShoppingCart } from "lucide-react";
 import Nav from "../components/Nav";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Logo from '../assets/logo.png'
 
 export default function Header() {
     const navigate = useNavigate()
@@ -27,10 +28,10 @@ export default function Header() {
     }, []);
 
   return (
-    <header className="container bg-white sticky top-0 z-50">
+    <header className="container bg-white sticky top-0 z-50 h-[96px] flex items-center">
         <div className="w-full flex h-16 items-center justify-between px-4">
             <div className="text-xl font-bold">
-                <Link to="/">Logo</Link>
+                <Link to="/"><img src={Logo} alt='logo' /></Link>
             </div>
 
             {/* Desktop Nav */}
@@ -42,6 +43,7 @@ export default function Header() {
                 <Button
                     variant="default"
                     size="sm"
+                    className="rounded-full w-[36px] h-[36px]"
                     onClick={() => navigate("/cart")}
                     aria-label="Cart"
                 >
@@ -52,7 +54,7 @@ export default function Header() {
                     <Button
                     variant="outline"
                     size="sm"
-                    className="text-base"
+                    className="text-base rounded-full h-[36px]"
                     onClick={() => {
                         // logout logic
                     }}
@@ -63,7 +65,7 @@ export default function Header() {
                     <Button
                     variant="default"
                     size="sm"
-                    className="text-base"
+                    className="text-base rounded-full h-[36px]"
                     onClick={() => navigate("/login")}
                     >
                     Login / Sign Up
@@ -76,6 +78,7 @@ export default function Header() {
             <Button
                 variant="default"
                 size="icon"
+                className="rounded-full w-[36px] h-[36px]"
                 onClick={() => navigate("/cart")}
                 aria-label="Cart"
             >
@@ -96,7 +99,7 @@ export default function Header() {
                         <Button
                             variant="outline"
                             size="sm"
-                            className="text-base"
+                            className="text-base rounded-full h-[36px]"
                             onClick={() => {
                             // logout logic
                             }}
@@ -107,7 +110,7 @@ export default function Header() {
                         <Button
                             variant="default"
                             size="sm"
-                            className="text-base"
+                            className="text-base rounded-full h-[36px]"
                             onClick={() => 
                                 {
                                 navigate("/login")

@@ -19,8 +19,8 @@ export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
         <Link
           key={link.href}
           to={link.href}
-          className={`relative text-base font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:bg-primary after:transition-all after:duration-300 ${
-            isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
+          className={`relative text-base font-medium transition-colors ${
+            isActive ? "text-primary" : "hover:text-primary"
           } ${isMobile ? "w-fit" : ""}`}
           onClick={() => {
             if (onLinkClick) onLinkClick();
