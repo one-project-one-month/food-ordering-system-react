@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from "react-router";
-import Cookies from "js-cookie";
+import { Navigate, Outlet } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const PrivateRoute = ({ allowedRoles }: { allowedRoles?: string[] }) => {
-  const userRole = Cookies.get("role") || "";
+  const userRole = Cookies.get('role') || '';
 
   if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <Navigate to="/403" />;
