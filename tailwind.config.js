@@ -12,14 +12,12 @@ export default {
    				'Roboto',
    				'sans-serif'
    			],
-   			serif: [
-   				'Playfair Display',
-   				'serif'
-   			]
+   			poppins: ['Poppins', 'sans-serif'],
+			merienda: ['Merienda', 'cursive'],
    		},
-   		fontSize: {
-   			base: '14px'
-   		},
+		container: {
+			center: true,
+		},
    		borderRadius: {
    			lg: 'var(--radius)',
    			md: 'calc(var(--radius) - 2px)',
@@ -37,8 +35,8 @@ export default {
    				foreground: 'hsl(var(--popover-foreground))'
    			},
    			primary: {
-   				DEFAULT: 'hsl(var(--primary))',
-   				foreground: 'hsl(var(--primary-foreground))'
+   				DEFAULT: "#3F9A1E",
+          		foreground: "#FAFAFA",
    			},
    			secondary: {
    				DEFAULT: 'hsl(var(--secondary))',
