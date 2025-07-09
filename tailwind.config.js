@@ -12,10 +12,8 @@ export default {
    				'Roboto',
    				'sans-serif'
    			],
-   			serif: [
-   				'Playfair Display',
-   				'serif'
-   			]
+   			poppins: ['Poppins', 'sans-serif'],
+			merienda: ['Merienda', 'cursive'],
    		},
 		container: {
 			center: true,
