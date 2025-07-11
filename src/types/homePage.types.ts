@@ -1,3 +1,3 @@
 export interface HomePageProps {
-  homeType: string;
+  homeType?: string;
 }

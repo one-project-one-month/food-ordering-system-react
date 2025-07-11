@@ -42,6 +42,14 @@ export default {
    				DEFAULT: 'hsl(var(--secondary))',
    				foreground: 'hsl(var(--secondary-foreground))'
    			},
+			dashboard: {
+				DEFAULT: "#F6FAFB",
+          		foreground: "#000",
+			},
+			lightGreen: {
+				DEFAULT: "#ebfce5",
+          		foreground: "#000",
+			},
    			muted: {
    				DEFAULT: 'hsl(var(--muted))',
    				foreground: 'hsl(var(--muted-foreground))'
