@@ -20,7 +20,7 @@ export default function MenuCard({ menu }: MenuCardProps) {
   };
   if (menu)
     return (
-      <div className=" w-56 h-80 bg-card border-2 flex items-center flex-col p-4 align-middle rounded-md">
+      <div className=" h-80 bg-card border-2 flex items-center flex-col p-4 align-middle rounded-md">
         <div className="w-full flex justify-between">
           <span className="underline p-1 text-sm text-clip-600">Active</span>
         </div>

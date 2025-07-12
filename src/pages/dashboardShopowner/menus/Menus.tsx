@@ -10,11 +10,11 @@ export default function Menus() {
     setIsOpened((open) => !open);
   };
   return (
-    <div className="flex flex-col w-full px-4 py-8">
+    <div className="flex flex-col w-full">
       <div className="flex justify-end mt-12 fixed top-8 right-4">
         <Button onClick={handleCreateMenu}>Create Menu</Button>
       </div>
-      <div className="mt-16">
+      <div className="mt-3">
         <MenuCards menus={menus} />
       </div>
       <DialogBox open={isOpened} onOpenChange={handleCreateMenu} item={null} formType="menu" />
