@@ -8,6 +8,7 @@ import PrivateLayout from '../layout/PrivateLayout';
 import Dashboard from '../pages/dashboard/Dashboard';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
+import UserMenuDetail from '../pages/userMenu/UserMenuDetail';
 
 export const routes = [
   {
@@ -34,6 +35,7 @@ export const routes = [
             element: <MainLayout />,
             children: [
               { path: 'order', element: <Location /> },
+              { path: 'menu/:id', element: <UserMenuDetail /> },
             ],
           },
         ],

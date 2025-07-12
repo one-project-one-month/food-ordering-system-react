@@ -11,12 +11,10 @@ export default function Menus() {
   };
   return (
     <div className="flex flex-col w-full">
-      <div className="flex justify-end mt-12 fixed top-8 right-4">
+      <div className="flex justify-end right-4">
         <Button onClick={handleCreateMenu}>Create Menu</Button>
       </div>
-      <div className="mt-3">
-        <MenuCards menus={menus} />
-      </div>
+      <MenuCards menus={menus} />
       <DialogBox open={isOpened} onOpenChange={handleCreateMenu} item={null} formType="menu" />
     </div>
   );
