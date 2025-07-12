@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { ProfileType } from "../../types/ProfileType";
-import { addProfile } from "../../schemas/profileSchema";
+import { createSlice } from '@reduxjs/toolkit';
+import { addProfile, getProfile, updateProfilePic } from '../../schemas/profileSchema';
+import type { Profile } from '../../types/ProfileType';
 
 interface ProfileState {
-  profile: ProfileType | null;
+  profile: Profile | null;
   error: string | null;
   loading: boolean;
 }
@@ -11,14 +11,14 @@ interface ProfileState {
 const initialState: ProfileState = {
   profile: null,
   error: null,
-  loading: false
+  loading: false,
 };
 
 export const profileSlice = createSlice({
-  name: "profile",
+  name: 'profile',
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(addProfile.pending, (state) => {
         state.loading = true;
@@ -31,9 +31,21 @@ export const profileSlice = createSlice({
       })
       .addCase(addProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to create profile";
+        state.error = action.error.message || 'Failed to create profile';
+      })
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.profile = action.payload;
+      })
+      .addCase(updateProfilePic.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        if (state.profile && action.payload?.profilePic) {
+          state.profile.profilePic = action.payload.profilePic;
+        }
       });
-  }
+  },
 });
 
 export default profileSlice.reducer;
