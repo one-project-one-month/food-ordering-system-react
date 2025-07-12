@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../store";
-import { useEffect } from "react";
-import { getProfile, updateProfilePic } from "../../schemas/profileSchema";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../store';
+import { useEffect } from 'react';
+import { getProfile, updateProfilePic } from '../../schemas/profileSchema';
+import { Link, useParams } from 'react-router-dom';
 
 export default function ProfileView() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,12 +19,11 @@ export default function ProfileView() {
   }, [dispatch]);
 
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file || !id) return;
+    const file = e.target.files?.[0];
+    if (!file || !id) return;
 
-  dispatch(updateProfilePic({ id: Number(id), profilePic: file }));
-};
-
+    dispatch(updateProfilePic({ id: Number(id), profilePic: file }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
@@ -36,8 +35,8 @@ export default function ProfileView() {
             <div className="relative w-40 h-40">
               <img
                 src={
-                  typeof profile.profilePic === "string"
-                    ? profile.profilePic.startsWith("data:")
+                  typeof profile.profilePic === 'string'
+                    ? profile.profilePic.startsWith('data:')
                       ? profile.profilePic
                       : `data:image/jpeg;base64,${profile.profilePic}`
                     : URL.createObjectURL(profile.profilePic)
@@ -69,22 +68,49 @@ export default function ProfileView() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-          <div><p className="text-sm font-semibold">Name</p><p>{profile?.name}</p></div>
-          <div><p className="text-sm font-semibold">User ID</p><p>{profile?.userId}</p></div>
-          <div><p className="text-sm font-semibold">Email</p><p>{profile?.email}</p></div>
-          <div><p className="text-sm font-semibold">Phone</p><p>{profile?.phone}</p></div>
-          <div><p className="text-sm font-semibold">NRC</p><p>{profile?.nrc}</p></div>
-          <div><p className="text-sm font-semibold">Gender</p><p>{profile?.gender}</p></div>
-          <div><p className="text-sm font-semibold">Date of Birth</p><p>{profile?.dob}</p></div>
-          <div><p className="text-sm font-semibold">Count</p><p>{profile?.count}</p></div>
-          <div className="sm:col-span-2"><p className="text-sm font-semibold">Address</p><p>{profile?.address}</p></div>
           <div>
-            <button
-              type="button"
+            <p className="text-sm font-semibold">Name</p>
+            <p>{profile?.name}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">User ID</p>
+            <p>{profile?.userId}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Email</p>
+            <p>{profile?.email}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Phone</p>
+            <p>{profile?.phone}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">NRC</p>
+            <p>{profile?.nrc}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Gender</p>
+            <p>{profile?.gender}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Date of Birth</p>
+            <p>{profile?.dob}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">Count</p>
+            <p>{profile?.count}</p>
+          </div>
+          <div className="sm:col-span-2">
+            <p className="text-sm font-semibold">Address</p>
+            <p>{profile?.address}</p>
+          </div>
+          <div>
+            <Link
+              to={`/profile/${profile?.id}`}
               className="text-gray-900 bg-white border focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             >
               Edit Profile
-            </button>
+            </Link>
           </div>
         </div>
       </div>

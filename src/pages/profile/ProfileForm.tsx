@@ -1,17 +1,25 @@
 import { useForm } from "react-hook-form";
 import type { Profile } from "../../types/ProfileType";
+import { useNavigate } from "react-router-dom";
 
 type ProfileFormProps = {
-  defaultValues?: Partial<Profile>;
-  onSubmit: (formData: FormData) => void; // changed to accept FormData
+  defaultValues?: Profile | null;
+  onSubmit: (formData: FormData) => void;
+  title: string;
 };
 
-export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
+export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm<Profile>({ defaultValues });
+    formState: { errors },
+    watch
+  } = useForm<Profile>({
+    defaultValues: defaultValues ?? undefined
+  });
+  const navigate=useNavigate()
+
+  const profilePicFile = watch("profilePic") as FileList | unknown;
 
   const onFormSubmit = (data: Profile) => {
     const formData = new FormData();
@@ -21,12 +29,12 @@ export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProp
       }
     }
 
-    const profilePicInput = document.getElementById("profilePic") as HTMLInputElement;
-    if (profilePicInput?.files?.[0]) {
-      formData.append("profilePic", profilePicInput.files[0]);
+    if (profilePicFile?.[0]) {
+      formData.append("profilePic", profilePicFile[0]);
     }
 
     onSubmit(formData);
+    navigate("/")
   };
 
   const fields: { label: string; name: keyof Profile; type: string; required?: boolean }[] = [
@@ -42,10 +50,10 @@ export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProp
   return (
     <form
       onSubmit={handleSubmit(onFormSubmit)}
-      encType="multipart/form-data" // important!
+      encType="multipart/form-data"
       className="w-full max-w-4xl bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition"
     >
-      <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-700">User Profile</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-700">{title} Profile</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {fields.map(({ label, name, type, required }) => (
@@ -62,18 +70,16 @@ export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProp
           </div>
         ))}
 
-        {/* Profile Picture */}
         <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-600 mb-2">Profile Picture</label>
           <input
-            id="profilePic"
             type="file"
             accept="image/*"
+            {...register("profilePic")}
             className="px-2 py-1 border rounded-md"
           />
         </div>
 
-        {/* Gender */}
         <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-600 mb-2">Gender</label>
           <select
@@ -89,7 +95,6 @@ export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProp
           )}
         </div>
 
-        {/* Address */}
         <div className="md:col-span-2 flex flex-col">
           <label className="text-sm font-medium text-gray-600 mb-2">Address</label>
           <textarea
@@ -106,9 +111,9 @@ export default function ProfileForm({ defaultValues, onSubmit }: ProfileFormProp
       <div className="flex justify-end pt-6">
         <button
           type="submit"
-          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+          className="px-6 py-3 bg-white-400 text-gray-400 font-medium rounded-lg hover:bg-green-400 hover:text-white transition"
         >
-          Save Profile
+          {title} Profile
         </button>
       </div>
     </form>

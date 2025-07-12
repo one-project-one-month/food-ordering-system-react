@@ -2,8 +2,9 @@ import PrivateRoute from './PrivateRoute';
 import PrivatePageSample from '../pages/PrivatePageSample';
 import Home from '../pages/home/Home';
 import Error from '../pages/error/Error';
-import { ProfileCreate } from '../pages/profile/ProfileCreate';
+import { ProfileCreate } from '../pages/profile/ProfileCreateAndUpdate';
 import ProfileView from '../pages/profile/ProfileView';
+
 
 export const routes = [
   {
@@ -11,7 +12,8 @@ export const routes = [
     children: [
       { index: true, element: <Home /> },
         {path:"/profile", element: <ProfileCreate />},
-        {path:"/:id", element: <ProfileView />},
+        {path:"/profile/:id",element:<ProfileCreate/>},
+        {path:"/view/:id", element: <ProfileView />},
 
     ],
   },
