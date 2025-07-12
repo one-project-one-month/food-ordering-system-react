@@ -1,9 +1,8 @@
 
-import type { HomePageProps } from "../../types/homePage.types"
 import ShopList from "../../components/ShopList"
 import Banner from "../../components/Banner"
 
-const Home = ({homeType}:HomePageProps) => {
+const Home = () => {
   return <div>
      <Banner/>
      <ShopList />
