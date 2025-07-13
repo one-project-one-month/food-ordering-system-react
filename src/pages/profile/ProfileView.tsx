@@ -28,7 +28,7 @@ export default function ProfileView() {
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6">
-        <h2 className="text-2xl font-bold text-blue-600">User Profile</h2>
+        <h2 className="text-2xl font-bold text-green-600">User Profile</h2>
 
         {profile?.profilePic && (
           <div className="flex flex-col ml-10 space-y-4 mt-6">
@@ -42,13 +42,13 @@ export default function ProfileView() {
                     : URL.createObjectURL(profile.profilePic)
                 }
                 alt="Profile"
-                className="w-full h-full object-cover rounded-full border-4 border-indigo-500 shadow-md"
+                className="w-full h-full object-cover rounded-full border-4 border-green-500 shadow-md"
               />
               <div className="absolute bottom-0 right-0 bg-white rounded-full border border-gray-300 p-1 shadow-sm">
                 <div className="relative">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5 text-indigo-600"
+                    className="w-5 h-5 text-green-600"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -107,7 +107,8 @@ export default function ProfileView() {
           <div>
             <Link
               to={`/profile/${profile?.id}`}
-              className="text-gray-900 bg-white border focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              className="text-gray-900 border-[#3F9A1E] border focus:outline-none hover:bg-green-400
+               focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             >
               Edit Profile
             </Link>
