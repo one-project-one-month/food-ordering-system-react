@@ -9,6 +9,7 @@ import Dashboard from '../pages/dashboard/Dashboard';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
 import Cart from '../pages/cart/Cart';
+import UserMenuDetail from '../pages/userMenu/UserMenuDetail';
 
 export const routes = [
   {
@@ -34,7 +35,11 @@ export const routes = [
           {
             path: '',
             element: <MainLayout />,
-            children: [{ path: 'order', element: <Location /> }],
+
+            children: [
+              { path: 'order', element: <Location /> },
+              { path: 'menu/:id', element: <UserMenuDetail /> },
+            ],
           },
         ],
       },
