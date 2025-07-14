@@ -1,16 +1,10 @@
-import type { Cart } from '../../types/cart';
 import P1 from '../../data/images/beef.png';
 import { Card, CardContent } from '../ui/card';
 import { MinusIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import type { Extra } from '../../types/extra';
+// import type { Extra } from '../../types/extra';
+import type { CartItemProps } from '../../types/cart.type';
 
-interface CartItemProps {
-  cartItem: Cart;
-  includedExtras: Extra[];
-  extraPrice: number;
-  handleUpdateQuantity: (q: number, item: Cart) => void;
-}
 export default function CartItem({
   cartItem,
   handleUpdateQuantity,

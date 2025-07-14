@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import CartItem from '../../components/cart/CartItem';
 import { carts as items } from '../../data/carts';
-import type { Cart } from '../../types/cart';
+import type { Cart } from '../../types/cart.type';
 import { extras } from '../../data/extras';
 import {
   Card,
@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import type { Extra } from '../../types/extra';
+import type { Extra } from '../../types/extra.type';
 
 export default function Cart() {
   const [carts, setCarts] = useState<Cart[]>(items);

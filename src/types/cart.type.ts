@@ -1,3 +1,5 @@
+import type { Extra } from './extra.type';
+
 export type Cart = {
   menuId: number;
   dish: string;
@@ -10,4 +12,11 @@ export type Cart = {
 
 export interface CartIncludedTotalPrice extends Cart {
   totalPrice?: number;
+}
+
+export interface CartItemProps {
+  cartItem: Cart;
+  includedExtras: Extra[];
+  extraPrice: number;
+  handleUpdateQuantity: (q: number, item: Cart) => void;
 }
