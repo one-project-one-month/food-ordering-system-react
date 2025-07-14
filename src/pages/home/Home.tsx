@@ -1,12 +1,12 @@
+
+import ShopList from "../../components/ShopList"
 import Banner from "../../components/Banner"
 
 const Home = () => {
-  return (
-    <div>
-      {/* Home page */}
-      <Banner/>
-    </div>
-  )
+  return <div>
+     <Banner/>
+     <ShopList />
+  </div>
 }
 
 export default Home
