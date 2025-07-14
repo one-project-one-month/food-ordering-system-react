@@ -8,6 +8,7 @@ import PrivateLayout from '../layout/PrivateLayout';
 import Dashboard from '../pages/dashboard/Dashboard';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
+import Cart from '../pages/cart/Cart';
 
 export const routes = [
   {
@@ -22,6 +23,7 @@ export const routes = [
         element: <MainLayout />,
         children: [
           { index: true, element: <Home /> }, // public route
+          { path: '/cart', element: <Cart /> },
         ],
       },
       {
@@ -32,41 +34,30 @@ export const routes = [
           {
             path: '',
             element: <MainLayout />,
-            children: [
-              { path: 'order', element: <Location /> },
-            ],
+            children: [{ path: 'order', element: <Location /> }],
           },
         ],
       },
       {
         path: '',
-        element: (
-         <PrivateLayout /> ),
+        element: <PrivateLayout />,
         children: [
           {
             path: 'dashboard',
-            element: <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['user']} />,
-            children: [
-              { index: true, element: <Dashboard /> },
-            ],
+            element: (
+              <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['user']} />
+            ),
+            children: [{ index: true, element: <Dashboard /> }],
           },
           {
             path: 'order_list',
-            element: (
-              <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />
-            ),
-            children: [
-              { index: true, element: <OrderList /> },
-            ],
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />,
+            children: [{ index: true, element: <OrderList /> }],
           },
           {
             path: 'menus',
-            element: (
-              <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />
-            ),
-            children: [
-              { index: true, element: <Menus /> },
-            ],
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />,
+            children: [{ index: true, element: <Menus /> }],
           },
         ],
       },
