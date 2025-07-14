@@ -1,4 +1,4 @@
-import type { Cart } from '../types/cart';
+import type { Cart } from '../types/cart.type';
 import Img1 from '../data/images/beef.png';
 
 export const carts: Cart[] = [
