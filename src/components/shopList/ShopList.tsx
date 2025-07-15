@@ -18,7 +18,7 @@ const ShopList = () => {
 
 
   return (
-    <div className="h-[300px] bg-green-600 w-full flex gap-[60px]">
+    <div className="h-[300px] bg-green-600 w-full flex gap-[80px]">
       <div className="text-white flex">
         <div className="">
           <img className="w-[183.463px] h-[224.52px] -rotate-[2.787deg]" src="src/assets/shopListImg/95edf7769844c677545e30dea49f91ca20232a6a.png" alt="" />
