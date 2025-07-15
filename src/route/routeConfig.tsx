@@ -10,6 +10,8 @@ import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
 import Cart from '../pages/cart/Cart';
 import UserMenuDetail from '../pages/userMenu/UserMenuDetail';
+import path from 'path';
+import Restaurants from '../pages/restaurant/Restaurants';
 
 export const routes = [
   {
@@ -25,6 +27,7 @@ export const routes = [
         children: [
           { index: true, element: <Home /> }, // public route
           { path: '/cart', element: <Cart /> },
+          { path:'/restaurants', element :<Restaurants /> }
         ],
       },
       {
