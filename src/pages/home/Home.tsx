@@ -1,5 +1,5 @@
 
-import ShopList from "../../components/ShopList"
+import ShopList from "../../components/shopList/ShopList"
 import Banner from "../../components/Banner"
 
 const Home = () => {
