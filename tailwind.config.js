@@ -19,7 +19,8 @@ export default {
    			merienda: [
    				'Merienda',
    				'cursive'
-   			]
+   			],
+			lobster: ['Lobster', 'cursive'],
    		},
    		container: {
    			center: true
@@ -32,6 +33,7 @@ export default {
    		colors: {
    			background: 'hsl(var(--background))',
    			foreground: 'hsl(var(--foreground))',
+			mainBg: '#f6fafb',
    			card: {
    				DEFAULT: 'hsl(var(--card))',
    				foreground: 'hsl(var(--card-foreground))'

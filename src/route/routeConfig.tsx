@@ -35,10 +35,12 @@ export const routes = [
           {
             path: '',
             element: <MainLayout />,
-
             children: [
               { path: 'order', element: <Location /> },
               { path: 'menu/:id', element: <UserMenuDetail /> },
+              {
+                path: 'order_list', element: <OrderList />
+              },
             ],
           },
         ],
@@ -53,11 +55,6 @@ export const routes = [
               <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['user']} />
             ),
             children: [{ index: true, element: <Dashboard /> }],
-          },
-          {
-            path: 'order_list',
-            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />,
-            children: [{ index: true, element: <OrderList /> }],
           },
           {
             path: 'menus',
