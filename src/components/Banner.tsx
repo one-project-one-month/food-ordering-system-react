@@ -3,9 +3,8 @@ import { Button } from "./ui/button"
 import bannerImage from "../assets/bannerImage.png"
 
 export default function Banner() {
-
     return (
-        <section className="grid grid-cols-1 md:grid-cols-2 items-center gap-10 py-10 px-4 sm:px-8 md:px-16">
+        <section className="container grid grid-cols-1 md:grid-cols-2 items-center gap-10 py-10 px-4 sm:px-8 md:px-16">
             <div className="space-y-6">
                 <h1 className="text-4xl md:text-5xl font-bold md:leading-[1.3] lg:leading-[1.4] text-primary font-merienda">
                     Be the Fastest <br />

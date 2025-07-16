@@ -15,7 +15,7 @@ const OrderList = () => {
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-2 md:px-0 py-8">
+    <div className="container mx-auto px-2 md:px-0 py-8">
       <div className="flex flex-wrap gap-2 md:gap-4 mb-6 justify-center">
         {TABS.map(tab => (
           <Button

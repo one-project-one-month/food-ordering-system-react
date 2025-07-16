@@ -3,11 +3,13 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 // import Cookies from 'js-cookie';
 function App() {
-  // Cookies.set('role','owner')
+  // Cookies.set('role','user')
   return (
-    <Provider store={store}>
-      <AppRouter />
-    </Provider>
+    <div className='bg-mainBg h-screen'>
+      <Provider store={store}>
+        <AppRouter />
+      </Provider>
+    </div>
   );
 }
 
