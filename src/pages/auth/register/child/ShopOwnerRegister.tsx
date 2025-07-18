@@ -24,23 +24,13 @@ import {
 	SelectTrigger, 
 	SelectValue 
 } from "../../../../components/ui/select";
-
-const formSchema = z.object({
-	restaurantName: z.string().nonempty({ message: 'Restaurant name is required' }),
-	restaurantImg: z.string().nonempty({ message: 'Restaurant image is required' }),
-	contactNumber: z.string().nonempty({ message: 'Contact number is required' }),
-	nrcRegionCode: z.string().nonempty({ message: 'Required' }),
-	nrcTownship: z.string().nonempty({ message: 'Required' }),
-	nrcCitizenship: z.string().nonempty({ message: 'Required' }),
-	nrcNumber: z.string().nonempty({ message: 'NRC no is required' }),
-	kpayNumber: z.string().nonempty({ message: 'Kpay no is required' }),
-});
+import { shopOwnerRegisterFormSchema } from "../../../../schemas/auth/registerSchema";
 
 export default function ShopOwnerRegister() {
 	const navigate = useNavigate();
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof shopOwnerRegisterFormSchema>>({
+		resolver: zodResolver(shopOwnerRegisterFormSchema),
 		defaultValues: {
 			restaurantName: '',
 			restaurantImg: '',
@@ -53,7 +43,7 @@ export default function ShopOwnerRegister() {
 		},
 	})
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof shopOwnerRegisterFormSchema>) {
 		console.log(values);
 		navigate("/otp");
 	}

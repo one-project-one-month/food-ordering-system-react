@@ -23,22 +23,17 @@ import {
 	CardFooter,
 	CardHeader
 } from "./../../../components/ui/card";
-
-const FormSchema = z.object({
-	otp: z.string().min(6, {
-		message: "Your OTP must be 6 characters.",
-	}),
-})
+import { otpFormSchema } from "../../../schemas/auth/otpSchema"
 
 export default function OTP() {
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
+	const form = useForm<z.infer<typeof otpFormSchema>>({
+		resolver: zodResolver(otpFormSchema),
 		defaultValues: {
 			otp: "",
 		},
 	})
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
+	function onSubmit(data: z.infer<typeof otpFormSchema>) {
 		console.log(data)
 	}
 

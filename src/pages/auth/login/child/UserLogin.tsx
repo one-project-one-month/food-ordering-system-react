@@ -18,26 +18,20 @@ import {
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { useNavigate } from "react-router-dom";
-
-const formSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8, { 
-		message: "Password must be at least 8 characters." 
-	}),
-});
+import { userLoginFormSchema } from "../../../../schemas/auth/loginSchema";
 
 export default function UserLogin() {
 	const navigate = useNavigate();
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof userLoginFormSchema>>({
+		resolver: zodResolver(userLoginFormSchema),
 		defaultValues: {
 			email: '',
 			password: '',
 		},
 	})
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof userLoginFormSchema>) {
 		console.log(values);
 		navigate("/");
 	}
