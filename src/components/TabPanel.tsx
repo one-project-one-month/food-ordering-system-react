@@ -1,14 +1,4 @@
-type TabItem = {
-	label: string;
-	value: string;
-}
-
-interface TabPanelProps {
-	tabs: TabItem[];
-	value: string;
-	onChange: (value: string) => void;
-	className?: string;
-}
+import type { TabPanelProps } from "../types/tabPanel.type";
 
 export default function TabPanel({ tabs, value, onChange, className }: TabPanelProps) {
 
