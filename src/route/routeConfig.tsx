@@ -10,6 +10,9 @@ import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
 import Cart from '../pages/cart/Cart';
 import UserMenuDetail from '../pages/userMenu/UserMenuDetail';
+import Register from '../pages/auth/register/Register';
+import Login from '../pages/auth/login/Login';
+import OTP from '../pages/auth/otp/OTP';
 
 export const routes = [
   {
@@ -25,6 +28,9 @@ export const routes = [
         children: [
           { index: true, element: <Home /> }, // public route
           { path: '/cart', element: <Cart /> },
+          { path: '/signup', element: <Register /> },
+          { path: '/login', element: <Login /> },
+          { path: '/otp', element: <OTP /> },
         ],
       },
       {
