@@ -31,7 +31,7 @@ const itemRef = useRef<HTMLAnchorElement | null>(null);
   // const totalPages = Math.ceil(restaurants.length/listPerPage)
 
   return (
-    <div className="w-full bg-green-600 ">
+    <div className="w-full bg-[#3F9A1E] ">
       <div className="h-[300px] container flex gap-[80px]">
         <div className="text-white flex">
           <div className="">
