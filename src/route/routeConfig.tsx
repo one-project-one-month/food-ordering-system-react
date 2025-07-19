@@ -1,6 +1,10 @@
 import PrivateRoute from './PrivateRoute';
+import PrivatePageSample from '../pages/PrivatePageSample';
 import Home from '../pages/home/Home';
 import Error from '../pages/error/Error';
+import { ProfileCreate } from '../pages/profile/ProfileCreateAndUpdate';
+import ProfileView from '../pages/profile/ProfileView';
+
 import MainLayout from '../layout/MainLayout';
 import Location from '../pages/order/Location';
 import Menus from '../pages/dashboardShopowner/menus/Menus';
@@ -17,22 +21,31 @@ import OTP from '../pages/auth/otp/OTP';
 export const routes = [
   {
     path: '/',
-    element: <RootSelector />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'profile', element: <ProfileCreate /> },
+      { path: 'profile/:id', element: <ProfileCreate /> },
+      { path: 'view/:id', element: <ProfileView /> },
+    ],
   },
   {
-    path: '/',
+    path: '/private',
+    element: <PrivateRoute allowedRoles={['admin']} />,
     children: [
+      { index: true, element: <PrivatePageSample /> },
+
       {
         path: '',
         element: <MainLayout />,
         children: [
-          { index: true, element: <Home /> }, // public route
-          { path: '/cart', element: <Cart /> },
-          { path: '/signup', element: <Register /> },
-          { path: '/login', element: <Login /> },
-          { path: '/otp', element: <OTP /> },
+          { index: true, element: <Home /> },
+          { path: 'cart', element: <Cart /> },
+          { path: 'signup', element: <Register /> },
+          { path: 'login', element: <Login /> },
+          { path: 'otp', element: <OTP /> },
         ],
       },
+
       {
         element: (
           <PrivateRoute allowedRoles={['user']} deniedRoles={['owner', 'admin', 'delivery']} />
@@ -44,13 +57,12 @@ export const routes = [
             children: [
               { path: 'order', element: <Location /> },
               { path: 'menu/:id', element: <UserMenuDetail /> },
-              {
-                path: 'order_list', element: <OrderList />
-              },
+              { path: 'order_list', element: <OrderList /> },
             ],
           },
         ],
       },
+
       {
         path: '',
         element: <PrivateLayout />,
@@ -64,35 +76,20 @@ export const routes = [
           },
           {
             path: 'menus',
-            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />,
+            element: (
+              <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />
+            ),
             children: [{ index: true, element: <Menus /> }],
           },
         ],
       },
+
       { path: '403', element: <Error errorType="403" /> },
       { path: '*', element: <Error errorType="404" /> },
     ],
   },
-  // {
-  //   path: 'dashboardShopowner',
-  //   element: <DashboardShopOwner />,
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: <DashShopowerHome />,
-  //     },
-  //     {
-  //       path: 'categories',
-  //       element: <Categories />,
-  //     },
-  //     {
-  //       path: 'Menus',
-  //       element: <Menus />,
-  //     },
-  //     {
-  //       path: 'Extras',
-  //       element: <Extras />,
-  //     },
-  //   ],
-  // },
+
+  // fallback and error routes
+  { path: '*', element: <Error errorType="404" /> },
+  { path: '/403', element: <Error errorType="403" /> },
 ];
