@@ -1,0 +1,37 @@
+name: CI Pipeline for React( Food Ordering System)
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '24.0.8'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-cache-${{ github.sha }}
+          restore-keys: |
+            npm-cache-${{ github.ref_name }}-
+            npm-restore-key
+
+      - name: Build the application
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
