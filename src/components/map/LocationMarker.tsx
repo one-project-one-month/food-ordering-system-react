@@ -5,10 +5,11 @@ import CustomMarker from './CustomMarker';
 import { getAddress } from '../../services/apiGecoding';
 
 export default function LocationMarker() {
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<{ state: string; city: string; locality: string } | null>(
     null
   );
+  
   useEffect(() => {
     if (position) {
       const latitude = position?.lat;
@@ -27,7 +28,8 @@ export default function LocationMarker() {
   // Custom Location Marker
   const map = useMapEvents({
     click(e: { latlng: LatLngExpression }) {
-      setPosition(e.latlng);
+      const latlng = e.latlng as { lat: number; lng: number };
+      setPosition({ lat: latlng.lat, lng: latlng.lng });
       console.log('Clicked position:', e.latlng);
       map.flyTo(e.latlng, map.getZoom());
     },
