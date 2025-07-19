@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 import { Button } from '../ui/button';
 import { LocateIcon } from 'lucide-react';
-import type { LatLngExpression } from 'leaflet';
 import { customIcon, questionIcon } from '../../utils/customIcon';
 import { getAddress } from '../../services/apiGecoding';
 import LocationMarker from './LocationMarker';
 
 export default function MapWithLeaf() {
   // Custom Location Marker
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<{ state: string; city: string; locality: string } | null>(
     null
   );
-  const getCoordinate = (p: any) => {
+
+  const getCoordinate = (p:GeolocationPosition) => {
     setPosition({ lat: p.coords.latitude, lng: p.coords.longitude });
   };
 

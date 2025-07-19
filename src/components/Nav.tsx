@@ -1,18 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const links = [
-  { href: "/menu", label: "Menu" },
-  { href: "/categories", label: "Categories" },
-  { href: "/restaurants", label: "Restaurant" },
-  { href: "/services", label: "Services" },
-  { href: "/about", label: "About Us" },
+  { href: "/", label: "Home" },
+  { href: "/order_list", label: "Orders", roles: ["user"] },
 ];
 
 export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
   const { pathname } = useLocation();
+  const userRole = Cookies.get("role");
+
+  const visibleLinks = links.filter(
+        ({ roles }) => !roles || roles.includes(userRole || "")
+    );
 
   const renderLinks = (isMobile: boolean) =>
-    links.map((link) => {
+    visibleLinks.map((link) => {
       const isActive = pathname === link.href;
 
       return (
@@ -32,12 +35,6 @@ export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
     });
 
   return (
-    <>
-      {/* Desktop Nav */}
-      <nav className="hidden md:flex lg:gap-16 md:gap-8">{renderLinks(false)}</nav>
-
-      {/* Mobile Nav */}
-      <div className="md:hidden flex flex-col gap-4 mt-4">{renderLinks(true)}</div>
-    </>
+      <div className="flex flex-col gap-4 mt-10">{renderLinks(true)}</div>
   );
 }

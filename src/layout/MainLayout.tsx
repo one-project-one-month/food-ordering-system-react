@@ -7,7 +7,7 @@ const MainLayout = () => {
   return (
     <div className="w-full">
       <Header />
-      <main className=" container mx-auto">
+      <main className="mx-auto">
         <Outlet />
       </main>
        
