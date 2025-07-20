@@ -1,3 +1,5 @@
+ 
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -24,17 +26,33 @@ import {
 	CardHeader
 } from "./../../../components/ui/card";
 import { otpFormSchema } from "../../../schemas/auth/otpSchema"
+import Cookies from "js-cookie"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, RootState } from "../../../store"
+import { setOtpVerified } from "../../../features/auth/authSlice"
+import { useNavigate } from "react-router-dom"
+import { Loader2 } from "lucide-react"
 
 export default function OTP() {
+	const dispatch = useDispatch<AppDispatch>()
+	const navigate = useNavigate()
+	const { loading } = useSelector((state: RootState) => state.auth.verifyEMailState);
 	const form = useForm<z.infer<typeof otpFormSchema>>({
 		resolver: zodResolver(otpFormSchema),
 		defaultValues: {
-			otp: "",
+			code: "",
 		},
 	})
+	const email = Cookies.get('checkedEmail')
 
 	function onSubmit(data: z.infer<typeof otpFormSchema>) {
-		console.log(data)
+		const payload = {
+			email,
+			code: data.code
+		}
+		dispatch(setOtpVerified(true))
+		console.log(payload)
+		void navigate('/signup')
 	}
 
 	return (
@@ -48,7 +66,7 @@ export default function OTP() {
 						<CardContent>
 							<FormField
 								control={form.control}
-								name="otp"
+								name="code"
 								render={({ field }) => (
 									<FormItem>
 										<FormControl>
@@ -79,7 +97,7 @@ export default function OTP() {
 											</InputOTP>
 										</FormControl>
 										<FormDescription>
-											Please enter the OTP sent to your phone.
+											Please enter the OTP sent to your email.
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -88,7 +106,9 @@ export default function OTP() {
 						</CardContent>
 						<CardFooter className="flex gap-2">
 							<Button className="w-1/3" variant='link' type="button">Resend OTP</Button>
-							<Button className="w-2/3 rounded-full" type="submit">Verify</Button>
+							<Button className="w-2/3 rounded-full" type="submit" disabled={loading}>{loading && (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                )}Verify</Button>
 						</CardFooter>
 					</Card>
 				</div>

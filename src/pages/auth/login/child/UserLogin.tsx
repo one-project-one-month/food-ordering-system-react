@@ -31,15 +31,15 @@ export default function UserLogin() {
 		},
 	})
 
-	function onSubmit(values: z.infer<typeof userLoginFormSchema>) {
+	async function onSubmit(values: z.infer<typeof userLoginFormSchema>) {
 		console.log(values);
-		navigate("/");
+		await navigate("/");
 	}
 
 	return (
 		<>
 			<Form {...form}>
-				<form className="w-full md:w-[400px]" onSubmit={form.handleSubmit(onSubmit)}>
+				<form className="w-full md:w-[400px]" onSubmit={void form.handleSubmit(onSubmit)}>
 					<CardContent className="flex flex-col items-center">
 						<div className="mb-6 text-center">
 							<CardTitle className="text-sm font-medium mb-2">Login</CardTitle>

@@ -1,15 +1,14 @@
-// src/routes/RootSelector.tsx
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const RootSelector = () => {
   const role = Cookies.get('role')?.toLowerCase();
 
-  if (['owner', 'admin', 'delivery'].includes(role || '')) {
+  if (['owner', 'admin', 'delivery'].includes(role ?? '')) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (role === 'user') {
+  if (role === 'customer') {
     return <Navigate to="/" replace />;
   }
 

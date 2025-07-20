@@ -3,7 +3,8 @@ import Cookies from "js-cookie";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/order_list", label: "Orders", roles: ["user"] },
+  { href: "/order_list", label: "Orders", roles: ["customer"] },
+  { href: "/dashboard", label: "Dashboard", roles: ["owner"] },
 ];
 
 export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
@@ -11,7 +12,7 @@ export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
   const userRole = Cookies.get("role");
 
   const visibleLinks = links.filter(
-        ({ roles }) => !roles || roles.includes(userRole || "")
+        ({ roles }) => !roles || roles.includes(userRole ?? "")
     );
 
   const renderLinks = (isMobile: boolean) =>

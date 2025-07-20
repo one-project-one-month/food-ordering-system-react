@@ -1,5 +1,4 @@
 import PrivateRoute from './PrivateRoute';
-import PrivatePageSample from '../pages/PrivatePageSample';
 import Home from '../pages/home/Home';
 import Error from '../pages/error/Error';
 import { ProfileCreate } from '../pages/profile/ProfileCreateAndUpdate';
@@ -17,38 +16,47 @@ import UserMenuDetail from '../pages/userMenu/UserMenuDetail';
 import Register from '../pages/auth/register/Register';
 import Login from '../pages/auth/login/Login';
 import OTP from '../pages/auth/otp/OTP';
+import OtpGuard from '../pages/auth/OtpGuard';
+import RegisterGuard from '../pages/auth/RegisterGuard';
+import CheckMail from '../pages/auth/checkMail/CheckMail';
 
 export const routes = [
   {
     path: '/',
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'profile', element: <ProfileCreate /> },
-      { path: 'profile/:id', element: <ProfileCreate /> },
-      { path: 'view/:id', element: <ProfileView /> },
-    ],
+    element: <RootSelector />,
   },
   {
-    path: '/private',
-    element: <PrivateRoute allowedRoles={['admin']} />,
+    path: '/',
     children: [
-      { index: true, element: <PrivatePageSample /> },
-
       {
         path: '',
         element: <MainLayout />,
         children: [
-          { index: true, element: <Home /> },
-          { path: 'cart', element: <Cart /> },
-          { path: 'signup', element: <Register /> },
+          { index: true, element: <Home /> }, // public route
+          { path: '/cart', element: <Cart /> },
+          { path: 'check_mail', element: <CheckMail /> },
+          {
+            element: <RegisterGuard />,
+            children: [
+              { path: 'signup', element: <Register /> },
+            ],
+          },
           { path: 'login', element: <Login /> },
-          { path: 'otp', element: <OTP /> },
+          {
+            element: <OtpGuard />,
+            children: [
+              { path: 'otp', element: <OTP /> },
+            ],
+          },
+          { path: 'profile', element: <ProfileCreate /> },
+          { path: 'profile/:id', element: <ProfileCreate /> },
+          { path: 'view/:id', element: <ProfileView /> },
         ],
       },
-
+       /* private route */
       {
         element: (
-          <PrivateRoute allowedRoles={['user']} deniedRoles={['owner', 'admin', 'delivery']} />
+          <PrivateRoute allowedRoles={['customer']} deniedRoles={['owner', 'admin', 'delivery']} />
         ),
         children: [
           {
@@ -57,12 +65,14 @@ export const routes = [
             children: [
               { path: 'order', element: <Location /> },
               { path: 'menu/:id', element: <UserMenuDetail /> },
-              { path: 'order_list', element: <OrderList /> },
+              {
+                path: 'order_list', element: <OrderList />
+              },
             ],
           },
         ],
       },
-
+      /* dashboard */
       {
         path: '',
         element: <PrivateLayout />,
@@ -70,26 +80,41 @@ export const routes = [
           {
             path: 'dashboard',
             element: (
-              <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['user']} />
+              <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['customer']} />
             ),
             children: [{ index: true, element: <Dashboard /> }],
           },
           {
             path: 'menus',
-            element: (
-              <PrivateRoute allowedRoles={['owner']} deniedRoles={['user']} />
-            ),
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Menus /> }],
           },
         ],
       },
-
       { path: '403', element: <Error errorType="403" /> },
       { path: '*', element: <Error errorType="404" /> },
     ],
   },
-
-  // fallback and error routes
-  { path: '*', element: <Error errorType="404" /> },
-  { path: '/403', element: <Error errorType="403" /> },
+  // {
+  //   path: 'dashboardShopowner',
+  //   element: <DashboardShopOwner />,
+  //   children: [
+  //     {
+  //       index: true,
+  //       element: <DashShopowerHome />,
+  //     },
+  //     {
+  //       path: 'categories',
+  //       element: <Categories />,
+  //     },
+  //     {
+  //       path: 'Menus',
+  //       element: <Menus />,
+  //     },
+  //     {
+  //       path: 'Extras',
+  //       element: <Extras />,
+  //     },
+  //   ],
+  // },
 ];

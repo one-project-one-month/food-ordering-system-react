@@ -4,10 +4,14 @@ import Cookies from "js-cookie";
 import { LayoutDashboard, ListOrdered, Menu, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { type AppDispatch } from "../store";
+import { logout } from "../features/auth/authSlice";
 
 const Sidebar = () => {
     const userRole = Cookies.get("role");
     const navigate = useNavigate()
+    const dispatch = useDispatch<AppDispatch>()
     const [isOpen, setIsOpen] = useState(true);
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
@@ -20,18 +24,18 @@ const Sidebar = () => {
     ];
 
     const visibleLinks = links.filter(
-        ({ roles }) => !roles || roles.includes(userRole || "")
+        ({ roles }) => !roles || roles.includes(userRole ?? "")
     );
 
     const handleLogout = () => {
-    Cookies.remove("role");
-    navigate("/");
-  };
+      dispatch(logout())
+      void navigate("/");
+    };
 
   return (
     <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => { setIsOpen(!isOpen); }}
         className={`absolute top-6 ${isOpen? 'right-[-17px]' : 'left-6'} z-50 bg-white border border-gray-200 p-2 rounded-md shadow-md hover:bg-gray-100 transition`}
       >
         {isOpen ? <PanelLeftClose className="w-5 h-5 text-primary" /> : <PanelRightClose className="w-5 h-5 text-primary" />}
@@ -40,7 +44,7 @@ const Sidebar = () => {
           ${isOpen ? "translate-x-0 w-60" : "-translate-x-full w-0 hidden"}   sm:relative `}
       >
         <div className="h-[77px] px-3">
-          <Link to="/dashboard">
+          <Link to="/">
             <img src={Logo} alt="logo" />
           </Link>
           <p className="text-sm pt-1 text-gray-500">Admin Dashboard</p>
