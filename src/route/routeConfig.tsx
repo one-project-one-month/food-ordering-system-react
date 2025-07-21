@@ -34,7 +34,7 @@ export const routes = [
         children: [
           { index: true, element: <Home /> }, // public route
           { path: '/cart', element: <Cart /> },
-          { path: 'check_mail', element: <CheckMail /> },
+          { path: 'verify_mail', element: <CheckMail /> },
           {
             element: <RegisterGuard />,
             children: [

@@ -55,6 +55,8 @@ export default function Header() {
                                         className="text-base flex h-[36px] lg:hidden"
                                         onClick={() => {
                                             diapatch(logout())
+                                            void navigate('/')
+                                            setSheetOpen(false)
                                         }}
                                     >
                                         Logout
@@ -66,7 +68,7 @@ export default function Header() {
                                         size="sm"
                                         className="text-base flex h-[36px]"
                                         onClick={() => {
-                                            void navigate("/check_mail");
+                                            void navigate("/verify_mail");
                                             setSheetOpen(false);}}
                                         >
                                         Sign Up
@@ -87,14 +89,14 @@ export default function Header() {
                                     <button
                                         onClick={() => {
                                             setSheetOpen(false);
-                                            void navigate('/check_mail');
+                                            void navigate('/verify_mail');
                                         }}
                                         className="text-left text-sm font-medium"
                                         >Sign up to open restaurant</button>
                                     <button
                                         onClick={() => {
                                             setSheetOpen(false);
-                                            void navigate('/check_mail');
+                                            void navigate('/verify_mail');
                                         }}
                                         className="text-left text-sm font-medium"
                                         >Sign up to deliver</button>

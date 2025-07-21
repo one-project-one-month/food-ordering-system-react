@@ -86,10 +86,6 @@ export const authSlice = createSlice({
       Cookies.remove("role");
       Cookies.remove("userId");
       Cookies.remove("token");
-
-      // Clear localStorage and sessionStorage for security
-      localStorage.clear();
-      sessionStorage.clear();
     },
     setRedirectPath: (state, action) => {
       state.redirectPath = action.payload;
@@ -115,6 +111,8 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action:any) => {
       state.loginState.isLoggedIn = true;
+      state.loginState.loading = false;
+      state.loginState.error = false;
 
       state.user.roleName = action.payload.data.data.roleName;
       state.user.token = action.payload.data.data.token;

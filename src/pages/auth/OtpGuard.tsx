@@ -6,7 +6,7 @@ export default function OtpGuard() {
   const { emailSubmitted } = useSelector((state: RootState) => state.auth);
 
   if (!emailSubmitted) {
-    return <Navigate to="/check_mail" replace />;
+    return <Navigate to="/verify_mail" replace />;
   }
 
   return <Outlet />;
