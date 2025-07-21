@@ -7,7 +7,7 @@ import RestaurantsCategories from '../../components/restaurantsCard/RestaurantsC
 
 const Restaurants = () => {
 
-  const[current,setCurrent] = useState({newList:false,data:null,type:null})
+  const[current,setCurrent] = useState({newList:false,data:null,type:"all"})
 
   console.log(current);
   
