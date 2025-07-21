@@ -29,5 +29,14 @@ export default tseslint.config([
       },
       // other options...
     },
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-floating-promises': [
+        'error',
+        {
+          ignoreVoid: true, // <--- this allows `void navigate(...)`
+        },
+      ],
+    },
   },
 ]);

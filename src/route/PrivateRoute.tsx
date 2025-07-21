@@ -11,12 +11,14 @@ const PrivateRoute = ({
   allowedRoles = [],
   deniedRoles = [],
 }: PrivateRouteProps) => {
-  const userRole = (Cookies.get('role') || 'user').toLowerCase();
+  const userRole = (Cookies.get('role') ?? 'customer').toLowerCase();
+  const isAuthenticated = !!Cookies.get("token");
 
   const isDenied = deniedRoles.map(r => r.toLowerCase()).includes(userRole);
   const isAllowed =
     allowedRoles.length === 0 || allowedRoles.map(r => r.toLowerCase()).includes(userRole);
 
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (isDenied) return <Navigate to="/403" replace />;
   if (!isAllowed) return <Navigate to="/" replace />;
 

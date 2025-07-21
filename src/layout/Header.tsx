@@ -8,17 +8,19 @@ import { Menu, ShoppingCart} from "lucide-react";
 import Nav from "../components/Nav";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { type AppDispatch, type RootState } from "../store";
 import { FacebookIcon, IgIcon, TwitterIcon } from "../icons/icons";
 import Cookies from "js-cookie";
+import { logout } from "../features/auth/authSlice";
 
 export default function Header() {
     const cartQuantity = useSelector((state: RootState) => state.cart.quantity);
     const navigate = useNavigate();
-    const [isAuthenticated, ] = useState(false);
+    const diapatch = useDispatch<AppDispatch>()
+    const isAuthenticated = !!Cookies.get("token");
     const [sheetOpen, setSheetOpen] = useState(false);
-    const userRole = Cookies.get("role")||'';
+    const userRole = Cookies.get("role")??'';
 
     useEffect(() => {
         function handleResize() {
@@ -28,7 +30,7 @@ export default function Header() {
         }
         window.addEventListener("resize", handleResize);
         handleResize();
-        return () => window.removeEventListener("resize", handleResize);
+        return () => { window.removeEventListener("resize", handleResize); };
     }, []);
 
     return (
@@ -44,34 +46,38 @@ export default function Header() {
                         </SheetTrigger>
                         <SheetContent side="left" className="flex flex-col justify-between"> 
                             <div>
-                                {userRole==='user' && <Nav onLinkClick={() => setSheetOpen(false)} />}
-                                <div className={`${userRole==='user' ? 'mt-6' : 'mt-10'} `}>
+                                <Nav onLinkClick={() => { setSheetOpen(false); }} />
+                                <div className={`mt-6 flex lg:hidden`}>
                                     {isAuthenticated ? (
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="text-base flex h-[36px] md:h-[52px]"
+                                        className="text-base flex h-[36px] lg:hidden"
                                         onClick={() => {
-                                        // logout
+                                            diapatch(logout())
+                                            void navigate('/')
+                                            setSheetOpen(false)
                                         }}
                                     >
                                         Logout
                                     </Button>
                                     ) : (
-                                    <div className="flex gap-4 flex-col">
+                                    <div className="flex gap-4 flex-col lg:hidden">
                                         <Button
                                         variant="default"
                                         size="sm"
-                                        className="text-base flex h-[36px] md:h-[52px]"
-                                        onClick={() => {navigate("/signup"); setSheetOpen(false);}}
+                                        className="text-base flex h-[36px]"
+                                        onClick={() => {
+                                            void navigate("/verify_mail");
+                                            setSheetOpen(false);}}
                                         >
                                         Sign Up
                                         </Button>
                                         <Button
                                         variant="default"
                                         size="sm"
-                                        className="text-base flex h-[36px] md:h-[52px]"
-                                        onClick={() => {navigate("/login"); setSheetOpen(false);}}
+                                        className="text-base flex h-[36px]"
+                                        onClick={() => {void navigate("/login"); setSheetOpen(false);}}
                                         >
                                         Login
                                         </Button> 
@@ -79,10 +85,21 @@ export default function Header() {
                                     )}
                                 </div>
                                 {userRole==='' && 
-                                <div className="mt-16 flex flex-col gap-4">
-                                    <Link to='' className="text-sm font-medium">Create business accout</Link>
-                                    <Link to='' className="text-sm font-medium">Add restaurant</Link>
-                                    <Link to='' className="text-sm font-medium">Sign up to deliver</Link>
+                                <div className="mt-6 flex flex-col gap-4">
+                                    <button
+                                        onClick={() => {
+                                            setSheetOpen(false);
+                                            void navigate('/verify_mail');
+                                        }}
+                                        className="text-left text-sm font-medium"
+                                        >Sign up to open restaurant</button>
+                                    <button
+                                        onClick={() => {
+                                            setSheetOpen(false);
+                                            void navigate('/verify_mail');
+                                        }}
+                                        className="text-left text-sm font-medium"
+                                        >Sign up to deliver</button>
                                 </div>
                                 }
                             </div>
@@ -105,7 +122,7 @@ export default function Header() {
                             variant="default"
                             size="sm"
                             className="rounded-full w-[36px] h-[36px]"
-                            onClick={() => navigate("/cart")}
+                            onClick={() => void navigate("/cart")}
                             aria-label="Cart"
                         >
                             <ShoppingCart className="h-5 w-5" />
@@ -127,7 +144,7 @@ export default function Header() {
                     size="sm"
                     className="text-base rounded-full h-[36px] hidden lg:flex"
                     onClick={() => {
-                        // logout logic
+                        diapatch(logout())
                     }}
                     >
                     Logout
@@ -138,7 +155,7 @@ export default function Header() {
                         variant="default"
                         size="sm"
                         className="text-base rounded-full h-[36px]"
-                        onClick={() => navigate("/login")}
+                        onClick={() => void navigate("/login")}
                         >
                         Login
                         </Button>
@@ -146,7 +163,7 @@ export default function Header() {
                         variant="default"
                         size="sm"
                         className="text-base rounded-full h-[36px]"
-                        onClick={() => navigate("/signup")}
+                        onClick={() => void navigate("/signup")}
                         >
                         Sign Up
                         </Button>

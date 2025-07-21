@@ -48,7 +48,7 @@ const DashboardCards = () => {
                 <span className="text-xs text-gray-500">{title}</span>
                 <div className={`flex items-center text-sm mt-1`}>
                     {trend === "up" ? <ArrowUpRight className="w-4 h-4 text-green-600" /> : <ArrowDownRight className="w-4 h-4 text-red-500" />}
-                    <span className={`${trend === "up" ? "text-green-600" : "text-red-500"}`}>{percent}</span><span className="ml-1 text-gray-300 text-[10px]">(30 days)</span>
+                    <span className={trend === "up" ? "text-green-600" : "text-red-500"}>{percent}</span><span className="ml-1 text-gray-300 text-[10px]">(30 days)</span>
                 </div>
             </div>
           </CardContent>

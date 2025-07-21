@@ -30,7 +30,7 @@ export function DialogToDelete({ open, onOpenChange, id, type, handleDeleteMenu 
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button variant="destructive" onClick={() => handleDeleteMenu(id)}>
+          <Button variant="destructive" onClick={() => { handleDeleteMenu(id); }}>
             Delete
           </Button>
         </DialogFooter>
