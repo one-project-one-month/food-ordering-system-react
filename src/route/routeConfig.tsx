@@ -36,7 +36,7 @@ export const routes = [
       },
       {
         element: (
-          <PrivateRoute allowedRoles={['user', 'delivery']} deniedRoles={['owner', 'admin']} />
+          <PrivateRoute allowedRoles={['customer']} deniedRoles={['owner', 'admin', 'delivery']} />
         ),
         children: [
           {
