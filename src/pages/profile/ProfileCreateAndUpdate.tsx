@@ -1,6 +1,7 @@
+// pages/Profile/ProfileCreate.tsx
 import ProfileForm from './ProfileForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProfile, getProfile, updateProfile } from '../../schemas/profileSchema';
+import { addProfile, getProfile, updateProfile, updateProfilePic } from '../../schemas/profileSchema';
 import type { AppDispatch, RootState } from '../../store';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -18,31 +19,24 @@ export function ProfileCreate() {
     }
   }, [dispatch, id]);
 
+  // CREATE
   const handleCreate = async (formData: FormData) => {
     try {
       await dispatch(addProfile(formData)).unwrap();
       navigate('/');
-    } catch {
+    } catch (error) {
+      console.error('Create failed:', error);
       navigate('/403');
     }
   };
 
-  const handleUpdate = async (formData: FormData) => {
-    const numericId = Number(id);
-    if (!id || isNaN(numericId)) {
-      navigate('/403'); // ဒါမှ မမှန်တဲ့ ID ကို handle လုပ်ပေးနိုင်တယ်
-      return null;
-    }
-    if (!isNaN(numericId)) {
-      try {
-        await dispatch(updateProfile({ id: numericId, formData })).unwrap();
-        console.log(formData.forEach)
-        navigate('/profile');
-      } catch {
-        navigate('/403');
-      }
-    }
-  };
+  // UPDATE
+ const handleUpdate = (formData: FormData) => {
+  dispatch(updateProfile({ id: Number(id), formData }))
+    .unwrap()
+    .then(() => navigate('/'))
+    .catch((err) => console.error(err));
+};
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">

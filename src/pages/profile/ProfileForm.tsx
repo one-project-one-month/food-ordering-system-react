@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 type ProfileFormProps = {
   defaultValues?: Profile | null;
   onSubmit: (formData: FormData) => void;
-  title: string;
+  title: 'Create' | 'Update';
 };
 
 export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileFormProps) {
@@ -17,41 +17,46 @@ export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileF
   } = useForm<Profile>({
     defaultValues: defaultValues ?? undefined,
   });
+
   const navigate = useNavigate();
 
-  const profilePicFile = watch('profilePic') as FileList | unknown;
+ const onFormSubmit = (profile: Profile) => {
+  const formData = new FormData();
 
-  const onFormSubmit = (data: Profile) => {
-    const formData = new FormData();
-    for (const key in data) {
-      if (key !== 'profilePic') {
-        formData.append(key, data[key as keyof Profile] as string);
-      }
+  if (title === 'Create') {
+    formData.append('userId', String(profile.userId)); // ✅ Only userId
+    if (profile.profilePic instanceof FileList && profile.profilePic.length > 0) {
+      formData.append('profilePic', profile.profilePic[0]);
     }
+  }
 
-    if (profilePicFile?.[0]) {
-      formData.append('profilePic', profilePicFile[0]);
-    }
+  formData.append('name', profile.name);
+  formData.append('phone', profile.phone);
+  formData.append('address', profile.address);
+  if (profile.nrc) formData.append('nrc', profile.nrc);
+  if (profile.dob) formData.append('dob', profile.dob);
+  if (profile.gender) formData.append('gender', profile.gender);
 
-    onSubmit(formData);
-    navigate('/');
-  };
+  onSubmit(formData);
+  navigate('/');
+};
+
 
   const fields: { label: string; name: keyof Profile; type: string; required?: boolean }[] = [
-    { label: 'User ID', name: 'userId', type: 'number', required: true },
+    ...(title === 'Create'
+      ? [{ label: 'User ID', name: 'userId', type: 'number', required: true }]
+      : []),
     { label: 'Name', name: 'name', type: 'text', required: true },
     { label: 'NRC', name: 'nrc', type: 'text', required: true },
-    { label: 'Email', name: 'email', type: 'email', required: true },
     { label: 'Phone', name: 'phone', type: 'tel', required: true },
-    { label: 'Date of Birth', name: 'dob', type: 'date', required: true },
-    { label: 'Count', name: 'count', type: 'number', required: true },
+    { label: 'Date of Birth', name: 'dob', type: 'text', required: true },
   ];
 
   return (
     <form
       onSubmit={handleSubmit(onFormSubmit)}
       encType="multipart/form-data"
-      className="w-full max-w-4xl bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition"
+      className="w-full max-w-4xl bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300"
     >
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-green-400">{title} Profile</h1>
 
@@ -61,7 +66,7 @@ export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileF
             <label className="text-sm font-medium text-gray-600 mb-2">{label}</label>
             <input
               type={type}
-              {...register(name, required ? { required: `Pls Enter Your ${label}` } : {})}
+              {...register(name, required ? { required: `Please enter your ${label}` } : {})}
               className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors[name] && (
@@ -70,8 +75,7 @@ export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileF
           </div>
         ))}
 
-        {/* Profile Picture: Show only when NOT updating */}
-        {title !== 'Update' && (
+        {title === 'Create' && (
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-600 mb-2">Profile Picture</label>
             <input
@@ -86,7 +90,7 @@ export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileF
         <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-600 mb-2">Gender</label>
           <select
-            {...register('gender', { required: 'Pls Select Your Gender' })}
+            {...register('gender', { required: 'Please select your gender' })}
             className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select gender</option>
@@ -101,7 +105,7 @@ export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileF
         <div className="md:col-span-2 flex flex-col">
           <label className="text-sm font-medium text-gray-600 mb-2">Address</label>
           <textarea
-            {...register('address', { required: 'Pls Enter Your Address' })}
+            {...register('address', { required: 'Please enter your address' })}
             rows={4}
             className="px-4 py-2 text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

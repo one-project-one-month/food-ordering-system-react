@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store';
 import { useEffect } from 'react';
-import { getProfile, updateProfilePic } from '../../schemas/profileSchema';
-import { Link, useParams } from 'react-router-dom';
+import { deleteProfile, getProfile, updateProfilePic } from '../../schemas/profileSchema';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export default function ProfileView() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { profile } = useSelector((state: RootState) => state.profile);
   const { id } = useParams<{ id: string }>();
 
@@ -16,13 +17,26 @@ export default function ProfileView() {
         dispatch(getProfile(numericId));
       }
     }
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !id) return;
 
     dispatch(updateProfilePic({ id: Number(id), profilePic: file }));
+  };
+
+  const handleDelete = async () => {
+    if (!id) return;
+    const confirmed = window.confirm('Are you sure you want to delete this profile?');
+    if (!confirmed) return;
+
+    try {
+      await dispatch(deleteProfile({ id: Number(id) })).unwrap();
+      navigate('/');
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
   };
 
   return (
@@ -73,12 +87,8 @@ export default function ProfileView() {
             <p>{profile?.name}</p>
           </div>
           <div>
-            <p className="text-sm font-semibold">User ID</p>
-            <p>{profile?.userId}</p>
-          </div>
-          <div>
             <p className="text-sm font-semibold">Email</p>
-            <p>{profile?.email}</p>
+            <p>{profile?.userId}</p>
           </div>
           <div>
             <p className="text-sm font-semibold">Phone</p>
@@ -96,22 +106,27 @@ export default function ProfileView() {
             <p className="text-sm font-semibold">Date of Birth</p>
             <p>{profile?.dob}</p>
           </div>
-          <div>
-            <p className="text-sm font-semibold">Count</p>
-            <p>{profile?.count}</p>
-          </div>
           <div className="sm:col-span-2">
             <p className="text-sm font-semibold">Address</p>
             <p>{profile?.address}</p>
           </div>
-          <div>
+
+          <div className="mt-6 flex gap-4">
             <Link
               to={`/profile/${profile?.id}`}
               className="text-gray-900 border-[#3F9A1E] border focus:outline-none hover:bg-green-400
-               focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+               focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             >
               Edit Profile
             </Link>
+
+            <button
+              onClick={handleDelete}
+              className="text-gray-900 border-[#ff3535] border focus:outline-none hover:bg-red-400
+               focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            >
+              Delete Profile
+            </button>
           </div>
         </div>
       </div>

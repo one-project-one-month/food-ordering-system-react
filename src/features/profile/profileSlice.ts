@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addProfile, getProfile, updateProfilePic } from '../../schemas/profileSchema';
+import { addProfile, deleteProfile, getProfile, updateProfilePic } from '../../schemas/profileSchema';
 import type { Profile } from '../../types/ProfileType';
 
 interface ProfileState {
@@ -41,6 +41,12 @@ export const profileSlice = createSlice({
       .addCase(updateProfilePic.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+        if (state.profile && action.payload?.profilePic) {
+          state.profile.profilePic = action.payload.profilePic;
+        }
+      }).addCase(deleteProfile.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.error=null;
         if (state.profile && action.payload?.profilePic) {
           state.profile.profilePic = action.payload.profilePic;
         }
