@@ -9,6 +9,7 @@ import Location from '../pages/order/Location';
 import Menus from '../pages/dashboardShopowner/menus/Menus';
 import PrivateLayout from '../layout/PrivateLayout';
 import Dashboard from '../pages/dashboard/Dashboard';
+import DeliOrderList from '../pages/orderList/DeliOrderList';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
 import Cart from '../pages/cart/Cart';
@@ -68,6 +69,7 @@ export const routes = [
               {
                 path: 'order_list', element: <OrderList />
               },
+              { path: 'deli_orders', element: <DeliOrderList /> },
             ],
           },
         ],
