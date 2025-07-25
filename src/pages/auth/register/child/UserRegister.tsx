@@ -28,9 +28,11 @@ import { Button } from "../../../../components/ui/button";
 import { userRegisterFormSchema } from "../../../../schemas/auth/registerSchema";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../../../../store";
-import { resetFlow } from "../../../../features/auth/authSlice";
+import { resetFlow, signup } from "../../../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import type { SignupProps } from "../../../../types/auth.types";
+import { toast } from "react-toastify";
 
 export default function UserRegister() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -41,17 +43,29 @@ export default function UserRegister() {
 		defaultValues: {
 			email: '',
 			password: '',
-			role: 'user',
+			role: 'CUSTOMER',
 		},
 	})
 
 	function onSubmit(values: z.infer<typeof userRegisterFormSchema>) {
-		console.log("registered ", values);
-		Cookies.remove('checkedEmail')
-		void navigate('/login', { replace: true });
-		setTimeout(() => {
-			dispatch(resetFlow());
-		}, 100);
+		void userSignup(values)
+	}
+
+	const userSignup = async (values:SignupProps)=>{
+		try{
+			const result = await dispatch(signup(values))
+			if(result.payload.code === 200){
+				Cookies.remove('checkedEmail')
+				toast.success(result.payload.message as string)
+				await navigate('/login', { replace: true });					
+				setTimeout(() => {
+					dispatch(resetFlow());
+				}, 500);
+			}
+		}catch(error:any){
+			console.log(error)
+			toast.error("Something is wrong while signup")	
+		}
 	}
 
 	return (
