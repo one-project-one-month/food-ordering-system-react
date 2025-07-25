@@ -20,6 +20,8 @@ import OTP from '../pages/auth/otp/OTP';
 import OtpGuard from '../pages/auth/OtpGuard';
 import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
+import Restaurant from '../pages/restaurant/Restaurant';
+import Category from '../pages/category/Category';
 
 export const routes = [
   {
@@ -90,6 +92,16 @@ export const routes = [
             path: 'menus',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Menus /> }],
+          },
+          {
+            path: 'restaurant',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <Restaurant /> }],
+          },
+          {
+            path: 'categories',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <Category /> }],
           },
         ],
       },

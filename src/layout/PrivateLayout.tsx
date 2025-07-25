@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { Bell } from "lucide-react";
 import { useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PrivateLayout = () => {
   const [orderCount, ] = useState<number>(0)
@@ -12,7 +14,7 @@ const PrivateLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <main className="flex-1 overflow-auto bg-dashboard ">
-          <nav className="flex sticky top-0 justify-end bg-white shadow-sm shadow-gray-200 items-center h-[77px]">
+          <nav className="flex sticky top-0 justify-end bg-white shadow-sm shadow-gray-200 items-center h-[76px]">
             <div className="flex items-center px-6 flex-row">
               <div className="relative cursor-pointer">
                 <Bell className="w-6 h-6 text-gray-600 hover:text-primary transition-colors" />
@@ -30,6 +32,7 @@ const PrivateLayout = () => {
             </div>
           </nav>
           <div className="my-6 px-6">
+            <ToastContainer position="top-right" className='top-[76px]' autoClose={2000} />
             <Outlet />
           </div>
         </main>

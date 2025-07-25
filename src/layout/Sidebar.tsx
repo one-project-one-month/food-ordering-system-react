@@ -16,6 +16,8 @@ const Sidebar = () => {
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
         { href: "/order_list", label: "Order Lists", icon: ListOrdered, roles: ["owner"] },
+        { href: "/restaurant", label: "My Restaurant", icon: ListOrdered, roles: ["owner"] },
+        { href: "/categories", label: "Categories", icon: ListOrdered, roles: ["owner"] },
         { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
     ];
 

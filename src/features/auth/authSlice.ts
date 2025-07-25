@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import api from "../../config/axios";
@@ -15,8 +13,7 @@ export const verifyEmail = createAsyncThunk<any, MailProps>(
       const result = await api.post(`${userUrl}/verifyEmail`, {
         email
       });
-      console.log("after call api result ", result)
-      return result;
+      return result.data;
 
     } catch (error:any) {
       return rejectWithValue(
@@ -35,8 +32,7 @@ export const login = createAsyncThunk<any, LoginProps>(
         email: payload.email,
         password: payload.password
       });
-      console.log("after call api result ", result)
-      return result;
+      return result.data;
 
     } catch (error:any) {
       return rejectWithValue(
@@ -86,6 +82,8 @@ export const authSlice = createSlice({
       Cookies.remove("role");
       Cookies.remove("userId");
       Cookies.remove("token");
+      Cookies.remove("restaurantId")
+      Cookies.remove("logged_in")
     },
     setRedirectPath: (state, action) => {
       state.redirectPath = action.payload;
@@ -114,19 +112,19 @@ export const authSlice = createSlice({
       state.loginState.loading = false;
       state.loginState.error = false;
 
-      state.user.roleName = action.payload.data.data.roleName;
-      state.user.token = action.payload.data.data.token;
-      state.user.userId = action.payload.data.data.userId;
+      state.user.roleName = action.payload.data.roleName;
+      state.user.token = action.payload.data.token;
+      state.user.userId = action.payload.data.userId;
 
-      const role = action.payload.data.data.roleName==='RESTAURANT_OWNER'?'owner': action.payload.data.data.roleName==='DELIVERY_STUFF'?'delivery': action.payload.data.data.roleName==='CUSTOMER'?'customer': action.payload.data.data.roleName==='SUPER_ADMIN'?'admin':''
+      const role = action.payload.data.roleName==='RESTAURANT_OWNER'?'owner': action.payload.data.roleName==='DELIVERY_STUFF'?'delivery': action.payload.data.roleName==='CUSTOMER'?'customer': action.payload.data.roleName==='SUPER_ADMIN'?'admin':''
 
       Cookies.set("role", role, {
         expires: 1,
       });
-      Cookies.set("token", action.payload.data.data.token, {
+      Cookies.set("token", action.payload.data.token, {
         expires: 1,
       });
-      Cookies.set("userId", action.payload.data.data.userId, {
+      Cookies.set("userId", action.payload.data.userId, {
         expires: 1,
       });
     });
