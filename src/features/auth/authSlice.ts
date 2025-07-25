@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import api from "../../config/axios";
-import type { AuthState, LoginProps, MailProps } from "../../types/auth.types";
+import type { AuthState, LoginProps, MailProps, SignupProps } from "../../types/auth.types";
 
 const userUrl = 'api/v1/auth/users';
 
@@ -18,6 +18,40 @@ export const verifyEmail = createAsyncThunk<any, MailProps>(
     } catch (error:any) {
       return rejectWithValue(
         error?.response.data.data ?? "An error occurred during checking email"
+      );
+    }
+  }
+);
+
+export const verifyAccount = createAsyncThunk<any, MailProps>(
+  "auth/verifyAccount",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await api.post(`${userUrl}/verifyAccount`, {
+        ...payload
+      });
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(
+        error?.response.data.data ?? "An error occurred during checking account"
+      );
+    }
+  }
+);
+
+export const signup = createAsyncThunk<any, SignupProps>(
+  "auth/signup",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await api.post(userUrl, {
+        ...payload
+      });
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(
+        error?.response.data.data ?? "An error occurred during signup"
       );
     }
   }
@@ -146,6 +180,12 @@ export const authSlice = createSlice({
     builder.addCase(verifyEmail.rejected, (state) => {
       state.verifyEMailState.loading = false;
       state.verifyEMailState.error = true;
+    });
+    builder.addCase(signup.fulfilled, (state) => {
+      state.loginState.loading = false;
+    });
+    builder.addCase(signup.pending, (state) => {
+      state.loginState.loading = true;
     });
   },
 });
