@@ -49,7 +49,8 @@ export default function ShopOwnerLogin() {
       const result = await dispatch(login(payload)).unwrap();
       if (result?.code === 200) {
         const targetPath = redirectPath ?? "/";
-        await navigate(targetPath);
+        await
+         navigate(targetPath);
       } else {
         console.error("Login failed", result);
       }
