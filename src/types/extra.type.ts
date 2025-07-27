@@ -1,7 +1,6 @@
-export type Extra = {
-  id: number;
-  name: string;
-  price: number;
-  status?: 'active' | 'inactive' | undefined;
-  menuId: number[];
-};
+// export type Extra = {
+//   id: number;
+//   name: string;
+//   price: number;
+//   menuId: number[];
+// };
