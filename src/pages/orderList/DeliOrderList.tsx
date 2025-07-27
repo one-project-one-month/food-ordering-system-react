@@ -51,11 +51,13 @@ const DeliOrderList = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-2 md:px-0 py-8">
-      <div className="bg-white rounded shadow p-6">
-        <div className="mb-4 flex items-center justify-between">
+    <div className="w-full mx-auto px-2 md:px-0">
+      <h2 className="text-3xl font-bold text-gray-700">Orders</h2>
+      <p className="text-sm pt-1">Organising your foods into categories allow you to more easily manage your foods</p>           
+      <div className="bg-white rounded-lg shadow mt-6 pt-6">
+        {/* <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">Deli Orders</h2>
-        </div>
+        </div> */}
         <Table
           data={paginatedOrders}
           config={deliTableConfig}
@@ -63,7 +65,7 @@ const DeliOrderList = () => {
           onApprove={handleApprove}
           onReject={handleReject}
         />
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-8 pb-8">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

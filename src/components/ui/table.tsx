@@ -13,7 +13,7 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ data, config, onApprove, onReject, showActions }) => {
   return (
     <div className="overflow-x-auto w-full">
-      <table className="min-w-full bg-white rounded shadow text-sm">
+      <table className="min-w-full bg-white rounded-lg shadow text-sm">
         <thead>
           <tr>
             {config.map(field => (
@@ -45,7 +45,7 @@ const Table: React.FC<TableProps> = ({ data, config, onApprove, onReject, showAc
                     <>
                       <Button
                         variant="default"
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded"
+                        className="bg-primary hover:bg-green-600 text-white px-4 py-1 rounded"
                         onClick={() => onApprove && onApprove(row)}
                       >
                         Approve

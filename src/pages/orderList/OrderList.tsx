@@ -11,7 +11,7 @@ const TABS: { key: OrderStatus; label: string }[] = [
 ];
 
 const OrderList = () => {
-  const [activeTab, setActiveTab] = useState<OrderStatus>('completed');
+  const [activeTab, setActiveTab] = useState<OrderStatus>('ongoing');
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
   return (
@@ -22,7 +22,7 @@ const OrderList = () => {
             key={tab.key}
             variant={activeTab === tab.key ? 'default' : 'outline'}
             className={`rounded-full px-6 py-2 text-base font-semibold transition-colors duration-200 ${activeTab === tab.key ? '' : 'bg-white'}`}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => { setActiveTab(tab.key); }}
           >
             {tab.label}
           </Button>
