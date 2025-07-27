@@ -22,6 +22,7 @@ import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
 import Restaurant from '../pages/restaurant/Restaurant';
 import Category from '../pages/category/Category';
+import ApplyRestaurant from '../pages/applyRestaurant/ApplyRestaurant';
 
 export const routes = [
   {
@@ -36,7 +37,6 @@ export const routes = [
         element: <MainLayout />,
         children: [
           { index: true, element: <Home /> }, // public route
-          { path: '/cart', element: <Cart /> },
           { path: 'verify_mail', element: <CheckMail /> },
           {
             element: <RegisterGuard />,
@@ -68,7 +68,8 @@ export const routes = [
                 path: 'order_list',
                 element: <OrderList />,
               },
-              { path: 'deli_orders', element: <DeliOrderList /> },
+              { path: 'cart', element: <Cart /> },
+              // { path: 'deli_orders', element: <DeliOrderList /> },
             ],
           },
         ],
@@ -102,6 +103,16 @@ export const routes = [
             path: 'categories',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Category /> }],
+          },
+          {
+            path: 'orders',
+            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <DeliOrderList /> }],
+          }, 
+          {
+            path: 'apply_restaurant',
+            element: <PrivateRoute allowedRoles={['delivery']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <ApplyRestaurant /> }],
           },
         ],
       },

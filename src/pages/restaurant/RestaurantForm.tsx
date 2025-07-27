@@ -61,6 +61,7 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
         const result = await dispatch(createRestaurant(payload))
           if (createRestaurant.fulfilled.match(result)) {
             toast.success('Restaurant updated successfully!');
+            onDataUpdated?.();
           } else if (createRestaurant.rejected.match(result)) {
             toast.error('Errors when updating restaurant!');
           }
@@ -78,6 +79,7 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
         const result = await dispatch(updateRestaurant(payload))
             if (updateRestaurant.fulfilled.match(result)) {
               toast.success('Restaurant updated successfully!');
+              onDataUpdated?.();
             } else if (updateRestaurant.rejected.match(result)) {
               toast.error('Errors when updating restaurant!');
             }
@@ -112,7 +114,7 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
 
   return (
     <>
-    <div className="w-full mt-12 bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition"
+    <div className="w-full mt-6 rounded-lg bg-white text-black rounded shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition"
       >
       <h1 className="text-xl sm:text-3xl font-bold text-center text-primary">{type==='create'?'Create':'Edit'} Restaurant</h1>
       <div className="mb-6">
