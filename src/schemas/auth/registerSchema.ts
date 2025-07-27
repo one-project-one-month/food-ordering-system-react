@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-deprecated */
 import { z } from "zod";
 
 const userRegisterFormSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8, { 
-		message: "Password must be at least 8 characters." 
-	}),
+	email: z
+		.string()
+		.min(1, "Email is required.")
+		.email("Invalid email format."), 		
+	password: z
+		.string()
+		.min(1, "Password is required.")
+		.min(8, "Password must be at least 8 characters."),
 	role: z.string(),
 });
 

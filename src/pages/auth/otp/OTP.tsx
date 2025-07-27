@@ -29,9 +29,11 @@ import { otpFormSchema } from "../../../schemas/auth/otpSchema"
 import Cookies from "js-cookie"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../../store"
-import { setOtpVerified } from "../../../features/auth/authSlice"
+import { setOtpVerified, verifyAccount } from "../../../features/auth/authSlice"
 import { useNavigate } from "react-router-dom"
 import { Loader2 } from "lucide-react"
+import type { OtpProps } from "../../../types/auth.types"
+import { toast } from "react-toastify"
 
 export default function OTP() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -50,9 +52,20 @@ export default function OTP() {
 			email,
 			code: data.code
 		}
-		dispatch(setOtpVerified(true))
-		console.log(payload)
-		void navigate('/signup')
+		void otpCheck(payload as OtpProps)
+	}
+
+	const otpCheck = async (values:OtpProps)=>{
+		try{
+			const result = await dispatch(verifyAccount(values))
+			if(result.payload.code === 200){
+				dispatch(setOtpVerified(true))
+				void navigate('/signup')
+			}
+		}catch(error:any){
+			console.log(error)
+			toast.error("Something is wrong while verifying account")	
+		}
 	}
 
 	return (
