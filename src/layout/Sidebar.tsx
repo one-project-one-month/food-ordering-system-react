@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import Cookies from "js-cookie";
-import { LayoutDashboard, ListOrdered, Menu, User, LogOut } from "lucide-react";
+import { LayoutDashboard, ListOrdered, Menu, User, LogOut, Utensils, LayoutGrid } from "lucide-react";
 import { useState } from "react";
 import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -15,8 +15,11 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true);
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
-        { href: "/order_list", label: "Order Lists", icon: ListOrdered, roles: ["owner"] },
+        { href: "/orders", label: "Order Lists", icon: ListOrdered, roles: ["owner","delivery"] },
+        { href: "/restaurant", label: "My Restaurant", icon: Utensils, roles: ["owner"] },
+        { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["owner"] },
         { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
+        { href: "/apply_restaurant", label: "Restaurants", icon: Utensils, roles: ["delivery"] },
     ];
 
     const bottomLinks = [

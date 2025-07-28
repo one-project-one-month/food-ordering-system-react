@@ -31,10 +31,14 @@ export default tseslint.config([
     },
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-explicit-any': 'off', // this allows `any` entirely
       '@typescript-eslint/no-floating-promises': [
         'error',
         {
-          ignoreVoid: true, // <--- this allows `void navigate(...)`
+          ignoreVoid: true,
         },
       ],
     },

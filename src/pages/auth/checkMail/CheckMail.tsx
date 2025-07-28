@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,13 +25,12 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../../../store";
 import { setEmailSubmitted, verifyEmail } from "../../../features/auth/authSlice";
-import { useToast } from "../../../hooks/use-toast";
+import { toast } from "react-toastify";
 
 export default function CheckMail() {
 	const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>()
     const { loading } = useSelector((state: RootState) => state.auth.verifyEMailState);
-    const { toast } = useToast()
 	const form = useForm<z.infer<typeof checkMailSchema>>({
 		resolver: zodResolver(checkMailSchema),
 		defaultValues: {
@@ -45,20 +42,17 @@ export default function CheckMail() {
         const email = values.email;
         try {
             const result = await dispatch(verifyEmail({email})).unwrap();
-            console.log("Resulet ", result)
-            if (result?.status === 200) {
+            if (result?.payload.code === 200) {
+                toast.success("OTP sent to your email")
                 void navigate(`/otp`);
                 Cookies.set('checkedEmail', values.email)
                 dispatch(setEmailSubmitted(true));
             } else {
-                console.error("Login failed", result);
+                toast.error(result.payload.message as string)
             }
         } catch (error) {
-            toast({
-                title: "Scheduled: Catch up",
-                description: "Friday, February 10, 2023 at 5:57 PM",
-            })
-              console.error("Login error:", error);
+            console.log(error)
+            toast.error("Something is wrong while verifying email")
         }
 	}
 

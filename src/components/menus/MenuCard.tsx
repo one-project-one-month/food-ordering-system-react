@@ -1,46 +1,79 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Separator } from '@radix-ui/react-separator';
-import type { MenuCardProps } from '../../types/menus';
 import { Button } from '../ui/button';
-import { useState } from 'react';
 import { DialogBox } from '../Dialog';
 import { DialogToDelete } from '../DialogToDelete';
+import DropZoneMenuImage from './DropZoneMenuImge';
+import Extras from './extras/Extras';
+import DishSizes from './dishSizes/DishSizes';
+import {
+  deleteMenuThunk,
+  deleteToMenu,
+  getMenusThunk,
+  uploadMenuPhotoThunk,
+} from '../../features/menu/menuSlice';
+import type { AppDispatch, RootState } from '../../store';
+import type { MenuCardProps } from '../../types/menus.type';
 
 export default function MenuCard({ menu }: MenuCardProps) {
+  const item = useSelector((state: RootState) => state.menu.items);
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const [isDeleteDia, setIsDeleteDia] = useState<boolean>(false);
+  const [dropDown, setDropDrown] = useState<File | undefined>(undefined);
+  const dispatch = useDispatch<AppDispatch>();
   const handleEditMenu = () => {
-    setIsOpened((prev) => !prev);
+    setIsOpened(!isOpened);
   };
   const handleCloseDialog = () => {
     setIsDeleteDia((prev) => !prev);
   };
   const handleDeleteMenu = (id: number) => {
-    console.log(id);
+    void dispatch(deleteMenuThunk(id));
+    dispatch(deleteToMenu(id));
     handleCloseDialog();
   };
-  if (menu)
+  useEffect(() => {
+    const fetchMenuImage = async () => {
+      if (dropDown && menu && typeof menu.id === 'number') {
+        await dispatch(uploadMenuPhotoThunk({ dishImg: dropDown, id: menu.id })).then(() =>
+          dispatch(getMenusThunk())
+        );
+      }
+    };
+    void fetchMenuImage();
+  }, [dispatch, dropDown]);
+  if (menu) {
     return (
-      <div className=" h-80 bg-card border-2 flex items-center flex-col p-4 align-middle rounded-md">
-        <div className="w-full flex justify-between">
-          <span className="underline p-1 text-sm text-clip-600">Active</span>
-        </div>
-        <img
-          src={
-            typeof menu.dish_Img === 'string'
-              ? menu.dish_Img
-              : menu.dish_Img
-                ? URL.createObjectURL(menu.dish_Img)
-                : undefined
-          }
-          alt={`${menu.dish} photo`}
-          className=" size-36"
-        />
+      <div
+        className={`${menu.status === 'ACTIVE' ? ' opacity-100' : ' opacity-30'} w-80 min-h-[400px] bg-card border-2 flex items-center flex-col  align-middle rounded-md`}
+      >
+        {menu.dishImg ? (
+          <img
+            src={typeof menu.dishImg === 'string' ? menu.dishImg.substring(53) : undefined}
+            loading="lazy"
+            decoding="async"
+            alt={`${menu.dish} photo`}
+            className="w-full h-36"
+          />
+        ) : (
+          <DropZoneMenuImage
+            setDropDrown={(files: File[]) => {
+              setDropDrown(files[0]);
+            }}
+          />
+        )}
         <Separator />
-        <div className="flex w-full  space-y-4 flex-col items-center">
-          <h6>{menu.dish}</h6>
+        <div className="flex w-full  space-y-4 flex-col items-center p-4">
           <div className="flex w-full gap-4 justify-between">
+            <h6 className="font-medium">{menu.dish}</h6>
             <p>{menu.price} Kyats</p>
-            <p className="text-yellow-300">{menu.cat_Id?.length} Categories</p>
+          </div>
+          <div className="flex w-full justify-between">
+            <Extras items={menu.extras ?? []} menu={menu} />
+          </div>
+          <div className="flex w-full justify-between">
+            <DishSizes items={menu.dishSizes ?? []} menu={menu} />
           </div>
           <div className="flex justify-between w-full">
             <Button variant="secondary" onClick={handleEditMenu}>
@@ -55,10 +88,11 @@ export default function MenuCard({ menu }: MenuCardProps) {
         <DialogToDelete
           open={isDeleteDia}
           onOpenChange={handleCloseDialog}
-          id={menu.id}
+          id={Number(menu.id)}
           type="menu"
           handleDeleteMenu={handleDeleteMenu}
         />
       </div>
     );
+  }
 }

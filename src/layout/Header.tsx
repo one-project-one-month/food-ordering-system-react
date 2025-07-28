@@ -34,7 +34,7 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="bg-mainBg sticky top-0 z-50 h-[76px] flex items-center">
+        <header className="sticky bg-white top-0 z-50 h-[76px] flex items-center shadow-sm">
             <div className="container flex h-16 items-center justify-between w-full">
                 {/* Left: Sheet Menu */}
                 <div className="flex items-center">
@@ -117,6 +117,7 @@ export default function Header() {
                     <p className="font-lobster font-normal text-2xl text-primary italic">Sar Mal</p>
                 </div>
                 <div className="flex items-center gap-4">
+                {isAuthenticated&&userRole==='customer' &&    
                     <div className="relative inline-block">
                         <Button
                             variant="default"
@@ -138,6 +139,7 @@ export default function Header() {
                         </span>
                         )}
                     </div>
+                }
                 {isAuthenticated ? (
                     <Button
                     variant="outline"
@@ -145,6 +147,7 @@ export default function Header() {
                     className="text-base rounded-full h-[36px] hidden lg:flex"
                     onClick={() => {
                         diapatch(logout())
+                        void navigate("/")
                     }}
                     >
                     Logout

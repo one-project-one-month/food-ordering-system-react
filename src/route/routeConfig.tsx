@@ -6,9 +6,10 @@ import ProfileView from '../pages/profile/ProfileView';
 
 import MainLayout from '../layout/MainLayout';
 import Location from '../pages/order/Location';
-import Menus from '../pages/dashboardShopowner/menus/Menus';
+import Menus from '../pages/menus/Menus';
 import PrivateLayout from '../layout/PrivateLayout';
 import Dashboard from '../pages/dashboard/Dashboard';
+import DeliOrderList from '../pages/orderList/DeliOrderList';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
 import Cart from '../pages/cart/Cart';
@@ -19,6 +20,9 @@ import OTP from '../pages/auth/otp/OTP';
 import OtpGuard from '../pages/auth/OtpGuard';
 import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
+import Restaurant from '../pages/restaurant/Restaurant';
+import Category from '../pages/category/Category';
+import ApplyRestaurant from '../pages/applyRestaurant/ApplyRestaurant';
 
 export const routes = [
   {
@@ -33,27 +37,22 @@ export const routes = [
         element: <MainLayout />,
         children: [
           { index: true, element: <Home /> }, // public route
-          { path: '/cart', element: <Cart /> },
           { path: 'verify_mail', element: <CheckMail /> },
           {
             element: <RegisterGuard />,
-            children: [
-              { path: 'signup', element: <Register /> },
-            ],
+            children: [{ path: 'signup', element: <Register /> }],
           },
           { path: 'login', element: <Login /> },
           {
             element: <OtpGuard />,
-            children: [
-              { path: 'otp', element: <OTP /> },
-            ],
+            children: [{ path: 'otp', element: <OTP /> }],
           },
           { path: 'profile', element: <ProfileCreate /> },
           { path: 'profile/:id', element: <ProfileCreate /> },
           { path: 'view/:id', element: <ProfileView /> },
         ],
       },
-       /* private route */
+      /* private route */
       {
         element: (
           <PrivateRoute allowedRoles={['customer']} deniedRoles={['owner', 'admin', 'delivery']} />
@@ -66,8 +65,11 @@ export const routes = [
               { path: 'order', element: <Location /> },
               { path: 'menu/:id', element: <UserMenuDetail /> },
               {
-                path: 'order_list', element: <OrderList />
+                path: 'order_list',
+                element: <OrderList />,
               },
+              { path: 'cart', element: <Cart /> },
+              // { path: 'deli_orders', element: <DeliOrderList /> },
             ],
           },
         ],
@@ -80,7 +82,10 @@ export const routes = [
           {
             path: 'dashboard',
             element: (
-              <PrivateRoute allowedRoles={['owner', 'admin', 'delivery']} deniedRoles={['customer']} />
+              <PrivateRoute
+                allowedRoles={['owner', 'admin', 'delivery']}
+                deniedRoles={['customer']}
+              />
             ),
             children: [{ index: true, element: <Dashboard /> }],
           },
@@ -88,6 +93,26 @@ export const routes = [
             path: 'menus',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Menus /> }],
+          },
+          {
+            path: 'restaurant',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <Restaurant /> }],
+          },
+          {
+            path: 'categories',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <Category /> }],
+          },
+          {
+            path: 'orders',
+            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <DeliOrderList /> }],
+          }, 
+          {
+            path: 'apply_restaurant',
+            element: <PrivateRoute allowedRoles={['delivery']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <ApplyRestaurant /> }],
           },
         ],
       },

@@ -46,7 +46,7 @@ export default function Cart() {
   };
 
   return (
-    <div className="flex w-full flex-col p-8">
+    <div className="flex container my-8 flex-col p-8 w-full bg-white text-black ">
       <div className=" mb-8">
         <h1 className="text-xl">
           Your Carts- {carts.length} {carts.length === 1 ? 'item' : 'items'}

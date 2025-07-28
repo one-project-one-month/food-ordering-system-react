@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+ 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -47,7 +47,7 @@ export default function ShopOwnerLogin() {
     };
     try {
       const result = await dispatch(login(payload)).unwrap();
-      if (result?.status === 200) {
+      if (result?.code === 200) {
         const targetPath = redirectPath ?? "/";
         await navigate(targetPath);
       } else {

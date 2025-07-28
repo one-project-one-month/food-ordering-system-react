@@ -4,7 +4,10 @@ import Cookies from "js-cookie";
 const links = [
   { href: "/", label: "Home" },
   { href: "/order_list", label: "Orders", roles: ["customer"] },
-  { href: "/dashboard", label: "Dashboard", roles: ["owner"] },
+  { href: "/address", label: "My Address", roles: ["customer"] },
+  { href: "/payment", label: "My Payment Info", roles: ["customer"] },
+  { href: "/profile", label: "Profile", roles: ["customer"] },
+  { href: "/dashboard", label: "Dashboard", roles: ["owner","delivery","admin"] },
 ];
 
 export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {

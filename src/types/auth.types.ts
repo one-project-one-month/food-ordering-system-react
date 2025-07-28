@@ -34,3 +34,14 @@ export interface LoginProps {
 export interface MailProps {
   email: string;
 }
+
+export interface OtpProps {
+  email: string;
+  code: string;
+}
+export interface SignupProps {
+  email: string;
+  password: string;
+  role: string;
+}
+
