@@ -1,17 +1,11 @@
 name: CI Pipeline for React( Food Ordering System)
 on:
   push:
-    branches:
-      - main
-      - dev
-      - 'FT/*'
-      - 'UI/*'
     tags:
       - 'v*.*.*' # Trigger only on tags like v1.2.3
   pull_request:
     branches:
       - main
-      - dev
 
 jobs:
   build:
