@@ -65,3 +65,18 @@ variable "target_origin_id" {
   default     = "s3Origin"
 
 }
+
+variable "viewer_protocol_policy" {
+  description = "The viewer protocol policy for the CloudFront distribution"
+  type        = string
+  default     = "redirect-to-https"
+
+}
+
+
+variable "aws_cloudfront_distribution_name" {
+  description = "The name of the CloudFront distribution"
+  type        = string
+  default     = "food-ordering-react-cdn"
+
+}

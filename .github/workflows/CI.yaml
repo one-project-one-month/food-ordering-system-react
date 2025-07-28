@@ -1,7 +1,17 @@
 name: CI Pipeline for React( Food Ordering System)
-
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
+      - dev
+      - 'FT/*'
+      - 'UI/*'
+    tags:
+      - 'v*.*.*' # Trigger only on tags like v1.2.3
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   build:
@@ -18,20 +28,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-cache-${{ github.sha }}
-          restore-keys: |
-            npm-cache-${{ github.ref_name }}-
-            npm-restore
+      - run: npm run lint
 
       - name: Build the application
         run: npm run build
 
-      - name: Upload build artifacts
+      - name: Create tarball of dist folder
+        run: tar -czf dist.tar.gz dist/
+
+      - name: Upload tarball artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: vite-dist-tarball-${{ github.ref_name }}
+          path: dist.tar.gz
