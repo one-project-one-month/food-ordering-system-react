@@ -22,6 +22,7 @@ import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
 import Restaurant from '../pages/restaurant/Restaurant';
 import Category from '../pages/category/Category';
+import Address from '../pages/address/Address';
 
 export const routes = [
   {
@@ -92,6 +93,11 @@ export const routes = [
             path: 'menus',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Menus /> }],
+          },
+          {
+            path: 'my_address',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [{ index: true, element: <Address /> }],
           },
           {
             path: 'restaurant',
