@@ -11,10 +11,12 @@ import { useDispatch } from 'react-redux';
 import {
   createDishSizeThunk,
   deleteDishSizeThunk,
+  getMenusThunk,
   updateDishSizeThunk,
 } from '../../../features/menu/menuSlice';
 import type { AppDispatch } from '../../../store';
 import type { DishSize } from '../../../types/menus.type';
+import { toast } from 'react-toastify';
 
 export const dishSchema = z.object({
   name: z.string({ message: '' }),
@@ -25,8 +27,9 @@ export const dishSchema = z.object({
 export interface DishSizeFormProps {
   menuId: number;
   dishSize: null | DishSize;
+  setIsOpened: () => void;
 }
-function DishSizeForm({ dishSize, menuId }: DishSizeFormProps) {
+function DishSizeForm({ dishSize, menuId, setIsOpened }: DishSizeFormProps) {
   const dispatch = useDispatch<AppDispatch>();
   const form = useForm<z.infer<typeof dishSchema>>({
     resolver: zodResolver(dishSchema),
@@ -39,11 +42,34 @@ function DishSizeForm({ dishSize, menuId }: DishSizeFormProps) {
     // ✅ This will be type-safe and validated.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (dishSize) {
-      await dispatch(updateDishSizeThunk({ ...values, id: dishSize.id, menuId }));
+      if (values.name !== dishSize.name || values.price !== dishSize.price) {
+        await dispatch(updateDishSizeThunk({ ...values, id: dishSize.id, menuId }))
+          .unwrap()
+          .then(() => {
+            void dispatch(getMenusThunk(1));
+            toast.success('Your dish-size successfully updated.');
+            setIsOpened();
+          });
+      }
     } else {
-      await dispatch(createDishSizeThunk({ ...values, menuId }));
+      await dispatch(createDishSizeThunk({ ...values, menuId }))
+        .unwrap()
+        .then(() => {
+          void dispatch(getMenusThunk(1));
+          toast.success('Your dish-size successfully created .');
+          setIsOpened();
+        });
     }
   }
+
+  const handleDeleteDishSize = async () => {
+    await dispatch(deleteDishSizeThunk(Number(dishSize?.id)))
+      .unwrap()
+      .then(() => {
+        toast.error('Your dish-size successfully deleted.');
+        void dispatch(getMenusThunk(1));
+      });
+  };
   return (
     <div>
       <Form {...form}>
@@ -87,7 +113,7 @@ function DishSizeForm({ dishSize, menuId }: DishSizeFormProps) {
             <Button
               variant="destructive"
               className={dishSize ? 'block mt-8' : 'hidden'}
-              onClick={() => dispatch(deleteDishSizeThunk(Number(dishSize?.id)))}
+              onClick={handleDeleteDishSize}
             >
               Delete
             </Button>

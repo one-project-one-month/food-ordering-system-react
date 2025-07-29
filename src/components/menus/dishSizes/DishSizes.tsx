@@ -14,15 +14,14 @@ interface DishSizesProps {
 export default function DishSizes({ items, menu }: DishSizesProps) {
   const [dishBox, setDishBox] = useState<{
     menuId: number | undefined;
-    isOpenBox: boolean;
     type: string;
     dishSize: null | DishSize;
   }>({
     menuId: menu.id,
-    isOpenBox: false,
     type: 'Create',
     dishSize: null,
   });
+  const [isOpened, setIsOpened] = useState<boolean>(false);
   return (
     <div className="">
       <p className="text-sm font-light text-secondary-foreground pb-2">
@@ -37,7 +36,8 @@ export default function DishSizes({ items, menu }: DishSizesProps) {
                 variant="outline"
                 className="size-3 ml-1"
                 onClick={() => {
-                  setDishBox({ ...dishBox, isOpenBox: true, type: 'Update', dishSize: item });
+                  setDishBox({ ...dishBox, type: 'Update', dishSize: item });
+                  setIsOpened(true);
                 }}
               >
                 <PenLineIcon className="w-[3px] h-[3px]" />
@@ -49,26 +49,30 @@ export default function DishSizes({ items, menu }: DishSizesProps) {
           variant="outline"
           className="m-1"
           onClick={() => {
-            setDishBox({ menuId: menu.id, isOpenBox: true, type: 'Create', dishSize: null });
+            setDishBox({ menuId: menu.id, type: 'Create', dishSize: null });
+            setIsOpened(true);
           }}
         >
           +
         </Badge>
         <Dialog
-          open={dishBox.isOpenBox}
+          open={isOpened}
           onOpenChange={() => {
-            setDishBox({ menuId: menu.id, isOpenBox: false, type: 'Create', dishSize: null });
+            setIsOpened(false);
           }}
         >
           <DialogContent className="sm:min-w-[425px] w-[850px]">
             <DialogHeader>
               <DialogTitle>
-                {menu.id ? 'Update' : 'Create'} Dish-Size Box for {menu.dish}.
+                {dishBox.type === 'Update' ? 'Update' : 'Create'} Dish-Size Box for {menu.dish}.
               </DialogTitle>
             </DialogHeader>
             <DishSizeForm
               menuId={Number(menu.id)}
               dishSize={dishBox.type === 'Create' ? null : dishBox.dishSize}
+              setIsOpened={() => {
+                setIsOpened(false);
+              }}
             />
           </DialogContent>
         </Dialog>
