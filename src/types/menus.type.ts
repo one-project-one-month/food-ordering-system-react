@@ -1,3 +1,5 @@
+import type { Category } from './category.types';
+
 export interface Extra {
   id?: string;
   name: string;
@@ -34,10 +36,12 @@ export interface Menu {
 
 export interface MenuCardProps {
   menu: Menu | null;
-  setIsOpened: (prev: boolean) => void;
+  setIsOpened: () => void;
+  categories?: Category[];
 }
 export interface MenuState {
   items: Menu[] | [];
+  totalPage: number;
   loading: boolean;
   error: Error | null | string | undefined;
 }
