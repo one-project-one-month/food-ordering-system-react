@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 import { restaurantFormSchema } from '../../schemas/restaurantFormSchema'; 
+import DropZoneMenuImage from '../../components/menus/DropZoneMenuImge';
 
 type RestaurantFormType = z.infer<typeof restaurantFormSchema>;
 
@@ -88,9 +89,9 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
         }
     }
 
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
+    const handleImageUpload = async (file: File) => {
+        // const file = event.target.files?.[0];
+        // if (!file) return;
 
         const formData = new FormData();
         formData.append('file', file);
@@ -118,23 +119,34 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
       >
       <h1 className="text-xl sm:text-3xl font-bold text-center text-primary">{type==='create'?'Create':'Edit'} Restaurant</h1>
       <div className="mb-6">
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-600 mb-2">Upload Restaurant Image</label>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="px-2 py-1 border text-xs rounded-md w-[300px]"
-            />
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-600 mb-2">
+            Upload Restaurant Image
+          </label>
+          <div className='lg:w-[500px]'>
+            <DropZoneMenuImage setDropDrown={(files) => {
+              void handleImageUpload(files[0]);
+            }} />
           </div>
-            { restaurantPic !== '' && 
-            <div className='w-full lg:w-[500px] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg'>
-              {uploadImageDataLoading ? 
-              <div className='flex h-full justify-center items-center'>
+        </div>
+
+        {restaurantPic !== '' && (
+          <div className="w-full lg:w-[500px] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg">
+            {uploadImageDataLoading ? (
+              <div className="flex h-full justify-center items-center">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              </div> : <img src={restaurantPic} className='object-cover w-full h-full' alt="restaurant image"/>}
-            </div>}
+              </div>
+            ) : (
+              <img
+                src={restaurantPic}
+                className="object-cover w-full h-full"
+                alt="restaurant image"
+              />
+            )}
+          </div>
+        )}
       </div>
+
       <form
         onSubmit={handleSubmit(onFormSubmit)}
        >

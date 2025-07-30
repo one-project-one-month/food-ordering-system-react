@@ -7,6 +7,7 @@ import authReducer from "../features/auth/authSlice"
 import restaurantReducer from "../features/restaurant/restaurantSlice"
 import categoriesReducer from "../features/categories/categoriesSlice"
 import applyRestaurantReducer from '../features/applyRestaurant/applyRestaurantSlice';
+import dashboardReducer from '../features/dashboard/dashboardSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     restaurant: restaurantReducer,
     categories: categoriesReducer,
     applyRestaurant: applyRestaurantReducer,
+    dashboard: dashboardReducer,
   },
 });
 
