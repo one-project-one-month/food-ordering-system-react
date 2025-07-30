@@ -1,70 +1,69 @@
-// pages/Profile/ProfileCreate.tsx
-import ProfileForm from './ProfileForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProfile, getProfile} from '../../schemas/profileSchema';
+import { useEffect } from 'react';
+import { addProfile, getProfile } from '../../schemas/profileSchema';
 import type { AppDispatch, RootState } from '../../store';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import ProfileForm from './ProfileForm';
 
 export function ProfileCreate() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const profile = useSelector((state: RootState) => state.profile.profile);
 
+  const { profile, loading, error } = useSelector((state: RootState) => state.profile);
+
+  // Fetch profile on mount
   useEffect(() => {
-    const numericId = Number(id);
-    if (id && !isNaN(numericId)) {
-      void dispatch(getProfile(numericId));
+    if (id) {
+      void dispatch(getProfile(Number(id)));
     }
   }, [dispatch, id]);
 
-  // CREATE
+  // Redirect if profile exists
+  useEffect(() => {
+    if (id && profile?.id === Number(id)) {
+      void navigate(`/view/${id}`);
+    }
+  }, [id, profile, navigate]);
+
   const handleCreate = async (formData: FormData) => {
     try {
-      // Extract required fields from FormData
-      const profileData: Record<string, any> = {};
-      let file: File | null = null;
-      let idValue = '';
-
-      formData.forEach((value, key) => {
-        if (key === 'file' && value instanceof File) {
-          file = value;
-        } else if (key === 'id') {
-          if (typeof value === 'string' || typeof value === 'number') {
-            idValue = String(value);
-          } else {
-            throw new Error('Invalid id value');
-          }
-        } else {
-          profileData[key] = value;
-        }
-      });
-
-      if (!idValue || !file) {
-        throw new Error('Missing required fields');
-      }
-
-      await dispatch(addProfile({
-        id: idValue,
-        profileData,
-        file
-      })).unwrap();
-      console.log(profileData)
-      void navigate('/');
+      if (!id) throw new Error('Missing ID from URL');
+      await dispatch(addProfile({ id: Number(id), formData })).unwrap();
+      void navigate(`/view/${id}`);
     } catch (error) {
       console.error('Create failed:', error);
-     void navigate('/403');
+      void navigate('/403');
     }
   };
 
-  // UPDATE
+  // Show loading spinner
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-700">Loading...</p>
+      </div>
+    );
+  }
+
+  // If profile exists, don't show form (redirect will happen)
+  if (profile && profile.id === Number(id)) {
+    return null;
+  }
+
+  // If not found, allow creating new profile
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
+      {/* <h1 className="text-2xl font-semibold text-center mb-6">Create Profile</h1> */}
+      {error && (
+        <p className="text-center text-red-500 mb-4">
+          Profile not found. You can create a new one.
+        </p>
+      )}
       <ProfileForm
-        onSubmit={()=>handleCreate}
-        title={ 'Create'}
-        defaultValues={id ? profile : undefined}
+        onSubmit={handleCreate}
+        title="Create"
+        defaultValues={undefined}
       />
     </div>
   );
