@@ -1,88 +1,119 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '../ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import type { MenuCardProps } from '../../types/menus';
-import { Checkbox } from '../ui/checkbox';
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '../../utils/acceptedImage';
-// import { DialogClose } from '@radix-ui/react-dialog';
+import type { MenuCardProps } from '../../types/menus.type';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../store';
+import { createMenuThunk, updateMenuThunk, updateToMenus } from '../../features/menu/menuSlice';
+import { useEffect, useState } from 'react';
+import { getAllCategories } from '../../features/categories/categoriesSlice';
+import { toast } from 'react-toastify';
 
-const items: { id: number; label: string }[] = [
-  {
-    id: 1,
-    label: 'Propular',
-  },
-  {
-    id: 2,
-    label: 'Salad',
-  },
-  {
-    id: 3,
-    label: 'Breakfast',
-  },
-  {
-    id: 4,
-    label: 'Juice',
-  },
-  {
-    id: 5,
-    label: 'Snack',
-  },
-];
-const formSchema = z.object({
+// const items: { id: number; label: string }[] = [
+//   {
+//     id: 1,
+//     label: 'Propular',
+//   },
+//   {
+//     id: 2,
+//     label: 'Salad',
+//   },
+//   {
+//     id: 3,
+//     label: 'Breakfast',
+//   },
+//   {
+//     id: 4,
+//     label: 'Juice',
+//   },
+//   {
+//     id: 5,
+//     label: 'Snack',
+//   },
+// ];
+export const menuSchema = z.object({
   dish: z.string().nonempty({ message: 'You need to fill dish name.' }),
   price: z.number().min(100, { message: 'Dish price must be above 100 kyats.' }),
-  status: z.enum(['active', 'inactive']),
-  cat_Id: z.array(z.number()),
-  dish_Img: z
-    .instanceof(File)
-    .refine((file) => file.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      'Only .jpg, .jpeg, .png and .webp formats are supported.'
-    ),
-  // picture: typeof window === "undefined" ? z.any() : z.instanceof(File),
+  status: z.enum(['ACTIVE', 'INACTIVE']),
+  categoryId: z.number(),
 });
 
-export function MenuForm({ menu }: MenuCardProps) {
+export function MenuForm({ menu, setIsOpened }: MenuCardProps) {
+  const [categories, setCategories] = useState<any>([]);
+  const { data } = useSelector((state: RootState) => state.categories.searched);
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    void dispatch(getAllCategories());
+    setCategories(data);
+  }, []);
+  // const data = useSelector((state: RootState) => state.menu);
+  const form = useForm<z.infer<typeof menuSchema>>({
+    resolver: zodResolver(menuSchema),
     defaultValues: menu
-      ? { ...menu, dish_Img: typeof menu.dish_Img === 'string' ? undefined : menu.dish_Img }
+      ? {
+          ...menu,
+        }
       : {
           dish: '',
-          price: 100,
-          status: 'inactive',
-          cat_Id: [],
-          dish_Img: undefined,
+          price: 0,
+          status: 'ACTIVE',
+          categoryId: 0,
         },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof menuSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    if (JSON.stringify(menu) === '{}') {
+      console.log(menu);
+      console.log(values);
+      await dispatch(createMenuThunk({ ...values }))
+        .unwrap()
+        .then(() => {
+          setIsOpened();
+          toast.success('Your menu created successfully.');
+        });
+    } else {
+      if (menu) {
+        await dispatch(
+          updateMenuThunk({
+            ...values,
+            id: menu.id,
+            extras: menu.extras,
+            dishSizes: menu.dishSizes,
+          })
+        )
+          .unwrap()
+          .then(() => {
+            setIsOpened();
+          });
+        toast.success('Your menu successfully updated.');
+        dispatch(
+          updateToMenus({
+            ...values,
+            id: menu.id,
+            extras: menu.extras,
+            dishImg: menu.dishImg,
+            dishSizes: menu.dishSizes,
+          })
+        );
+      }
+    }
   }
-
   return (
-    <div className="w-4/5">
+    <div className="w-11/12 mx-auto">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="flex w-full justify-between gap-8">
+          <div className="flex w-full justify-between gap-6">
             <FormField
               control={form.control}
               name="dish"
@@ -107,8 +138,10 @@ export function MenuForm({ menu }: MenuCardProps) {
                       placeholder="Pease fill dish price."
                       type="number"
                       {...field}
-                      onChange={(e) => onChange(Number(e.target.value))}
                       className="w-44"
+                      onChange={(e) => {
+                        onChange(Number(e.target.value));
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -116,7 +149,7 @@ export function MenuForm({ menu }: MenuCardProps) {
               )}
             />
           </div>
-          <div className="flex w-full justify-between gap-8">
+          <div className="flex w-full justify-between gap-6">
             <FormField
               control={form.control}
               name="status"
@@ -124,13 +157,17 @@ export function MenuForm({ menu }: MenuCardProps) {
                 <FormItem>
                   <FormLabel>Status</FormLabel>
                   <FormControl>
-                    <Select>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                    >
                       <SelectTrigger className="w-44">
-                        <SelectValue placeholder="Status" defaultValue={field.value} />
+                        <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+                        <SelectItem value="INACTIVE">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -140,70 +177,44 @@ export function MenuForm({ menu }: MenuCardProps) {
             />
             <FormField
               control={form.control}
-              name="dish_Img"
-              render={({ field: { onChange } }) => {
-                console.log();
-                return (
-                  <FormItem>
-                    <FormLabel>Menu Image</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="picture"
-                        type="file"
-                        className="w-44"
-                        onChange={(event) =>
-                          onChange(event.target.files && event.target?.files[0].name)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    value={field.value ? String(field.value) : ''}
+                    onValueChange={(value) => {
+                      field.onChange(Number(value));
+                    }}
+                  >
+                    <SelectTrigger className="w-44">
+                      <SelectValue placeholder="Join Category." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories?.length &&
+                        categories.map((item: any) => (
+                          <SelectItem key={item.id} value={String(item.id)}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="cat_Id"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-base">Category</FormLabel>
-                  <FormDescription>Select categories.</FormDescription>
-                </div>
-                {items.map((item) => (
-                  <FormField
-                    key={item.id}
-                    control={form.control}
-                    name="cat_Id"
-                    render={({ field }) => {
-                      return (
-                        <FormItem key={item.id} className="flex flex-row items-center gap-2">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter((value) => value !== item.id)
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">{item.label}</FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* <DialogClose asChild> */}
+          {/* <div className="flex w-full justify-between flex-col gap-4">
+            <div className="w-full flex justify-between gap-4">
+              <h1>Extras</h1>
+            </div>
+            <AppendForm form={form} extras={menu?.extras} />
+            <div className="w-full flex justify-between gap-4">
+              <h1>Dish-size</h1>
+            </div>
+            <AppendForm form={form} dishes={menu?.dishSizes} />
+          </div> */}
           <Button type="submit">Save Changes</Button>
-          {/* </DialogClose> */}
         </form>
       </Form>
     </div>

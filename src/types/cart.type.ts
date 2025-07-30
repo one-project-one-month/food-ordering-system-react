@@ -1,6 +1,6 @@
-import type { Extra } from './extra.type';
+import type { Extra } from './menus.type';
 
-export type Cart = {
+export interface Cart {
   menuId: number;
   dish: string;
   extras: number[];
@@ -8,7 +8,7 @@ export type Cart = {
   size: 'small' | 'medium' | 'large' | 'extra-large';
   dish_Img: string | File | undefined;
   quantity: number;
-};
+}
 
 export interface CartIncludedTotalPrice extends Cart {
   totalPrice?: number;

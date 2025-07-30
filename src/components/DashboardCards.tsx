@@ -31,7 +31,7 @@ const stats = [
 const DashboardCards = () => {
     const userRole = Cookies.get("role");
     const visibleCards = stats.filter(
-        ({ roles }) => !roles || roles.includes(userRole || "")
+        ({ roles }) => !roles || roles.includes(userRole ?? "")
     );
 
   return (

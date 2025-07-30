@@ -13,15 +13,13 @@ import { logout } from '../features/auth/authSlice';
 export default function Header() {
   const cartQuantity = useSelector((state: RootState) => state.cart.quantity);
   const navigate = useNavigate();
-  const diapatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = !!Cookies.get('token');
   const [sheetOpen, setSheetOpen] = useState(false);
   const userRole = Cookies.get('role') ?? '';
-
-const user = useSelector((state: RootState) => state.auth.user);
-const userId = user.userId;
-const userName=Cookies.get('email')??'';
-
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userId = user.userId;
+  const userName = Cookies.get('email') ?? '';
 
   useEffect(() => {
     function handleResize() {
@@ -49,19 +47,15 @@ const userName=Cookies.get('email')??'';
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col justify-between">
               <div>
-                <Nav
-                  onLinkClick={() => {
-                    setSheetOpen(false);
-                  }}
-                />
-                <div className={`mt-6 flex lg:hidden`}>
+                <Nav onLinkClick={() => setSheetOpen(false)} />
+                <div className="mt-6 flex lg:hidden">
                   {isAuthenticated ? (
                     <Button
                       variant="outline"
                       size="sm"
                       className="text-base flex h-[36px] lg:hidden"
                       onClick={() => {
-                        diapatch(logout());
+                        dispatch(logout());
                         void navigate('/');
                         setSheetOpen(false);
                       }}
@@ -127,65 +121,60 @@ const userName=Cookies.get('email')??'';
                   <br /> foods
                 </p>
                 <div className="flex flex-row gap-4 mt-20 mb-10 justify-center">
-                  <Link to="">
-                    <FacebookIcon />
-                  </Link>
-                  <Link to="">
-                    <TwitterIcon />
-                  </Link>
-                  <Link to="">
-                    <IgIcon />
-                  </Link>
+                  <Link to=""><FacebookIcon /></Link>
+                  <Link to=""><TwitterIcon /></Link>
+                  <Link to=""><IgIcon /></Link>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
           <p className="font-lobster font-normal text-2xl text-primary italic">Sar Mal</p>
         </div>
+
+        {/* Right: Cart & User */}
         <div className="flex items-center gap-4">
-          <div className="relative inline-block">
-            <Button
-              variant="default"
-              size="sm"
-              className="rounded-full w-[36px] h-[36px]"
-              onClick={() => void navigate('/cart')}
-              aria-label="Cart"
-            >
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-            {cartQuantity > 0 && (
-              <span
-                className="absolute -top-1 -right-1 inline-flex items-center justify-center
-                            px-1.5 py-0.5 text-xs font-medium leading-none text-white bg-red-500
-                            rounded-full"
-                style={{ minWidth: '18px', height: '18px' }}
+          {isAuthenticated && userRole === 'customer' && (
+            <div className="relative inline-block">
+              <Button
+                variant="default"
+                size="sm"
+                className="rounded-full w-[36px] h-[36px]"
+                onClick={() => void navigate('/cart')}
+                aria-label="Cart"
               >
-                {cartQuantity}
-              </span>
-            )}
-          </div>
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+              {cartQuantity > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 inline-flex items-center justify-center
+                              px-1.5 py-0.5 text-xs font-medium leading-none text-white bg-red-500
+                              rounded-full"
+                  style={{ minWidth: '18px', height: '18px' }}
+                >
+                  {cartQuantity}
+                </span>
+              )}
+            </div>
+          )}
           {isAuthenticated ? (
             <div className="flex gap-4 items-center">
               <Button
                 variant="outline"
                 size="sm"
                 className="text-base rounded-full h-[36px] hidden lg:flex"
-                onClick={() => {
-                  diapatch(logout());
-                }}
+                onClick={() => dispatch(logout())}
               >
                 Logout
               </Button>
               <p>{userName}</p>
-              <div className="w-50 h-50 d-flex items-center justify-center rounded-full bg-primary text-white" >
-                
-<Link to={`/view/${String(userId)}`}>
-  <PersonStanding size={50} />
-</Link>
+              <div className="w-50 h-50 flex items-center justify-center rounded-full bg-primary text-white">
+                <Link to={`/view/${String(userId)}`}>
+                  <PersonStanding size={50} />
+                </Link>
               </div>
             </div>
           ) : (
-            <div className="d-flex gap-4 hidden lg:flex">
+            <div className="flex gap-4 hidden lg:flex">
               <Button
                 variant="default"
                 size="sm"

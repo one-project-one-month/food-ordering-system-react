@@ -4,7 +4,7 @@ import { store } from './store';
 
 function App() {
   return (
-    <div className='bg-mainBg h-screen'>
+    <div className='h-screen'>
       <Provider store={store}>
         <AppRouter />
       </Provider>
