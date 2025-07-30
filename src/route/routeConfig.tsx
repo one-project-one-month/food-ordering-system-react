@@ -1,9 +1,6 @@
 import PrivateRoute from './PrivateRoute';
 import Home from '../pages/home/Home';
 import Error from '../pages/error/Error';
-import { ProfileCreate } from '../pages/profile/ProfileCreateAndUpdate';
-import ProfileView from '../pages/profile/ProfileView';
-
 import MainLayout from '../layout/MainLayout';
 import Location from '../pages/order/Location';
 import Menus from '../pages/menus/Menus';
@@ -22,7 +19,11 @@ import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
 import Restaurant from '../pages/restaurant/Restaurant';
 import Category from '../pages/category/Category';
+import { ProfileUpdate } from '../pages/profile/ProfileUpdate';
+import ProfileView from '../pages/profile/ProfileView';
+import { ProfileCreate } from '../pages/profile/ProfileCreate';
 import ApplyRestaurant from '../pages/applyRestaurant/ApplyRestaurant';
+
 
 export const routes = [
   {
@@ -47,8 +48,8 @@ export const routes = [
             element: <OtpGuard />,
             children: [{ path: 'otp', element: <OTP /> }],
           },
-          { path: 'profile', element: <ProfileCreate /> },
-          { path: 'profile/:id', element: <ProfileCreate /> },
+          { path: 'profile/create/:id', element: <ProfileCreate /> },
+          { path: 'profile/edit/:id', element: <ProfileUpdate /> },
           { path: 'view/:id', element: <ProfileView /> },
         ],
       },

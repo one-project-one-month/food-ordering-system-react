@@ -60,7 +60,7 @@ export const signup = createAsyncThunk<any, SignupProps>(
 export const login = createAsyncThunk<any, LoginProps>(
   "auth/login",
   async (payload, { rejectWithValue }) => {
-    console.log("Pyaload ", payload)
+    console.log("Payload ", payload)
     try {
       const result = await api.post(`${userUrl}/login`, {
         email: payload.email,
