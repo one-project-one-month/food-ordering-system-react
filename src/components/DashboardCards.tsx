@@ -37,7 +37,7 @@ const DashboardCards = () => {
   return (
     <div className="grid grid-cols-1 mt-6 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {visibleCards.map(({ title, amount, percent, trend, image }) => (
-        <Card key={title} className="rounded-2xl shadow-md">
+        <Card key={title}>
           <CardContent className="p-4 flex items-center gap-4">
             <div className="rounded-full w-[70px] h-[70px] flex justify-center items-center bg-lightGreen">
                 {/* <img src={image} alt={title} className="w-12 h-12 rounded-full object-cover" /> */}
