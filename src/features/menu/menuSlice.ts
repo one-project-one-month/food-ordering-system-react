@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
+ 
+ 
+ 
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../config/axios';
@@ -19,8 +19,9 @@ const menuUrl = '/api/v1/menus';
 const restaurantId = Cookies.get('restaurantId');
 
 export const getMenusThunk = createAsyncThunk('menu/getMenus', async (payload: number) => {
-  const result = await api.get(`${menuUrl}?page=${String(payload)}`);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  const restaurantId = Cookies.get('restaurantId');
+  const result = await api.get(`${menuUrl}/restaurant/${String(restaurantId)}?page=${String(payload)}`);
+   
   return result.data;
 });
 
@@ -28,11 +29,12 @@ export const getMenusThunk = createAsyncThunk('menu/getMenus', async (payload: n
 export const createMenuThunk = createAsyncThunk(
   'menu/createMenu',
   async (payload: Menu, { rejectWithValue }) => {
+    const restaurantId = Cookies.get('restaurantId');
     const menu = { ...payload, restaurantId };
     try {
       const result = await api.post(menuUrl, menu);
       console.log(result);
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+       
       return result.data.data['created Menu'];
     } catch (error: any) {
       return rejectWithValue(
@@ -52,7 +54,7 @@ export const updateMenuThunk = createAsyncThunk(
       }
       if (menu.id) {
         const result = await api.patch(`${menuUrl}/${String(menu.id)}`, menu);
-        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+         
         return result.data.data;
       }
     } catch (error: any) {
@@ -74,7 +76,7 @@ export const deleteMenuThunk = createAsyncThunk(
       if (payload) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const result = await api.delete(`${menuUrl}/${Number(payload)}`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+         
         return result.data.message;
       }
     } catch (error: any) {
@@ -93,7 +95,7 @@ export const createExtraThunk = createAsyncThunk(
   async (payload: Extra, { rejectWithValue }) => {
     try {
       const result = await api.post(extraUrl, payload);
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+       
       return result.data.data['created Extra'];
     } catch (error: any) {
       return rejectWithValue(
@@ -111,7 +113,7 @@ export const updateExtraThunk = createAsyncThunk(
         name: payload.name,
         price: payload.price,
       });
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+       
       return result.data.data['created Extra'];
     } catch (error: any) {
       return rejectWithValue(
@@ -132,7 +134,7 @@ export const deleteExtraThunk = createAsyncThunk(
       if (payload) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const result = await api.delete(`${extraUrl}/${Number(payload)}`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+         
         return result.data.message;
       }
     } catch (error: any) {
@@ -151,7 +153,7 @@ export const createDishSizeThunk = createAsyncThunk(
   async (payload: DishSize, { rejectWithValue }) => {
     try {
       const result = await api.post(dishSizeUrl, payload);
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+       
       return result.data.data['created DishSize'];
     } catch (error: any) {
       return rejectWithValue(
@@ -169,7 +171,7 @@ export const updateDishSizeThunk = createAsyncThunk(
         name: payload.name,
         price: payload.price,
       });
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+       
       return result.data.data['created DishSize'];
     } catch (error: any) {
       return rejectWithValue(
@@ -190,7 +192,7 @@ export const deleteDishSizeThunk = createAsyncThunk(
       if (payload) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const result = await api.delete(`${dishSizeUrl}/${Number(payload)}`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+         
         return result.data.message;
       }
     } catch (error: any) {
@@ -218,7 +220,7 @@ export const uploadMenuPhotoThunk = createAsyncThunk(
             'Content-Type': 'multipart/form-data',
           },
         });
-        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return*/
+         
         return result.data.data;
       }
     } catch (error: any) {

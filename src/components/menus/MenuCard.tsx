@@ -68,20 +68,15 @@ export default function MenuCard({ menu, setIsOpened }: MenuCardProps) {
   if (menu) {
     return (
       <div
-        className={`${menu.status === 'ACTIVE' ? ' opacity-100' : ' opacity-70'} relative w-80 min-h-[400px] bg-card border-2 flex items-center flex-col  align-middle rounded-md`}
+        className={`${menu.status === 'ACTIVE' ? ' opacity-100' : ' opacity-70'} relative w-full min-h-[400px] bg-card border-2 flex items-center flex-col  align-middle rounded-xl overflow-hidden`}
       >
-        <div className="absolute top-2 left-2">
-          <p className="text-sm text-green-500 italic underline font-medium">
-            {categories.find((item: Category) => item.id === Number(menu.categoryId))?.name}
-          </p>
-        </div>
         {menu.dishImg ? (
           <img
-            src={typeof menu.dishImg === 'string' ? menu.dishImg.substring(53) : undefined}
+            src={typeof menu.dishImg === 'string' ? menu.dishImg.replace(/^.*?(https:\/)/, 'https:/') : undefined}
             loading="lazy"
             decoding="async"
             alt={`${menu.dish} photo`}
-            className="w-full h-36"
+            className="w-full h-36 object-cover"
           />
         ) : (
           <DropZoneMenuImage
@@ -91,9 +86,14 @@ export default function MenuCard({ menu, setIsOpened }: MenuCardProps) {
           />
         )}
         <Separator />
-        <div className="flex w-full  space-y-4 flex-col items-center p-4">
-          <div className="flex w-full gap-4 justify-between">
-            <h6 className="font-medium">{menu.dish}</h6>
+        <div className="flex w-full space-y-3 flex-col items-center p-4">
+          <div className="flex w-full gap-4 justify-start">
+            <div>
+              <h6 className="font-medium leading-0">{menu.dish}</h6>
+              <span className="text-xs text-green-500 italic underline font-medium">
+                {categories.find((item: Category) => item.id === Number(menu.categoryId))?.name}
+              </span>
+            </div>
             <p>{menu.price} Kyats</p>
           </div>
           <div className="flex w-full justify-between">

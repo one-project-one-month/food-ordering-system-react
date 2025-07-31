@@ -92,6 +92,7 @@ const initialState: AuthState = {
     roleId: 0,
     userId: 0,
     token: "",
+    refreshToken: "",
   },
   redirectPath: null,
   emailSubmitted: Cookies.get('emailSubmitted') === 'true',
@@ -110,12 +111,14 @@ export const authSlice = createSlice({
         roleId: 0,
         userId: 0,
         token: "",
+        refreshToken: "",
       };
 
       // Clear cookies
       Cookies.remove("role");
       Cookies.remove("userId");
       Cookies.remove("token");
+      Cookies.remove("refreshToken");
       Cookies.remove("restaurantId")
       Cookies.remove("logged_in")
     },
@@ -148,6 +151,7 @@ export const authSlice = createSlice({
 
       state.user.roleName = action.payload.data.roleName;
       state.user.token = action.payload.data.token;
+      state.user.refreshToken = action.payload.data.RefreshToken;
       state.user.userId = action.payload.data.userId;
 
       const role = action.payload.data.roleName==='RESTAURANT_OWNER'?'owner': action.payload.data.roleName==='DELIVERY_STUFF'?'delivery': action.payload.data.roleName==='CUSTOMER'?'customer': action.payload.data.roleName==='SUPER_ADMIN'?'admin':''
@@ -156,6 +160,9 @@ export const authSlice = createSlice({
         expires: 1,
       });
       Cookies.set("token", action.payload.data.token, {
+        expires: 1,
+      });
+      Cookies.set("refreshToken", action.payload.data.RefreshToken, {
         expires: 1,
       });
       Cookies.set("userId", action.payload.data.userId, {

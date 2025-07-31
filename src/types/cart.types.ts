@@ -5,6 +5,7 @@ export interface CartItem extends Menu {
   selectedExtras: string[];
   notes?: string;
   totalAmount: number;
+  dish_Img?: string;
 }
 
 export interface CartState {

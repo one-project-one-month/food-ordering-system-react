@@ -15,6 +15,7 @@ export interface AuthUser {
     roleId: number;
     userId: number;
     token?: string;
+    refreshToken?: string;
 }
 
 export interface AuthState {
