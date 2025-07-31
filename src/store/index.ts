@@ -8,6 +8,7 @@ import restaurantReducer from "../features/restaurant/restaurantSlice"
 import categoriesReducer from "../features/categories/categoriesSlice"
 import applyRestaurantReducer from '../features/applyRestaurant/applyRestaurantSlice';
 import dashboardReducer from '../features/dashboard/dashboardSlice';
+import userMenuReducer from '../features/userMenu/userMenuSlice'
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     categories: categoriesReducer,
     applyRestaurant: applyRestaurantReducer,
     dashboard: dashboardReducer,
+    userMenu: userMenuReducer,
   },
 });
 

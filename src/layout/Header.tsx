@@ -47,7 +47,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col justify-between">
               <div>
-                <Nav onLinkClick={() => setSheetOpen(false)} />
+                <Nav onLinkClick={() => { setSheetOpen(false); }} />
                 <div className="mt-6 flex lg:hidden">
                   {isAuthenticated ? (
                     <Button

@@ -14,7 +14,7 @@ const PrivateLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <main className="flex-1 overflow-auto bg-dashboard ">
-          <nav className="flex sticky top-0 justify-end bg-white shadow-sm shadow-gray-200 items-center h-[76px]">
+          <nav className="flex sticky top-0 justify-end z-10 bg-white shadow-sm shadow-gray-200 items-center h-[76px]">
             <div className="flex items-center px-6 flex-row">
               <div className="relative cursor-pointer">
                 <Bell className="w-6 h-6 text-gray-600 hover:text-primary transition-colors" />

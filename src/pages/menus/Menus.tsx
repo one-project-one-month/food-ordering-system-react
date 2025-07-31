@@ -37,7 +37,6 @@ export default function Menus() {
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
-  if (items.length) {
     return (
       <div className="flex flex-col w-full">
         <div className="flex justify-end right-4">
@@ -49,7 +48,8 @@ export default function Menus() {
             Create Menu
           </Button>
         </div>
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4 mt-6 px-4 mx-auto">
+        {items.length && <>
+          <div className="grid lg:grid-cols-3 h-full md:grid-cols-2 grid-cols-2 gap-4 mt-6 px-4 mx-auto">
           {items.map((item: Menu) => (
             <MenuCard
               key={item.id}
@@ -60,7 +60,7 @@ export default function Menus() {
             />
           ))}
         </div>
-        <div className="flex w-56 justify-end">
+        <div className="flex justify-center">
           <Button
             className="mt-5"
             size="sm"
@@ -84,7 +84,8 @@ export default function Menus() {
             Next Page <ChevronRight />
           </Button>
         </div>
-        <DialogBox
+        </> }
+      <DialogBox
           open={isOpened}
           onOpenChange={() => {
             handleCreateMenu({});
@@ -94,5 +95,4 @@ export default function Menus() {
         />
       </div>
     );
-  }
 }

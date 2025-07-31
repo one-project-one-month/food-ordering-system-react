@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import type { MenuCardProps } from '../../types/menus.type';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store';
-import { createMenuThunk, updateMenuThunk, updateToMenus } from '../../features/menu/menuSlice';
+import { createDishSizeThunk, createMenuThunk, updateMenuThunk, updateToMenus } from '../../features/menu/menuSlice';
 import { useEffect, useState } from 'react';
 import { getAllCategories } from '../../features/categories/categoriesSlice';
 import { toast } from 'react-toastify';
@@ -74,14 +74,17 @@ export function MenuForm({ menu, setIsOpened }: MenuCardProps) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (JSON.stringify(menu) === '{}') {
-      console.log(menu);
-      console.log(values);
-      await dispatch(createMenuThunk({ ...values }))
-        .unwrap()
-        .then(() => {
-          setIsOpened();
-          toast.success('Your menu created successfully.');
-        });
+      const result = await dispatch(createMenuThunk({ ...values }))
+      if(result.type==='menu/createMenu/fulfilled'){
+        setIsOpened();
+        toast.success('Your menu created successfully.');
+        const menuId = await result.payload.id;
+        const payload = {
+          name: "normal",
+          price: result.payload.price,
+        }
+        await dispatch(createDishSizeThunk({...payload,menuId})).unwrap()
+      }
     } else {
       if (menu) {
         await dispatch(

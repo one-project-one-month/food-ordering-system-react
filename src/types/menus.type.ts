@@ -32,6 +32,7 @@ export interface Menu {
   categoryId?: number;
   extras?: Extra[];
   dishSizes?: DishSize[];
+  dish_Img?: string;
 }
 
 export interface MenuCardProps {

@@ -15,7 +15,7 @@ const MainLayout = () => {
         <ToastContainer position="top-right" className='top-[76px]' autoClose={2000} />
         <Outlet />
       </main>  
-      {(!location.pathname.includes('login') && !location.pathname.includes('signup') && !location.pathname.includes('verify_mail') && !location.pathname.includes('otp')) && <Footer/>}
+     {location.pathname === '/' && <Footer />}
     </div>
   );
 };
