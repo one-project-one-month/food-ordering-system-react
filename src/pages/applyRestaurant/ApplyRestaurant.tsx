@@ -80,6 +80,7 @@ const ApplyRestaurant = () => {
                 <h2 className="text-lg m:text-2xl font-normal text-left">
                     Applied Restaurant
                 </h2>
+                {appliedRestaurants.length === 0 && <p className='text-sm mt-1 text-yellow-500'>You need to apply at least one restaurant to start your job!</p>}
                 {
                 loading ? 
                 <div className='flex mt-4 h-full justify-center items-center'>

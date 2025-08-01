@@ -86,6 +86,19 @@ export const getOwnerRestaurant = createAsyncThunk<any>(
   }
 );
 
+export const getRestaurantDetail = createAsyncThunk<string,any>(
+  "restaurant/getRestaurantDetail",
+  async ({id}, { rejectWithValue }) => {
+    try {
+      const result = await api.get(`${restaurantUrl}/${id}`);
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
 export const getAllRestaurant = createAsyncThunk<restaurantProps>(
   "restaurant/getAll",
   async (_, { rejectWithValue }) => {
