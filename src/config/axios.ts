@@ -46,7 +46,7 @@ api.interceptors.response.use(
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
     const isExpiredToken =
-    (error.response?.status === 401) ||
+    (error.response?.status === 401) || (error.response?.status === 403) ||
     (error.response?.status === 500);
 
     if (isExpiredToken && !originalRequest._retry) {
