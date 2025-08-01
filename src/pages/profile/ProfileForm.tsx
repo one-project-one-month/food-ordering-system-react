@@ -55,6 +55,7 @@ export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileF
       }
 
       onSubmit(formData);
+      console.log(formData)
     } else {
       onSubmit({
         name,

@@ -2,6 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 //default backend baseUrl
 const BACKEND_URL = "http://localhost:8080/api/v1/auth/profile";
+import Cookies from 'js-cookie';
+
 
 
 export const addProfile = createAsyncThunk(
@@ -11,13 +13,19 @@ export const addProfile = createAsyncThunk(
     thunkAPI
   ) => {
     try {
+      const token = Cookies.get('token');
       const response = await axios.post(
-        `http://localhost:8080/api/v1/auth/profile/${String(id)}/create`,
+        `${BACKEND_URL}/${String(id)}/create`,
         formData,
         {
-          withCredentials: true
-          // ❌ Don't set headers manually; Axios will manage Content-Type
+          withCredentials: true,
+           
+          headers: {
+            Authorization: `Bearer ${String(token)}`,
+            'Content-Type': 'multipart/form-data',
+          },
         }
+        
       );
 
       return response.data;
