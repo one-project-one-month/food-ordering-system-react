@@ -1,7 +1,6 @@
-import type { Menu } from '../types/menus.type';
 import P1 from '../data/images/beef.png';
 
-export const menus: Menu[] = [
+export const menus: any = [
   {
     id: 12231231311,
     dish: 'Beef',

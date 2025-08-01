@@ -1,10 +1,9 @@
-import React from 'react'
 import {ArrowLeft,ArrowRight} from "lucide-react"
 
 
-const ShopListPagination = ({currentPage,setCurrentPage,totalPages}) => {
+const ShopListPagination = ({currentPage,setCurrentPage,totalPages}:any) => {
     const  onNextHandler = () => {
-    setCurrentPage(currentPage + 1)
+    setCurrentPage(+currentPage + 1)
     }
     const  onPrevHandler = () => {
     setCurrentPage(currentPage - 1)
