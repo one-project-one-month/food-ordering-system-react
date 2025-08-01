@@ -5,40 +5,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 import { Checkbox } from "../../components/ui/checkbox";
 import { Button } from "../../components/ui/button";
 import DummyImage from '../../assets/dummy.png'
-import type { Menu } from "../../types/menus.type"
-import { addToCart } from "../../features/cart/cartSlice";
+import { addToCart, addToCartItem, removeAllCartItem } from "../../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store";
 import type { CartItem } from "../../types/cart.types";
 import { useParams } from "react-router-dom";
 import { getMenuDetail } from "../../features/userMenu/userMenuSlice";
-
-const sampleMenu: Menu = {
-  id: 1,
-  status: 'ACTIVE',
-  dish_Img: DummyImage,
-  dish: "Deluxe Pizza",
-  // description: "Loaded with cheese, pepperoni, and fresh veggies.",
-  price: 200,
-  // extras: [
-  //   {
-  //     id: "sauces",
-  //     name: "Choose Your Sauce",
-  //     options: [
-  //       { id: "extra-cheese", name: "Extra Cheese", price: 50 },
-  //       { id: "bbq-sauce", name: "BBQ Sauce", price: 80 },
-  //     ],
-  //   },
-  //   {
-  //     id: "toppings",
-  //     name: "Extra Toppings",
-  //     options: [
-  //       { id: "olives", name: "Olives" },
-  //       { id: "mushrooms", name: "Mushrooms" },
-  //     ],
-  //   },
-  // ],
-};
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
+import { DialogToDelete } from "../../components/DialogToDelete";
 
 const UserMenuDetail = () => {
     const [selectedExtras, setSelectedExtras] = useState<Record<string, boolean>>({});
@@ -48,8 +24,12 @@ const UserMenuDetail = () => {
     const [customerNotes, setCustomerNotes] = useState('');
     const dispatch = useDispatch<AppDispatch>()
     const {id} = useParams();
+    const userId = Cookies.get('userId')
     const { data: menuDetail } = useSelector((state:RootState) => state.userMenu.detailed);
     const [menuData, setMenuData ] = useState<any>({})
+    const { loading } = useSelector((state:RootState) => state.cart.new);
+    const [isDeleteDia, setIsDeleteDia] = useState<boolean>(false);
+    const [idToDelete, ] = useState<number>(0)
 
   const toggleOption = (optionId: string) => {
     setSelectedExtras((prev) => ({
@@ -61,24 +41,47 @@ const UserMenuDetail = () => {
   const increment = () => {setQuantity(prev => prev + 1)};
   const decrement = () => {setQuantity(prev => (prev > 1 ? prev - 1 : 1))};
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (menuData:any) => {
     const selected = Object.entries(selectedExtras)
       .filter(([, checked]) => checked)
       .map(([id]) => id);
     const cartItem: CartItem = {
-        id: sampleMenu.id,
-        dish: sampleMenu.dish,
-        status: sampleMenu.status,
-        dish_Img: sampleMenu.dish_Img,
-        price: sampleMenu.price,
+        id: menuData.id,
+        dish: menuData.dish,
+        status: menuData.status,
+        dish_Img: menuData.dish_Img,
+        price: menuData.price,
         selectedExtras: selected,
+        dishSizeId: menuData.dishSizes[0].id,
         notes,
         quantity: quantity,
         totalAmount: calculateTotal(),
     };
     dispatch(addToCart(cartItem));
-  console.log("Cart Item:", cartItem);
+    void callAddToCart(cartItem);
   };
+
+  const callAddToCart = async(data:any)=>{
+    const choosenRestaurantToAddCart = menuData?.restaurantId 
+    const savedCartRestaurantId = Cookies.get('cartRestaurantId') ?? ''
+    const payload = {
+      quantity: data.quantity,
+      customerId: Number(userId),
+      dishSizeId: data.dishSizeId,
+    }
+    if(choosenRestaurantToAddCart !== savedCartRestaurantId && savedCartRestaurantId!=='') {
+      setIsDeleteDia(true)
+    }else{
+      try{
+      const result = await dispatch(addToCartItem(payload))
+        if (addToCartItem.fulfilled.match(result)) {
+          toast.success('Add to cart successfully!');
+        }
+      }catch(e){
+        console.log("error ", e)
+    }
+    } 
+  }
 
   const calculateTotal = () => {
     const basePrice =
@@ -116,6 +119,30 @@ const UserMenuDetail = () => {
       setMenuData(menuDetail.menu)
     }
   },[menuDetail])
+
+  const handleDeleteDialog = () => {
+    setIsDeleteDia((prev) => !prev);
+  };
+
+  const handleDeleteCart = () => {
+    handleDeleteDialog();
+    void deleteAllCartData()
+  };
+
+  const deleteAllCartData = async()=>{
+      try{
+        const result = await dispatch(removeAllCartItem(1))
+        const resultPayload = result.payload as any
+        if (resultPayload.code===200) {
+          toast.success('successfully removed your previous cart!');
+          Cookies.remove('cartRestaurantId')
+        } else {
+          toast.error('Errors when removing your previous cart');
+        }
+      }catch(e){
+        console.log("error ", e)
+      }
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">
@@ -210,10 +237,19 @@ const UserMenuDetail = () => {
             disabled={menuData?.status !== 'ACTIVE'}
           >+</Button>
         </div>
-        <Button className="flex-1" onClick={handleAddToCart} disabled={menuData?.status !== 'ACTIVE'}>
-          {menuData?.status !== 'ACTIVE' ? 'Sold Out' : `Add to Cart (${calculateTotal().toFixed(2)}kyats)`}
+        <Button className="flex-1" onClick={()=>{ handleAddToCart(menuData); }} disabled={menuData?.status !== 'ACTIVE' || loading}>
+          {loading && (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}{menuData?.status !== 'ACTIVE' ? 'Sold Out' : `Add to Cart (${calculateTotal().toFixed(2)}kyats)`}
         </Button>
       </div>
+      <DialogToDelete
+        open={isDeleteDia}
+        onOpenChange={handleDeleteDialog}
+        id={idToDelete}
+        type="previous cart"
+        handleDeleteMenu={handleDeleteCart}
+      />
     </div>
   );
 };
