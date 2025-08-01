@@ -9,6 +9,7 @@ import categoriesReducer from "../features/categories/categoriesSlice"
 import applyRestaurantReducer from '../features/applyRestaurant/applyRestaurantSlice';
 import dashboardReducer from '../features/dashboard/dashboardSlice';
 import userMenuReducer from '../features/userMenu/userMenuSlice'
+import orderReducer from '../features/order/orderSlice'
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     applyRestaurant: applyRestaurantReducer,
     dashboard: dashboardReducer,
     userMenu: userMenuReducer,
+    order: orderReducer,
   },
 });
 

@@ -54,7 +54,7 @@ const Cities = () => {
       </div>
       {/* Foreground content */}
       <div className="relative z-10 py-12">
-        <h2 className="text-2xl text-white mt-6 mb-8 font-bold">Cities where we deliver</h2>
+        <h2 className="text-3xl text-white mt-6 mb-8 font-bold">Cities where we deliver</h2>
         <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
           {yangonCities.map((city) => (
             <span

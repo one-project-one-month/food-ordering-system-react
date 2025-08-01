@@ -5,7 +5,6 @@ import MainLayout from '../layout/MainLayout';
 import Location from '../pages/order/Location';
 import Menus from '../pages/menus/Menus';
 import PrivateLayout from '../layout/PrivateLayout';
-import Dashboard from '../pages/dashboard/Dashboard';
 import DeliOrderList from '../pages/orderList/DeliOrderList';
 import OrderList from '../pages/orderList/OrderList';
 import RootSelector from './RootSelector';
@@ -23,6 +22,11 @@ import { ProfileUpdate } from '../pages/profile/ProfileUpdate';
 import ProfileView from '../pages/profile/ProfileView';
 import { ProfileCreate } from '../pages/profile/ProfileCreate';
 import ApplyRestaurant from '../pages/applyRestaurant/ApplyRestaurant';
+import Payment from '../pages/payment/Payment';
+import PaymentGuard from '../pages/auth/PaymentGuard';
+import Restaurants from '../pages/userRestaurant/Restaurants';
+import UserMenu from '../pages/userMenu/UserMenu';
+import Dashboard from '../pages/dashboard/Dashboard';
 
 
 export const routes = [
@@ -38,6 +42,8 @@ export const routes = [
         element: <MainLayout />,
         children: [
           { index: true, element: <Home /> }, // public route
+          { path: 'restaurants', element: <Restaurants /> },
+          { path: 'restaurants/:id', element: <UserMenu /> },
           { path: 'verify_mail', element: <CheckMail /> },
           {
             element: <RegisterGuard />,
@@ -70,6 +76,15 @@ export const routes = [
                 element: <OrderList />,
               },
               { path: 'cart', element: <Cart /> },
+              {
+              element: <PaymentGuard />,
+              children: [
+                {
+                  path: "payment",
+                  element: <Payment />
+                }
+              ]
+            }
               // { path: 'deli_orders', element: <DeliOrderList /> },
             ],
           },

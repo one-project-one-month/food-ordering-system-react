@@ -88,9 +88,8 @@ const cartSlice = createSlice({
     } else {
         state.items.push(action.payload);
     }
-
-  state.quantity = state.items.reduce((total, item) => total + item.quantity, 0);
-},
+    state.quantity = state.items.reduce((total, item) => total + item.quantity, 0);
+  },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter(item => item.id !== action.payload);
       state.quantity = state.items.reduce((sum, item) => sum + item.quantity, 0);
