@@ -1,7 +1,6 @@
-import type { Cart } from '../types/cart.type';
 import Img1 from '../data/images/beef.png';
 
-export const carts: Cart[] = [
+export const carts: any = [
   {
     menuId: 1,
     dish: 'Shan',
