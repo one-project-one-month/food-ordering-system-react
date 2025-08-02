@@ -1,76 +1,67 @@
-import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+// import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { LocateIcon } from 'lucide-react';
-import { customIcon, questionIcon } from '../../utils/customIcon';
+import Map from './Map';
 import { getAddress } from '../../services/apiGecoding';
-import LocationMarker from './LocationMarker';
+import { useEffect, useState } from 'react';
 
+// interface MapWithLeafProps {
+//   getCoordinate: (p: GeolocationPosition) => GeolocationPosition;
+// }
 export default function MapWithLeaf() {
-  // Custom Location Marker
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [address, setAddress] = useState<{ state: string; city: string; locality: string } | null>(
     null
   );
-
-  const getCoordinate = (p:GeolocationPosition) => {
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const getCoordinate = (p: GeolocationPosition) => {
     setPosition({ lat: p.coords.latitude, lng: p.coords.longitude });
+    return position;
+  };
+  console.log(position);
+
+  const getCoordinates = (p: GeolocationPosition) => {
+    return getCoordinate(p);
+  };
+
+  const fetchAddress = async () => {
+    try {
+      if (position) {
+        const data = await getAddress({ latitude: position.lat, longitude: position.lng });
+        if (data) {
+          setAddress(data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
+    }
   };
 
   useEffect(() => {
     if (position) {
-      const latitude = position?.lat;
-      const longitude = position?.lng;
-      async function fetchAddress() {
-        try {
-          const data = await getAddress({ latitude, longitude });
-          setAddress(data);
-        } catch (error) {
-          console.error('Error fetching address:', error);
-        }
-      }
-      fetchAddress();
+      void fetchAddress();
     }
   }, [position]);
   const locateUser = () => {
-    navigator.geolocation.getCurrentPosition(getCoordinate);
-    console.log(position);
+    navigator.geolocation.getCurrentPosition(getCoordinates);
   };
+
   return (
     <div className="relative">
-      <h1 className="text-2xl font-bold mb-4">This is your current city.</h1>
-      <div className="absolute  top-14 right-5 z-[1000]">
-        <Button onClick={locateUser}>
-          <LocateIcon /> Get Location
-        </Button>
+      <div id="map" className=" h-56 w-full  lg:mt-0 mt-64 mb-10 ">
+        <div className="flex justify-between">
+          <div className="mb-3">
+            <h1 className="text-2xl font-bold mb-4">Select Location.</h1>
+            <span className="text-sm italic underline text-yellow-500">
+              By clicking the mark,get your latitude and longitude .
+            </span>
+          </div>
+          <Button onClick={locateUser}>
+            <LocateIcon /> Get Location
+          </Button>
+        </div>
+        <Map position={position} address={address} type={'toCreate'} />
       </div>
-      <MapContainer center={[19.782211, 94.942272]} zoom={12} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        {position ? (
-          //If user access GPS,collect the location
-          <Marker
-            position={[position.lat, position.lng]}
-            icon={address?.state ? customIcon : questionIcon}
-          >
-            <Popup>
-              <span>This is just only township and city.Sorry,we cannot guess your quarter.</span>
-              <p>
-                {address
-                  ? `${address?.state},${address?.city} City,${address?.locality} Township`
-                  : 'We cannot access you location.'}
-              </p>
-            </Popup>
-          </Marker>
-        ) : (
-          //If user doesn't access,this is for the custom location.
-          <LocationMarker />
-        )}
-      </MapContainer>
     </div>
   );
 }
