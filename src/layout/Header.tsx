@@ -88,28 +88,6 @@ export default function Header() {
                     </div>
                   )}
                 </div>
-                {userRole === '' && (
-                  <div className="mt-6 flex flex-col gap-4">
-                    <button
-                      onClick={() => {
-                        setSheetOpen(false);
-                        void navigate('/verify_mail');
-                      }}
-                      className="text-left text-sm font-medium"
-                    >
-                      Sign up to open restaurant
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSheetOpen(false);
-                        void navigate('/verify_mail');
-                      }}
-                      className="text-left text-sm font-medium"
-                    >
-                      Sign up to deliver
-                    </button>
-                  </div>
-                )}
               </div>
               <div className="nav-foot flex flex-col justify-center items-center text-center">
                 <p className="font-lobster font-normal text-3xl text-primary">Sar Mal</p>
