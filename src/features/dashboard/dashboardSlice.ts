@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+ 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../config/axios";
 import type { restaurantProps} from "../../types/restaurant.types"
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import type { DashboardState } from "../../types/dashboard.types";
 
 const ownerDashboardUrl = 'api/v1/summary/owners';
 const deliveryDashboardUrl = 'api/v1/summary/delivery';
-const userId = Cookies.get('userId')
+// const userId = Cookies.get('userId')
 
 export const getSummaryByOwner = createAsyncThunk<restaurantProps>(
   "restaurant/getAllbyOwner",
   async (_, { rejectWithValue }) => {
     try {
-      const result = await api.get(`${ownerDashboardUrl}/${userId}`);
+      const result = await api.get(ownerDashboardUrl);
       return result.data;
 
     } catch (error:any) {
@@ -28,7 +28,7 @@ export const getSummaryByDelivery = createAsyncThunk<restaurantProps>(
   "restaurant/getAllbyDelivery",
   async (_, { rejectWithValue }) => {
     try {
-      const result = await api.get(`${deliveryDashboardUrl}/${userId}`);
+      const result = await api.get(deliveryDashboardUrl);
       return result.data;
 
     } catch (error:any) {

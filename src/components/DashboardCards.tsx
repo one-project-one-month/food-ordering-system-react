@@ -1,34 +1,16 @@
 import { Card, CardContent } from "../components/ui/card";
-import { Package, Truck, XCircle, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import Cookies from "js-cookie";
 
-const stats = [
-  {
-    title: "Total Orders",
-    amount: "0",
-    percent: "15%",
-    trend: "up",
-    image: <Package className="w-12 h-12 text-primary" />,
-    roles: ["owner"]
-  },
-  {
-    title: "Total Delivered",
-    amount: "4",
-    percent: "3%",
-    trend: "down",
-    image: <Truck className="w-12 h-12 text-primary" />,
-    roles: ["delivery"]
-  },
-  {
-    title: "Total canceled",
-    amount: "3",
-    percent: "8%",
-    trend: "up",
-    image: <XCircle className="w-12 h-12 text-primary" />,
-  },
-];
-
-const DashboardCards = () => {
+interface Stat {
+  title: string;
+  amount: string;
+  percent: string;
+  trend: "up" | "down";
+  image: React.ReactNode;
+  roles?: string[];
+};
+const DashboardCards = ({ stats }: { stats: Stat[] }) => {
     const userRole = Cookies.get("role");
     const visibleCards = stats.filter(
         ({ roles }) => !roles || roles.includes(userRole ?? "")
