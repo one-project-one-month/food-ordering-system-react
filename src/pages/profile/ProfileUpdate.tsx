@@ -2,13 +2,15 @@ import ProfileForm from './ProfileForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, updateProfile } from '../../schemas/profileSchema';
 import type { AppDispatch, RootState } from '../../store';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { clearProfile } from '../../features/profile/profileSlice';
 
 export function ProfileUpdate() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const id = Cookies.get('userId');
   const profile = useSelector((state: RootState) => state.profile.profile);
   const [loading, setLoading] = useState(true);
 
@@ -18,24 +20,31 @@ export function ProfileUpdate() {
       if (id && !isNaN(numericId)) {
         try {
           await dispatch(getProfile(numericId)).unwrap();
-          setLoading(false);
         } catch (error) {
           console.error('Error fetching profile:', error);
           void navigate('/403');
+        } finally {
+          setLoading(false);
         }
+      } else {
+       void navigate('/403');
       }
     };
-
     void fetchProfile();
   }, [dispatch, id, navigate]);
 
-  const handleUpdate = (formData: FormData) => {
-    dispatch(updateProfile({ id: Number(id), formData }))
-      .unwrap()
-      .then(() => navigate('/'))
-      .catch((err: unknown) => {
-        console.error('Update error:', err);
-      });
+  const handleUpdate = async (formData: FormData) => {
+    try {
+      if (!id) throw new Error('Missing ID');
+      const result = await dispatch(updateProfile({ id: Number(id), formData })).unwrap();
+      dispatch(clearProfile()); // ✅ clears stale state
+      if (result) {
+       void navigate(`/view/${id}`);
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      void navigate('/403');
+    }
   };
 
   if (loading || !profile) {
@@ -48,11 +57,7 @@ export function ProfileUpdate() {
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
-      <ProfileForm
-        onSubmit={handleUpdate}
-        title="Update"
-        defaultValues={profile}
-      />
+      <ProfileForm onSubmit={handleUpdate as (formData: object | FormData) => void | Promise<void>} title="Update" defaultValues={profile as any} />
     </div>
   );
 }
