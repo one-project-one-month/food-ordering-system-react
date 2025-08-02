@@ -18,23 +18,30 @@ interface DialogBoxProps extends DialogProps {
 }
 export function DialogToDelete({ open, onOpenChange, id, type, handleDeleteMenu }: DialogBoxProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Do you want to delete this {type}?</DialogTitle>
-          <DialogDescription>
-            Are you sure to delete this {type}? You cannot redo this action.Be careful!
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button variant="destructive" onClick={() => { handleDeleteMenu(id); }}>
-            Delete
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <div className="absolute top-0 left-0 z-50">
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[425px] z-[9999]">
+          <DialogHeader>
+            <DialogTitle>Do you want to delete this {type}?</DialogTitle>
+            <DialogDescription>
+              Are you sure to delete this {type}? You cannot redo this action.Be careful!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                handleDeleteMenu(id);
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

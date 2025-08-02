@@ -23,6 +23,7 @@ import CheckMail from '../pages/auth/checkMail/CheckMail';
 import Restaurant from '../pages/restaurant/Restaurant';
 import Category from '../pages/category/Category';
 import Address from '../pages/address/Address';
+import CreateAddress from '../pages/address/child/CreateAddress';
 
 export const routes = [
   {
@@ -97,7 +98,12 @@ export const routes = [
           {
             path: 'my_address',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
-            children: [{ index: true, element: <Address /> }],
+            children: [
+              { index: true, element: <Address /> },
+              { path: 'create', element: <CreateAddress /> },
+              { path: ':id', element: <Address /> },
+              { path: 'update/:id', element: <CreateAddress /> },
+            ],
           },
           {
             path: 'restaurant',

@@ -10,6 +10,7 @@ import { logout } from '../features/auth/authSlice';
 
 const Sidebar = () => {
   const userRole = Cookies.get('role');
+  const addressId = Cookies.get('addressId');
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(true);
@@ -19,7 +20,12 @@ const Sidebar = () => {
     { href: '/restaurant', label: 'My Restaurant', icon: ListOrdered, roles: ['owner'] },
     { href: '/categories', label: 'Categories', icon: ListOrdered, roles: ['owner'] },
     { href: '/menus', label: 'Menus', icon: Menu, roles: ['owner'] },
-    { href: '/my_address', label: 'My Address', icon: MapPinHouse, roles: ['owner'] },
+    {
+      href: addressId ? `/my_address/${addressId}` : '/my_address',
+      label: 'My Address',
+      icon: MapPinHouse,
+      roles: ['owner'],
+    },
   ];
 
   const bottomLinks = [{ href: '/profile', label: 'Profile', icon: User }];
