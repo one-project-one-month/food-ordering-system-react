@@ -24,15 +24,6 @@ const PrivateLayout = () => {
                 }
               </div>
               <span className="inline-block w-[2px] h-5 bg-gray-300 mx-4" />
-                {/* <div className="flex items-center gap-2">
-                  <Link to={`/view/${String(userId)}`}>
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                  </Link>
-                  <p className="text-gray-700">Name</p>
-                </div> */}
                 <UserAvatarMenu userId={String(userId)} name="John" />
             </div>
           </nav>

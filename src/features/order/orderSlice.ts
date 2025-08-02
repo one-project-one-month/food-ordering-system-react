@@ -49,6 +49,26 @@ export const getAllOrdersByRestaurant = createAsyncThunk<any>(
   }
 );
 
+export const getAllOrdersByCustomer = createAsyncThunk<any,any>(
+  "order/getAllOrdersByCustomer",
+  async ({page,size,status}, { rejectWithValue }) => {
+    const customerId = Cookies.get('userId')
+    try {
+      const result = await api.get(`${orderUrl}/${String(customerId)}`,{
+        params: {
+          page,
+          size,
+          status,
+        }
+      });
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
 export const makePayment = createAsyncThunk<any, any>(
   "order/payment",
   async (payload, { rejectWithValue }) => {

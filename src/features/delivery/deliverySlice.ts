@@ -37,6 +37,27 @@ export const assignDeliveryByRestaurant = createAsyncThunk<any,any>(
   }
 );
 
+export const getAssignedOrderByDelivery = createAsyncThunk<any,any>(
+  "delivery/getAssignedOrderByDelivery",
+  async ({page,size,status}, { rejectWithValue }) => {
+    const deliveryId = Cookies.get('userId')
+    try {
+      const result = await api.get(`${deliveryUrl}/assignment/${String(deliveryId)}`,
+    {
+      params: {
+        page,
+        size,
+        status
+      }
+    });
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
 const initialState: RestaurantState = {
   new: {
     data: [],

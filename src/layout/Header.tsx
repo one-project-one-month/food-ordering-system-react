@@ -35,7 +35,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-mainBg sticky top-0 z-50 h-[76px] flex items-center">
+    <header className="bg-white sticky top-0 z-50 h-[76px] flex items-center shadow-sm">
       <div className="container flex h-16 items-center justify-between w-full">
         {/* Left: Sheet Menu */}
         <div className="flex items-center">

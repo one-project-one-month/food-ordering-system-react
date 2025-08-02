@@ -4,6 +4,7 @@ import { addProfile, getProfile } from '../../schemas/profileSchema';
 import type { AppDispatch, RootState } from '../../store';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
+import { toast } from 'react-toastify';
 
 export function ProfileCreate() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,11 +22,12 @@ export function ProfileCreate() {
   const handleCreate = async (formData: FormData) => {
     try {
       if (!id) throw new Error('Missing ID from URL');
-      await dispatch(addProfile({ id: Number(id), formData })).unwrap();
-      void navigate(`/view/${id}`);
+        await dispatch(addProfile({ id: Number(id), formData })).unwrap();
+        await navigate(`/view/${id}`);
+        toast.success("profile created successfully")
     } catch (error) {
       console.error('Create failed:', error);
-      void navigate('/403');
+      toast.error("Fail to create profile")
     }
   };
 
@@ -42,7 +44,7 @@ export function ProfileCreate() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10">
+    <div className="min-h-screen max-w-3xl mx-auto px-6 py-10">
       {error && (
         <p className="text-center text-red-500 mb-4">
           Profile not found. You can create a new one.

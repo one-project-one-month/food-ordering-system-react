@@ -14,29 +14,30 @@ const DeliveryDashboard = () => {
     const [statsData, setStatsData] = useState<any[]>([]);
 
     const calcPercent = (value: number) => {
-        if (!summaryData.summary.noOfOrderPerMonth || summaryData.summary.noOfOrderPerMonth === 0) return "0%";
-          return `${Math.round((value / summaryData.summary.noOfOrderPerMonth) * 100)}%`;
+        if (!summaryData?.summar?.noOfOrderPerMonth || summaryData?.summary?.noOfOrderPerMonth === 0) return "0%";
+          return `${Math.round((value / summaryData?.summary?.noOfOrderPerMonth) * 100)}%`;
     };
     
     useEffect(()=>{
         if(summaryAllData){
-            setSummaryData(summaryAllData)
+            const summaryData = summaryAllData.data as any;
+            setSummaryData(summaryData?.summary)
             const stats = [
                 {
-                    title: "Total Orders",
-                    amount: summaryData.summary.totalOrders?.toString() ?? "0",
-                    percent: calcPercent(summaryData.summary.totalOrders),
-                    trend: summaryData.summary.totalOrders >= 50 ? "up" : "down",
-                    image: <Package className="w-12 h-12 text-primary" />,
-                    roles: ["owner"]
-                },
-                {
                     title: "Total Delivered",
-                    amount: summaryData.summary.totalDelivered?.toString() ?? "0",
-                    percent: "4%",
-                    trend: "down",
+                    amount: summaryData?.summary?.noOfDeliveredPerMonth?.toString() ?? "0",
+                    percent: calcPercent(summaryData?.summary?.noOfDeliveredPerMonth),
+                    trend: summaryData?.summary?.noOfDeliveredPerMonth >= 50 ? "up" : "down",
                     image: <Truck className="w-12 h-12 text-primary" />,
-                    roles: ["owner"]
+                    roles: ["delivery"]
+                },
+                                {
+                    title: "Total Cancelled",
+                    amount: summaryData?.summary?.noOfCancelledPerMonth?.toString() ?? "0",
+                    percent: calcPercent(summaryData?.summary?.noOfCancelledPerMonth),
+                    trend: summaryData?.summary?.noOfCancelledPerMonth >= 50 ? "up" : "down",
+                    image: <Package className="w-12 h-12 text-primary" />,
+                    roles: ["delivery"]
                 },
             ];
 
