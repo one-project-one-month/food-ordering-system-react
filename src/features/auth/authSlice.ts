@@ -60,7 +60,6 @@ export const signup = createAsyncThunk<any, SignupProps>(
 export const login = createAsyncThunk<any, LoginProps>(
   "auth/login",
   async (payload, { rejectWithValue }) => {
-    console.log("Payload ", payload)
     try {
       const result = await api.post(`${userUrl}/login`, {
         email: payload.email,
@@ -171,6 +170,7 @@ export const authSlice = createSlice({
     });
     builder.addCase(login.pending, (state) => {
       state.loginState.loading = true;
+      state.loginState.error = false;
     });
     builder.addCase(login.rejected, (state) => {
       state.loginState.loading = false;
@@ -190,9 +190,15 @@ export const authSlice = createSlice({
     });
     builder.addCase(signup.fulfilled, (state) => {
       state.loginState.loading = false;
+      state.loginState.error = false;
     });
     builder.addCase(signup.pending, (state) => {
       state.loginState.loading = true;
+      state.loginState.error = false;
+    });
+    builder.addCase(signup.rejected, (state) => {
+      state.loginState.loading = false;
+      state.loginState.error = true;
     });
   },
 });

@@ -12,19 +12,11 @@ export function ProfileCreate() {
 
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
 
-  // Fetch profile on mount
   useEffect(() => {
     if (id) {
       void dispatch(getProfile(Number(id)));
     }
   }, [dispatch, id]);
-
-  // Redirect if profile exists
-  useEffect(() => {
-    if (id && profile?.id === Number(id)) {
-      void navigate(`/view/${id}`);
-    }
-  }, [id, profile, navigate]);
 
   const handleCreate = async (formData: FormData) => {
     try {
@@ -37,7 +29,6 @@ export function ProfileCreate() {
     }
   };
 
-  // Show loading spinner
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -46,22 +37,19 @@ export function ProfileCreate() {
     );
   }
 
-  // If profile exists, don't show form (redirect will happen)
   if (profile && profile.id === Number(id)) {
-    return null;
+    return null; // redirect handled in ProfileRouter
   }
 
-  // If not found, allow creating new profile
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">
-      {/* <h1 className="text-2xl font-semibold text-center mb-6">Create Profile</h1> */}
       {error && (
         <p className="text-center text-red-500 mb-4">
           Profile not found. You can create a new one.
         </p>
       )}
       <ProfileForm
-        onSubmit={handleCreate}
+        onSubmit={handleCreate as (formData : object | FormData) =>void | Promise<void>}
         title="Create"
         defaultValues={undefined}
       />
