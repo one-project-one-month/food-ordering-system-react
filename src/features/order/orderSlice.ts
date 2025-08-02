@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../config/axios";
 import type { OrderRequestProps, OrdersState } from "../../types/orders.type";
+import Cookies from "js-cookie";
 
 const orderUrl = 'api/v1/orders';
 
@@ -27,6 +28,20 @@ export const getAllOrders = createAsyncThunk<any>(
     try {
       const result = await api.get(`${orderUrl}/all-orders`);
       return result.data.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
+export const getAllOrdersByRestaurant = createAsyncThunk<any>(
+  "order/getAllOrdersByRestaurant",
+  async (_, { rejectWithValue }) => {
+    const restaurantId = Cookies.get('restaurantId')
+    try {
+      const result = await api.get(`${orderUrl}/all-orders/${String(restaurantId)}`);
+      return result.data;
 
     } catch (error:any) {
       return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
@@ -117,6 +132,18 @@ export const orderSlice = createSlice({
     builder.addCase(createOrder.rejected, (state) => {
       state.new.loading = false;
       state.new.error = true;
+    });
+    builder.addCase(getAllOrdersByRestaurant.fulfilled, (state: any, action) => {
+      state.searched.data = action.payload;
+      state.searched.loading = false;
+    });
+    builder.addCase(getAllOrdersByRestaurant.pending, (state) => {
+      state.searched.loading = true;
+      state.searched.error = false;
+    });
+    builder.addCase(getAllOrdersByRestaurant.rejected, (state) => {
+      state.searched.loading = false;
+      state.searched.error = true;
     });
     }
 });

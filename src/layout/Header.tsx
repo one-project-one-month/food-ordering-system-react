@@ -1,6 +1,6 @@
 import { Button } from '../components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '../components/ui/sheet';
-import { Menu, PersonStanding, ShoppingCart } from 'lucide-react';
+import { Menu, ShoppingCart } from 'lucide-react';
 import Nav from '../components/Nav';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { type AppDispatch, type RootState } from '../store';
 import { FacebookIcon, IgIcon, TwitterIcon } from '../icons/icons';
 import Cookies from 'js-cookie';
 import { logout } from '../features/auth/authSlice';
+import UserAvatarMenu from '../components/UserAvatarMenu';
 
 export default function Header() {
   const cartQuantity = useSelector((state: RootState) => state.cart.quantity);
@@ -17,8 +18,8 @@ export default function Header() {
   const isAuthenticated = !!Cookies.get('token');
   const [sheetOpen, setSheetOpen] = useState(false);
   const userRole = Cookies.get('role') ?? '';
-  const userId = Cookies.get('userId');
-  const userName = Cookies.get('email') ?? '';
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userId = user.userId;
 
   useEffect(() => {
     function handleResize() {
@@ -134,22 +135,23 @@ export default function Header() {
             </div>
           )}
           {isAuthenticated ? (
-            <div className="flex gap-4 items-center">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-base rounded-full h-[36px] hidden lg:flex"
-                onClick={() => dispatch(logout())}
-              >
-                Logout
-              </Button>
-              <p>{userName}</p>
-              <div className="w-50 h-50 flex items-center justify-center rounded-full bg-primary text-white">
-                <Link to={`/view/${String(userId)}`}>
-                  <PersonStanding size={50} />
-                </Link>
-              </div>
-            </div>
+            // <div className="flex gap-4 items-center">
+            //   <Button
+            //     variant="outline"
+            //     size="sm"
+            //     className="text-base rounded-full h-[36px] hidden lg:flex"
+            //     onClick={() => dispatch(logout())}
+            //   >
+            //     Logout
+            //   </Button>
+            //   <p>{userName}</p>
+            //   <div className="w-50 h-50 flex items-center justify-center rounded-full bg-primary text-white">
+            //     <Link to={`/view/${String(userId)}`}>
+            //       <PersonStanding size={50} />
+            //     </Link>
+            //   </div>
+            // </div>
+            <UserAvatarMenu userId={String(userId)} name="John" />
           ) : (
             <div className="d-flex gap-4 hidden lg:flex">
               <Button

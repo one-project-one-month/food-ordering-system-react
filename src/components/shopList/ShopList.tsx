@@ -70,7 +70,7 @@ const ShopList = () => {
             className="font-sans w-[140px] min-w-[140px] bg-white flex-col items-center ms-[7px]  pb-[30px] rounded-full
                       flex gap-5 text-black"
             >
-              <img className="w-[120px] h-[120px] rounded-full border border-lightGray" src={restaurant.restaurantImage?.replace(/^.*?(https:\/)/, 'https:/')} alt={restaurant.restaurantName} />
+              <img className="w-[120px] h-[120px] object-cover rounded-full border border-lightGray" src={restaurant.restaurantImage?.replace(/^.*?(https:\/)/, 'https:/')} alt={restaurant.restaurantName} />
               <h3 className="leading-5 text-base text-center px-2 font-sans font-medium">{restaurant.restaurantName}</h3>
               <p className="leading-5 text-center font-light px-2 text-sm">More than 40 different of food</p>
           </Link>)}

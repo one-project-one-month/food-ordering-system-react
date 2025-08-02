@@ -10,6 +10,7 @@ import applyRestaurantReducer from '../features/applyRestaurant/applyRestaurantS
 import dashboardReducer from '../features/dashboard/dashboardSlice';
 import userMenuReducer from '../features/userMenu/userMenuSlice'
 import orderReducer from '../features/order/orderSlice'
+import deliveryReducer from '../features/delivery/deliverySlice'
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     userMenu: userMenuReducer,
     order: orderReducer,
+    delivery: deliveryReducer,
   },
 });
 
