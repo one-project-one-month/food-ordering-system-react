@@ -1,15 +1,13 @@
 import { Link, NavLink} from "react-router-dom";
 import Logo from "../assets/logo.png";
 import Cookies from "js-cookie";
-import { LayoutDashboard, ListOrdered, Menu, User, LogOut, MapPinHouse, Utensils, LayoutGrid } from "lucide-react";
+import { LayoutDashboard, ListOrdered, Menu, MapPinHouse, Utensils, LayoutGrid } from "lucide-react";
 import { useState } from "react";
 import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
 
 const Sidebar = () => {
     const userRole = Cookies.get("role");
     const addressId = Cookies.get('addressId');
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
     const [isOpen, setIsOpen] = useState(true);
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
@@ -28,11 +26,6 @@ const Sidebar = () => {
     ];
 
   const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
-
-  const handleLogout = () => {
-    dispatch(logout());
-    void navigate('/');
-  };
 
   return (
     <div className="relative">
