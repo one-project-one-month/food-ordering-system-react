@@ -11,11 +11,12 @@ import {
   // addToExtra,
   createExtraThunk,
   deleteExtraThunk,
+  getMenusThunk,
   updateExtraThunk,
-  updateToExtra,
 } from '../../../features/menu/menuSlice';
 import type { AppDispatch } from '../../../store';
 import type { Extra } from '../../../types/menus.type';
+import { toast } from 'react-toastify';
 // import type { AppDispatch } from '../../../store';
 
 export const extraSchema = z.object({
@@ -28,10 +29,10 @@ export const extraSchema = z.object({
 interface ExtraFromProps {
   extra: null | Extra;
   menuId: number;
+  setIsOpened: () => void;
 }
 
-function ExtraForm({ extra, menuId }: ExtraFromProps) {
-  // const data = useSelector((state: RootState) => state.menu);
+function ExtraForm({ extra, menuId, setIsOpened }: ExtraFromProps) {
   const dispatch = useDispatch<AppDispatch>();
   const form = useForm<z.infer<typeof extraSchema>>({
     resolver: zodResolver(extraSchema),
@@ -40,19 +41,34 @@ function ExtraForm({ extra, menuId }: ExtraFromProps) {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof extraSchema>) {
-    if (extra) {
-      await dispatch(
-        updateExtraThunk({ ...values, id: extra.id, menuId: Number(menuId) })
-      ).unwrap();
-      dispatch(updateToExtra({ ...values, menuId, id: extra.id }));
-    } else {
+    if (extra === null) {
       await dispatch(createExtraThunk({ ...values, menuId: Number(menuId) }))
         .unwrap()
         .then(() => {
-          console.log('Created extra');
+          void dispatch(getMenusThunk(1));
+          toast.success('Your extra successfully created .');
+          setIsOpened();
         });
+    } else {
+      if (values.name !== extra.name || values.price !== extra.price) {
+        await dispatch(updateExtraThunk({ ...values, id: extra.id, menuId: Number(menuId) }))
+          .unwrap()
+          .then(() => {
+            void dispatch(getMenusThunk(1));
+            toast.success('Your extra successfully updated .');
+            setIsOpened();
+          });
+      }
     }
   }
+  const handleDeleteExtra = async () => {
+    await dispatch(deleteExtraThunk(Number(extra?.id)))
+      .unwrap()
+      .then(() => {
+        toast.error('Your extra successfully deleted.');
+        void dispatch(getMenusThunk(1));
+      });
+  };
 
   return (
     <div>
@@ -106,7 +122,7 @@ function ExtraForm({ extra, menuId }: ExtraFromProps) {
             <Button
               variant="destructive"
               className={extra?.id ? 'block mt-8' : 'hidden'}
-              onClick={() => dispatch(deleteExtraThunk(Number(extra?.id)))}
+              onClick={handleDeleteExtra}
             >
               Delete
             </Button>

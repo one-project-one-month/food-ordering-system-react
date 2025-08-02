@@ -1,4 +1,6 @@
  
+ 
+ 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../../../../store";
 import { login } from "../../../../features/auth/authSlice";
 import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function ShopOwnerLogin() {
   const navigate = useNavigate();
@@ -39,6 +42,7 @@ export default function ShopOwnerLogin() {
       password: "",
     },
   });
+  const { handleSubmit } = form;
 
   async function onSubmit(values: z.infer<typeof shopOwnerLoginFormSchema>) {
     const payload = {
@@ -49,12 +53,14 @@ export default function ShopOwnerLogin() {
       const result = await dispatch(login(payload)).unwrap();
       if (result?.code === 200) {
         const targetPath = redirectPath ?? "/";
-        await navigate(targetPath);
-      } else {
-        console.error("Login failed", result);
+        await
+         navigate(targetPath);
+      } else if(result.type==='auth/signup/rejected') {
+        toast.error(result.payload as string)
       }
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("Login failed. Please check your credentials.");
     }
   }
 
@@ -62,7 +68,7 @@ export default function ShopOwnerLogin() {
     <Form {...form}>
       <form
         className="w-full md:w-[400px]"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <CardContent className="flex flex-col items-center">
           <div className="mb-8 text-center">
@@ -112,7 +118,7 @@ export default function ShopOwnerLogin() {
         </CardContent>
 
         <CardFooter>
-          <Button className="w-full rounded-full" type="submit" disabled={loading}>
+          <Button className="w-full rounded-full" disabled={loading}>
             {loading && (
               <Loader2 className="h-4 w-4 animate-spin" />
             )}Continue

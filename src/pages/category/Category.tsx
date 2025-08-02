@@ -107,7 +107,7 @@ const Category = () => {
                     <div key={data.id} className='bg-white text-base flex items-center justify-between py-3 px-5 shadow-sm rounded-md'>
                         <h3>{data.name}</h3>
                         <div className='flex gap-2'>
-                          <Button type='button' className='h-[30px] text-sm bg-primary' onClick={()=>{ editHandler(data)}}>
+                          <Button type='button' variant="secondary" className='h-[30px] text-sm' onClick={()=>{ editHandler(data)}}>
                           Edit</Button>
                           <Button type='button' className='h-[30px] text-sm bg-red-500 hover:bg-red-600' disabled={false} onClick={()=>{ deleteHandler(data) }}>
                           Delete</Button>

@@ -14,6 +14,30 @@ export interface OrderProps {
   orders: Order[];
 }
 
+export interface OrdersState {
+  new: RequestState<OrderState[]>;
+  searched: RequestState<OrderState[]>;
+  detailed: RequestState<OrderState>;
+  orderId: string;
+  canAccessPayment: boolean;
+}
+
+export interface RequestState<T = any> {
+    loading: boolean;
+    error: boolean;
+    errorMessage?: string;
+    data?: T;
+  }
+
+export interface OrderRequestProps{
+  orderDateTime?: string;
+  addressId: number;
+  totalAmount: number;
+  customerId: number;
+  paymentId?: number;
+};
+
+export type OrderState = Record<string, unknown>;
 export type OrderStatus = 'completed' | 'ongoing' | 'canceled';
 
 export type DeliveryStatus = 'pending' | 'delivered' | 'canceled';

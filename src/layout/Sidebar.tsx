@@ -1,34 +1,30 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import Logo from '../assets/logo.png';
-import Cookies from 'js-cookie';
-import { LayoutDashboard, ListOrdered, Menu, User, LogOut, MapPinHouse } from 'lucide-react';
-import { useState } from 'react';
-import { PanelLeftClose, PanelRightClose } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { type AppDispatch } from '../store';
-import { logout } from '../features/auth/authSlice';
+import { Link, NavLink} from "react-router-dom";
+import Logo from "../assets/logo.png";
+import Cookies from "js-cookie";
+import { LayoutDashboard, ListOrdered, Menu, User, LogOut, MapPinHouse, Utensils, LayoutGrid } from "lucide-react";
+import { useState } from "react";
+import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
 
 const Sidebar = () => {
-  const userRole = Cookies.get('role');
-  const addressId = Cookies.get('addressId');
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const [isOpen, setIsOpen] = useState(true);
-  const links = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/order_list', label: 'Order Lists', icon: ListOrdered, roles: ['owner'] },
-    { href: '/restaurant', label: 'My Restaurant', icon: ListOrdered, roles: ['owner'] },
-    { href: '/categories', label: 'Categories', icon: ListOrdered, roles: ['owner'] },
-    { href: '/menus', label: 'Menus', icon: Menu, roles: ['owner'] },
-    {
+    const userRole = Cookies.get("role");
+    const addressId = Cookies.get('addressId');
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const [isOpen, setIsOpen] = useState(true);
+    const links = [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
+        { href: "/orders", label: "Order Lists", icon: ListOrdered, roles: ["owner","delivery"] },
+        { href: "/restaurant", label: "My Restaurant", icon: Utensils, roles: ["owner"] },
+        { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["owner"] },
+        { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
+        { href: "/apply_restaurant", label: "Restaurants", icon: Utensils, roles: ["delivery"] },
+      {
       href: addressId ? `/my_address/${addressId}` : '/my_address',
       label: 'My Address',
       icon: MapPinHouse,
       roles: ['owner'],
     },
-  ];
-
-  const bottomLinks = [{ href: '/profile', label: 'Profile', icon: User }];
+    ];
 
   const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
 
@@ -76,33 +72,7 @@ const Sidebar = () => {
               {label}
             </NavLink>
           ))}
-
-          {/* common links */}
-          {bottomLinks.map(({ href, label, icon: Icon }) => (
-            <NavLink
-              key={href}
-              to={href}
-              className={({ isActive }) =>
-                `flex items-center gap-3 py-2 px-3 rounded-md text-sm transition-colors duration-200 hover:bg-lightGreen hover:text-primary ${
-                  isActive ? 'bg-lightGreen text-primary' : 'text-gray-700'
-                }`
-              }
-            >
-              <Icon className="w-5 h-5" />
-              {label}
-            </NavLink>
-          ))}
         </nav>
-        {/* Bottom Section */}
-        <div className="space-y-2 pt-2">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 py-2 px-3 rounded-md text-sm text-gray-700 hover:bg-lightGreen hover:text-primary transition-colors duration-200 w-full text-left"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
-        </div>
       </aside>
     </div>
   );

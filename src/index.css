@@ -7,7 +7,7 @@
 @layer base {
   html,
   body {
-    @apply font-poppins text-base min-h-screen bg-mainBg text-black;
+    @apply font-poppins text-base min-h-screen text-black;
   }
 
   h1,

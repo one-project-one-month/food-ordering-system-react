@@ -15,7 +15,8 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
-import { restaurantFormSchema } from '../../schemas/restaurantFormSchema';
+import { restaurantFormSchema } from '../../schemas/restaurantFormSchema'; 
+import DropZoneMenuImage from '../../components/menus/DropZoneMenuImge';
 
 type RestaurantFormType = z.infer<typeof restaurantFormSchema>;
 
@@ -62,46 +63,48 @@ export default function RestaurantForm({
     }
   };
 
-  const createRestaurantHandler = async (data: restaurantProps) => {
-    const payload = {
-      ...data,
-      resOwnerId: Number(ownerId),
-    };
-    try {
-      const result = await dispatch(createRestaurant(payload));
-      if (createRestaurant.fulfilled.match(result)) {
-        toast.success('Restaurant updated successfully!');
-      } else if (createRestaurant.rejected.match(result)) {
-        toast.error('Errors when updating restaurant!');
-      }
-    } catch (e) {
-      console.log('error ', e);
+
+    const createRestaurantHandler = async(data:restaurantProps)=>{
+        const payload = {
+            ...data,
+            resOwnerId: Number(ownerId),
+        }
+        try{
+        const result = await dispatch(createRestaurant(payload))
+          if (createRestaurant.fulfilled.match(result)) {
+            toast.success('Restaurant updated successfully!');
+            onDataUpdated?.();
+          } else if (createRestaurant.rejected.match(result)) {
+            toast.error('Errors when updating restaurant!');
+          }
+        }catch(e){
+        console.log("error ", e)
+        }
     }
   };
 
-  const updateRestaurantHandler = async (data: restaurantProps) => {
-    const payload = {
-      ...data,
-      id: restaurantId,
-    };
-    try {
-      const result = await dispatch(updateRestaurant(payload));
-      if (updateRestaurant.fulfilled.match(result)) {
-        toast.success('Restaurant updated successfully!');
-      } else if (updateRestaurant.rejected.match(result)) {
-        toast.error('Errors when updating restaurant!');
-      }
-    } catch (e) {
-      console.log('error ', e);
+    const updateRestaurantHandler = async(data:restaurantProps)=>{
+        const payload = {
+            ...data,
+            id: restaurantId,
+        }
+        try{
+        const result = await dispatch(updateRestaurant(payload))
+            if (updateRestaurant.fulfilled.match(result)) {
+              toast.success('Restaurant updated successfully!');
+              onDataUpdated?.();
+            } else if (updateRestaurant.rejected.match(result)) {
+              toast.error('Errors when updating restaurant!');
+            }
+        }catch(e){
+            console.log("error ", e)
+        }
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
+    const handleImageUpload = async (file: File) => {
+        const formData = new FormData();
+        formData.append('file', file);
 
     try {
       const result = await dispatch(uploadRestaurantImage({ formData, restaurantId }));
@@ -146,34 +149,54 @@ export default function RestaurantForm({
 
   return (
     <>
-      <div className="w-full mt-12 bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition">
-        <h1 className="text-xl sm:text-3xl font-bold text-center text-primary">
-          {type === 'create' ? 'Create' : 'Edit'} Restaurant
-        </h1>
-        <div className="mb-6">
+    <div className="w-full mt-6 rounded-lg bg-white text-black rounded shadow-xl p-10 md:p-12 space-y-10 border border-gray-300 transition"
+      >
+      <h1 className="text-xl sm:text-3xl font-bold text-center text-primary">{type==='create'?'Create':'Edit'} Restaurant</h1>
+      <div className="mb-6">
+        {restaurantId !== '' && 
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-600 mb-2">
               Upload Restaurant Image
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="px-2 py-1 border text-xs rounded-md w-[300px]"
-            />
+            <div className='lg:w-[500px]'>
+              <DropZoneMenuImage setDropDrown={(files) => {
+                void handleImageUpload(files[0]);
+              }} />
+            </div>
           </div>
-          {restaurantPic !== '' && (
-            <div className="w-full lg:w-[500px] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg">
-              {uploadImageDataLoading ? (
-                <div className="flex h-full justify-center items-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                </div>
-              ) : (
-                <img
-                  src={restaurantPic}
-                  className="object-cover w-full h-full"
-                  alt="restaurant image"
-                />
+        }
+        {restaurantPic !== '' && (
+          <div className="w-full lg:w-[500px] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg">
+            {uploadImageDataLoading ? (
+              <div className="flex h-full justify-center items-center">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            ) : (
+              <img
+                src={restaurantPic}
+                className="object-cover w-full h-full"
+                alt="restaurant image"
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      <form
+        onSubmit={handleSubmit(onFormSubmit)}
+       >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {fields.map(({ label, name, type, placeholder, required }) => (
+            <div key={name} className="flex flex-col">
+              <label className="text-sm font-medium text-gray-600 mb-2">{label}</label>
+              <input
+                type={type}
+                placeholder={placeholder}
+                {...register(name, required ? { required: `Pls Enter Your ${label}` } : {})}
+                className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {errors[name] && (
+                <span className="text-red-500 text-xs mt-1">{errors[name].message ?? ''}</span>
               )}
             </div>
           )}

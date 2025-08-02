@@ -1,128 +1,190 @@
 import { useForm } from 'react-hook-form';
-import type { Profile } from '../../types/ProfileType';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-type ProfileFormProps = {
-  defaultValues?: Profile | null;
-  onSubmit: (formData: FormData) => void;
+interface ProfileFormProps {
+onSubmit: (formData: FormData | object) => void | Promise<void>;
   title: 'Create' | 'Update';
-};
+  defaultValues?: {
+    name?: string;
+    nrc?: string;
+    phone?: string;
+    dob?: string;
+    gender?: 'Male' | 'Female';
+    address?: string;
+    profilePic?:string
+  };
+}
 
-export default function ProfileForm({ defaultValues, onSubmit, title }: ProfileFormProps) {
+export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileFormProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-    watch,
-  } = useForm<Profile>({
-    defaultValues: defaultValues ?? undefined,
-  });
+  } = useForm({ defaultValues });
 
-  const navigate = useNavigate();
-
- const onFormSubmit = (profile: Profile) => {
-  const formData = new FormData();
-
-  if (title === 'Create') {
-    formData.append('userId', String(profile.userId)); // ✅ Only userId
-    if (profile.profilePic instanceof FileList && profile.profilePic.length > 0) {
-      formData.append('profilePic', profile.profilePic[0]);
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
     }
-  }
+  }, [defaultValues, reset]);
 
-  formData.append('name', profile.name);
-  formData.append('phone', profile.phone);
-  formData.append('address', profile.address);
-  if (profile.nrc) formData.append('nrc', profile.nrc);
-  if (profile.dob) formData.append('dob', profile.dob);
-  if (profile.gender) formData.append('gender', profile.gender);
+  const handleFormSubmit = (data: any) => {
+    const { name, nrc, phone, dob, gender, address,profilePic } = data;
 
-  onSubmit(formData);
-  navigate('/');
-};
+    if (title === 'Create') {
+      const formData = new FormData();
 
+      const jsonBlob = new Blob(
+        [
+          JSON.stringify({
+            name,
+            nrc,
+            phone,
+            dob,
+            gender: gender.toUpperCase(),
+            address,
+          }),
+        ],
+        { type: 'application/json' }
+      );
 
-  const fields: { label: string; name: keyof Profile; type: string; required?: boolean }[] = [
-    ...(title === 'Create'
-      ? [{ label: 'User ID', name: 'userId', type: 'number', required: true }]
-      : []),
-    { label: 'Name', name: 'name', type: 'text', required: true },
-    { label: 'NRC', name: 'nrc', type: 'text', required: true },
-    { label: 'Phone', name: 'phone', type: 'tel', required: true },
-    { label: 'Date of Birth', name: 'dob', type: 'text', required: true },
-  ];
+      formData.append('data', jsonBlob);
+
+      if (profilePic?.[0]) {
+        formData.append('file', profilePic[0] as string);
+      }
+
+     void onSubmit(formData);
+    } else {
+     void onSubmit({
+        name,
+        nrc,
+        phone,
+        dob,
+        gender: gender.toUpperCase(),
+        address
+      });
+    }
+  };
 
   return (
     <form
-      onSubmit={handleSubmit(onFormSubmit)}
-      encType="multipart/form-data"
-      className="w-full max-w-4xl bg-white text-black rounded-2xl shadow-xl p-10 md:p-12 space-y-10 border border-gray-300"
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onSubmit={handleSubmit(handleFormSubmit)}
+  
+      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-4"
     >
-      <h1 className="text-3xl sm:text-4xl font-bold text-center text-green-400">{title} Profile</h1>
+      <h2 className="text-xl font-bold">{title} Profile</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {fields.map(({ label, name, type, required }) => (
-          <div key={name} className="flex flex-col">
-            <label className="text-sm font-medium text-gray-600 mb-2">{label}</label>
-            <input
-              type={type}
-              {...register(name, required ? { required: `Please enter your ${label}` } : {})}
-              className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors[name] && (
-              <span className="text-red-500 text-sm mt-1">{errors[name]?.message}</span>
-            )}
-          </div>
-        ))}
-
-        {title === 'Create' && (
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-600 mb-2">Profile Picture</label>
-            <input
-              type="file"
-              accept="image/*"
-              {...register('profilePic')}
-              className="px-2 py-1 border rounded-md"
-            />
-          </div>
-        )}
-
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-600 mb-2">Gender</label>
-          <select
-            {...register('gender', { required: 'Please select your gender' })}
-            className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          {errors.gender && (
-            <span className="text-red-500 text-sm mt-1">{errors.gender.message}</span>
-          )}
-        </div>
-
-        <div className="md:col-span-2 flex flex-col">
-          <label className="text-sm font-medium text-gray-600 mb-2">Address</label>
-          <textarea
-            {...register('address', { required: 'Please enter your address' })}
-            rows={4}
-            className="px-4 py-2 text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {errors.address && (
-            <span className="text-red-500 text-sm mt-1">{errors.address.message}</span>
-          )}
-        </div>
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-medium">Name</label>
+        <input
+          {...register('name', {
+            required: 'Name must not be empty',
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
+        />
+        {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>}
       </div>
 
-      <div className="flex justify-end pt-6">
-        <button
-          type="submit"
-          className="px-6 py-3 bg-white-400 text-gray-400 font-medium rounded-lg hover:bg-green-400 hover:text-white transition"
+      {/* Phone */}
+      <div>
+        <label className="block text-sm font-medium">Phone</label>
+        <input
+          {...register('phone', {
+            required: 'Phone number is required',
+            pattern: {
+              value: /^09\d{9}$/,
+              message: 'Phone number must start with 09 and be exactly 11 digits',
+            },
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
+        />
+        {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>}
+      </div>
+
+      {/* NRC */}
+      <div>
+        <label className="block text-sm font-medium">NRC</label>
+        <input
+          {...register('nrc', {
+            required: 'NRC is required',
+            pattern: {
+             value: /^(1[0-4]|[1-9])\/[A-Za-z]+\([A-Z]\)\d{6}$/,
+message: 'Invalid NRC format. Must be in the format 1-14/Word(A-Z)123456'
+
+            },
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
+        />
+        {errors.nrc && <p className="text-red-600 text-sm mt-1">{errors.nrc.message}</p>}
+      </div>
+
+      {/* Gender */}
+      <div>
+        <label className="block text-sm font-medium">Gender</label>
+        <select
+          {...register('gender', {
+            required: 'Gender is required',
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
         >
-          {title} Profile
-        </button>
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender.message}</p>}
       </div>
+
+      {/* DOB */}
+      <div>
+        <label className="block text-sm font-medium">Date of Birth</label>
+        <input
+          type="date"
+          {...register('dob', {
+            required: 'Date of birth is required',
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
+        />
+        {errors.dob && <p className="text-red-600 text-sm mt-1">{errors.dob.message}</p>}
+      </div>
+
+      {/* Address */}
+      <div>
+        <label className="block text-sm font-medium">Address</label>
+        <textarea
+          {...register('address', {
+            required: 'Address is required',
+          })}
+          className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
+        />
+        {errors.address && <p className="text-red-600 text-sm mt-1">{errors.address.message}</p>}
+      </div>
+
+      {/* Profile Picture */}
+      {title === 'Create' && (
+        <div>
+          <label className="block text-sm font-medium">Profile Picture</label>
+          <input
+            type="file"
+            accept="image/*"
+            {...register('profilePic', {
+              required: 'Profile picture is required',
+            })}
+            className="mt-1 block w-full border-gray-300 rounded focus:ring focus:border-green-500"
+          />
+          {errors.profilePic && <p className="text-red-600 text-sm mt-1">{errors.profilePic.message}</p>}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+      >
+        Save
+      </button>
     </form>
   );
 }

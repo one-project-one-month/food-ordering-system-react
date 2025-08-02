@@ -1,39 +1,33 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 //default backend baseUrl
-const BACKEND_URL = "http://localhost:8080/api/profile";
+const BACKEND_URL = 'http://localhost:8080/api/v1/auth/profile';
 
-
-//create profile
 export const addProfile = createAsyncThunk(
-  "profile/created",
-  async (formData: FormData, { rejectWithValue }) => {
+  'profile/add',
+  async ({ id, formData }: { id: number; formData: FormData }, thunkAPI) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/created`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        withCredentials: true // if you use cookies/sessions
+      const response = await axios.post(`${BACKEND_URL}/${String(id)}/create`, formData, {
+        withCredentials: true
       });
+
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to create profile");
+      console.error('Failed to add profile:', error);
+
+      return thunkAPI.rejectWithValue(error.response?.data ?? 'Unknown error occurred');
     }
   }
 );
 
-//update profile
 export const updateProfile = createAsyncThunk(
   'profile/update',
   async ({ id, formData }: { id: number; formData: FormData }) => {
     console.log('Updating profile with ID:', id);
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
 
-    const response = await axios.put(`${BACKEND_URL}/update/${id}`, formData, {
+    const response = await axios.post(`${BACKEND_URL}/${String(id)}/update`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
       },
     });
 
@@ -41,40 +35,47 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-
 export const deleteProfile = createAsyncThunk(
   'profile/delete',
   async ({ id }: { id: number }, thunkAPI) => {
     try {
-      const response = await axios.delete(`${BACKEND_URL}/delete/${id}`);
-      return { id }; // return only the ID so you can remove it from state if needed
+      const response = await axios.delete(`${BACKEND_URL}/delete/${String(id)}`);
+      return response.data; // return only the ID so you can remove it from state if needed
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Delete failed');
+      return thunkAPI.rejectWithValue(error.response?.data ?? 'Delete failed');
     }
   }
 );
 
+export const getProfile = createAsyncThunk(
+  'profile/get',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/${String(id)}`);
+      return response.data.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data ?? 'Failed to fetch profile');
+    }
+  }
+);
 
-//profile getById
-export const getProfile=createAsyncThunk(`profile/get`,async (id:number)=>{
-  const response=await axios.get(`${BACKEND_URL}/${id}`)
-  return response.data
-})
-
-
-//update profile pic
 export const updateProfilePic = createAsyncThunk(
-  "profile/updatePic",
-  async ({ id, profilePic }: { id: number; profilePic: File }) => {
-    const formData = new FormData();
-    formData.append("profilePic", profilePic);
+  'profile/updatePic',
+  async ({ id, profilePic }: { id: number; profilePic: File }, thunkAPI) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', profilePic); // ✅ MUST match backend's field name!
 
-     const response=await axios.patch(`${BACKEND_URL}/update-pic/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data
-     
+      const response = await axios.post(`${BACKEND_URL}/${String(id)}/profile-picture`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data; // Should be updated profile object
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message ?? 'Failed to update profile picture'
+      );
+    }
   }
 );

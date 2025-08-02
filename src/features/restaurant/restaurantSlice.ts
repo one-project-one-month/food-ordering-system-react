@@ -86,6 +86,34 @@ export const getOwnerRestaurant = createAsyncThunk<any>(
   }
 );
 
+export const getRestaurantDetail = createAsyncThunk<string,any>(
+  "restaurant/getRestaurantDetail",
+  async ({id}, { rejectWithValue }) => {
+    try {
+      const result = await api.get(`${restaurantUrl}/${id}`);
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
+export const getAllRestaurant = createAsyncThunk<restaurantProps>(
+  "restaurant/getAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await api.get(restaurantUrl);
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(
+        error?.response.data.data ?? "An error occurred during getting restaurants"
+      );
+    }
+  }
+);
+
 const initialState: RestaurantState = {
   new: {
     data: [],
@@ -151,6 +179,14 @@ export const restaurantSlice = createSlice({
     builder.addCase(uploadRestaurantImage.rejected, (state) => {
       state.imageData.loading = false;
       state.imageData.error = true;
+    });
+    builder.addCase(getAllRestaurant.fulfilled, (state: any, action) => {
+      state.searched.data = action.payload;
+      state.searched.loading = false;
+    });
+    builder.addCase(getAllRestaurant.pending, (state) => {
+      state.imageData.loading = true;
+      state.imageData.error = false;
     });
    }
 });

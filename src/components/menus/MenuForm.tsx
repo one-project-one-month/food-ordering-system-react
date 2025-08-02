@@ -10,30 +10,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import type { MenuCardProps } from '../../types/menus.type';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store';
-import { createMenuThunk, updateMenuThunk, updateToMenus } from '../../features/menu/menuSlice';
+import { createDishSizeThunk, createMenuThunk, updateMenuThunk, updateToMenus } from '../../features/menu/menuSlice';
+import { useEffect, useState } from 'react';
+import { getAllCategories } from '../../features/categories/categoriesSlice';
+import { toast } from 'react-toastify';
 
-const items: { id: number; label: string }[] = [
-  {
-    id: 1,
-    label: 'Propular',
-  },
-  {
-    id: 2,
-    label: 'Salad',
-  },
-  {
-    id: 3,
-    label: 'Breakfast',
-  },
-  {
-    id: 4,
-    label: 'Juice',
-  },
-  {
-    id: 5,
-    label: 'Snack',
-  },
-];
+// const items: { id: number; label: string }[] = [
+//   {
+//     id: 1,
+//     label: 'Propular',
+//   },
+//   {
+//     id: 2,
+//     label: 'Salad',
+//   },
+//   {
+//     id: 3,
+//     label: 'Breakfast',
+//   },
+//   {
+//     id: 4,
+//     label: 'Juice',
+//   },
+//   {
+//     id: 5,
+//     label: 'Snack',
+//   },
+// ];
 export const menuSchema = z.object({
   dish: z.string().nonempty({ message: 'You need to fill dish name.' }),
   price: z.number().min(100, { message: 'Dish price must be above 100 kyats.' }),
@@ -42,16 +45,21 @@ export const menuSchema = z.object({
 });
 
 export function MenuForm({ menu, setIsOpened }: MenuCardProps) {
+  const [categories, setCategories] = useState<any>([]);
+  const { data } = useSelector((state: RootState) => state.categories.searched);
   // 1. Define your form.
   const dispatch = useDispatch<AppDispatch>();
-  const data = useSelector((state: RootState) => state.menu);
-  console.log(data);
+
+  useEffect(() => {
+    void dispatch(getAllCategories());
+    setCategories(data);
+  }, []);
+  // const data = useSelector((state: RootState) => state.menu);
   const form = useForm<z.infer<typeof menuSchema>>({
     resolver: zodResolver(menuSchema),
     defaultValues: menu
       ? {
           ...menu,
-          categoryId: menu.categoryId,
         }
       : {
           dish: '',
@@ -65,34 +73,45 @@ export function MenuForm({ menu, setIsOpened }: MenuCardProps) {
   async function onSubmit(values: z.infer<typeof menuSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (values.dish) {
-      if (menu !== null) {
-        if (menu.id) {
-          await dispatch(
-            updateMenuThunk({
-              ...values,
-              id: menu.id,
-              extras: menu.extras,
-              dishSizes: menu.dishSizes,
-            })
-          ).unwrap();
-          dispatch(
-            updateToMenus({
-              ...values,
-              id: menu.id,
-              extras: menu.extras,
-              dishImg: menu.dishImg,
-              dishSizes: menu.dishSizes,
-            })
-          );
+    if (JSON.stringify(menu) === '{}') {
+      const result = await dispatch(createMenuThunk({ ...values }))
+      if(result.type==='menu/createMenu/fulfilled'){
+        setIsOpened();
+        toast.success('Your menu created successfully.');
+        const menuId = await result.payload.id;
+        const payload = {
+          name: "normal",
+          price: result.payload.price,
         }
-      } else {
-        await dispatch(createMenuThunk(values)).unwrap();
+        await dispatch(createDishSizeThunk({...payload,menuId})).unwrap()
       }
-      setIsOpened(false);
+    } else {
+      if (menu) {
+        await dispatch(
+          updateMenuThunk({
+            ...values,
+            id: menu.id,
+            extras: menu.extras,
+            dishSizes: menu.dishSizes,
+          })
+        )
+          .unwrap()
+          .then(() => {
+            setIsOpened();
+          });
+        toast.success('Your menu successfully updated.');
+        dispatch(
+          updateToMenus({
+            ...values,
+            id: menu.id,
+            extras: menu.extras,
+            dishImg: menu.dishImg,
+            dishSizes: menu.dishSizes,
+          })
+        );
+      }
     }
   }
-
   return (
     <div className="w-11/12 mx-auto">
       <Form {...form}>
@@ -175,11 +194,12 @@ export function MenuForm({ menu, setIsOpened }: MenuCardProps) {
                       <SelectValue placeholder="Join Category." />
                     </SelectTrigger>
                     <SelectContent>
-                      {items.map((item: { id: number; label: string }) => (
-                        <SelectItem key={item.id} value={String(item.id)}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
+                      {categories?.length &&
+                        categories.map((item: any) => (
+                          <SelectItem key={item.id} value={String(item.id)}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

@@ -1,20 +1,22 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { Bell } from "lucide-react";
 import { useState } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from "js-cookie";
+import UserAvatarMenu from "../components/UserAvatarMenu";
 
 const PrivateLayout = () => {
   const [orderCount, ] = useState<number>(0)
+  const userId = Cookies.get('userId')
 
   return (
     <div className="w-full h-screen flex flex-col">
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <main className="flex-1 overflow-auto bg-dashboard ">
-          <nav className="flex sticky top-0 justify-end bg-white shadow-sm shadow-gray-200 items-center h-[76px]">
+          <nav className="flex sticky top-0 justify-end z-10 bg-white shadow-sm shadow-gray-200 items-center h-[76px]">
             <div className="flex items-center px-6 flex-row">
               <div className="relative cursor-pointer">
                 <Bell className="w-6 h-6 text-gray-600 hover:text-primary transition-colors" />
@@ -22,13 +24,16 @@ const PrivateLayout = () => {
                 }
               </div>
               <span className="inline-block w-[2px] h-5 bg-gray-300 mx-4" />
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                {/* <div className="flex items-center gap-2">
+                  <Link to={`/view/${String(userId)}`}>
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Link>
                   <p className="text-gray-700">Name</p>
-                </div>
+                </div> */}
+                <UserAvatarMenu userId={String(userId)} name="John" />
             </div>
           </nav>
           <div className="my-6 px-6">

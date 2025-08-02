@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { useState } from 'react';
 import { orders } from '../../data/orders';
 import type { OrderStatus } from '../../types/orders.type';
@@ -11,7 +13,7 @@ const TABS: { key: OrderStatus; label: string }[] = [
 ];
 
 const OrderList = () => {
-  const [activeTab, setActiveTab] = useState<OrderStatus>('completed');
+  const [activeTab, setActiveTab] = useState<OrderStatus>('ongoing');
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
   return (
@@ -22,7 +24,7 @@ const OrderList = () => {
             key={tab.key}
             variant={activeTab === tab.key ? 'default' : 'outline'}
             className={`rounded-full px-6 py-2 text-base font-semibold transition-colors duration-200 ${activeTab === tab.key ? '' : 'bg-white'}`}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => { setActiveTab(tab.key); }}
           >
             {tab.label}
           </Button>
@@ -36,7 +38,7 @@ const OrderList = () => {
             </CardContent>
           </Card>
         )}
-        {filteredOrders.map(order => (
+        {filteredOrders.map((order:any) => (
           <Card key={order.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
               <CardTitle className="text-lg md:text-xl flex flex-col md:flex-row md:items-center gap-2">
@@ -44,11 +46,11 @@ const OrderList = () => {
                   Order #{order.id}
                 </span>
                 <span className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'completed' ? 'bg-green-100 text-green-700' : order.status === 'ongoing' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
-                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  {order?.status?.charAt(0).toUpperCase() + order?.status?.slice(1)}
                 </span>
               </CardTitle>
               <span className="text-sm text-muted-foreground">
-                {new Date(order.orderDateTime).toLocaleString()}
+                {new Date(order?.orderDateTime).toLocaleString()}
               </span>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">

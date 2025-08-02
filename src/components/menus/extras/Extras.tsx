@@ -17,22 +17,32 @@ export default function Extras({ items, menu }: ExtraProps) {
   if (menu) {
     const [extraBox, setExtraBox] = useState<{
       menuId: number | undefined;
-      isOpenBox: boolean;
       type: string;
       extra: null | Extra;
     }>({
       menuId: menu.id,
-      isOpenBox: false,
       type: 'Create',
       extra: null,
     });
+    const [isOpened, setIsOpened] = useState(false);
     const renderform = (type: string) => {
       switch (type) {
         case 'Create':
-          return <ExtraForm extra={null} menuId={Number(menu.id)} />;
+          return (
+            <ExtraForm
+              extra={null}
+              menuId={Number(menu.id)}
+              setIsOpened={() => setIsOpened(false)}
+            />
+          );
         case 'Update':
-          return <ExtraForm extra={extraBox.extra} menuId={Number(menu.id)} />;
-
+          return (
+            <ExtraForm
+              extra={extraBox.extra}
+              menuId={Number(menu.id)}
+              setIsOpened={() => setIsOpened(false)}
+            />
+          );
         default:
           break;
       }
@@ -50,9 +60,10 @@ export default function Extras({ items, menu }: ExtraProps) {
                 <Button
                   variant="outline"
                   className="size-3 ml-1"
-                  onClick={() =>
-                    setExtraBox({ ...extraBox, isOpenBox: true, type: 'Update', extra: item })
-                  }
+                  onClick={() => {
+                    setExtraBox({ ...extraBox, type: 'Update', extra: item });
+                    setIsOpened(true);
+                  }}
                 >
                   <PenLineIcon className="w-[3px] h-[3px]" />
                 </Button>
@@ -63,17 +74,13 @@ export default function Extras({ items, menu }: ExtraProps) {
             variant="outline"
             className="m-1"
             onClick={() => {
-              setExtraBox({ ...extraBox, isOpenBox: true, type: 'Create', extra: null });
+              setExtraBox({ ...extraBox, type: 'Create', extra: null });
+              setIsOpened(true);
             }}
           >
             +
           </Badge>
-          <Dialog
-            open={extraBox.isOpenBox}
-            onOpenChange={() =>
-              setExtraBox({ menuId: menu.id, isOpenBox: false, type: 'Create', extra: null })
-            }
-          >
+          <Dialog open={isOpened} onOpenChange={setIsOpened}>
             <DialogContent className="sm:min-w-[425px] w-[850px]">
               <DialogHeader>
                 <DialogTitle>
