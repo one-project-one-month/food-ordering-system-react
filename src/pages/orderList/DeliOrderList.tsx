@@ -10,25 +10,9 @@ import { assignDeliveryByRestaurant, getDeliveryByRestaurant } from '../../featu
 import { getAllOrdersByRestaurant } from '../../features/order/orderSlice';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
-
-const deliTableConfig: TableConfig = [
-  { key: 'id', label: 'Order #', render: row => row.id.toString()},
-  { key: 'amount', label: 'Amount(kyats)', render: row => row.totalAmount },
-  { key: 'orderDateTime', label: 'Date', render: row => new Date(row.orderDateTime).toISOString().slice(0, 10) },
-  { key: 'status', label: 'Status', render: row =>
-      row.deliveryStatus === 'assigned'
-        ? 'ASSIGNED'
-        : row.deliveryStatus.toUpperCase(),
-   },
-];
+import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 10;
-
-const deliveryPersons = [
-  { id: '1', name: 'Ali Khan' },
-  { id: '2', name: 'Sita Patel' },
-  { id: '3', name: 'John Doe' },
-];
 
 const DeliOrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +23,26 @@ const DeliOrderList = () => {
   const { data: allData } = useSelector((state: RootState) => state.delivery.searched);
   const { data: allOrdersData, loading } = useSelector((state: RootState) => state.order.searched);
   const [assignStatus, setAssignStatus] = useState(false)
+  const [deliveryList, setDeliveryList] = useState<any>([])
+  const navigate = useNavigate()
+
+  const deliTableConfig: TableConfig = [
+  { key: 'id', label: 'Order #', render: (row: any) => (
+      <button
+        onClick={() => void navigate(`/orders/${String(row.id)}`)}
+        className="text-blue-600 hover:underline"
+      >
+        {row.id}
+      </button>
+    ),},
+  { key: 'amount', label: 'Amount(kyats)', render: row => row.totalAmount },
+  { key: 'orderDateTime', label: 'Date', render: row => new Date(row.orderDateTime).toISOString().slice(0, 10) },
+  { key: 'status', label: 'Status', render: row =>
+      row.deliveryStatus === 'assigned'
+        ? 'ASSIGNED'
+        : row.deliveryStatus.toUpperCase(),
+   },
+];
 
   const handleApprove = async(row: any,deliveryPersonId?: string) => {
     const updatedOrders = await ordersData.map((order:any) =>
@@ -87,6 +91,9 @@ const DeliOrderList = () => {
 
   useEffect(()=>{
     console.log("All data ", allData)
+    if(allData&&allData.length!==0){
+      setDeliveryList(allData)
+    }
   },[allData])
 
   const getAllOrdersData = async()=>{
@@ -119,7 +126,7 @@ const DeliOrderList = () => {
               config={deliTableConfig}
               showActions={true}
               onApprove={handleApprove as any}
-              deliveryPersons={deliveryPersons}
+              deliveryPersons={deliveryList}
             />
             <div className="flex justify-center mt-8 pb-8">
               <Pagination

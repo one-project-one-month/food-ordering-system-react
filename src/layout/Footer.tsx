@@ -27,7 +27,7 @@ const Footer = () => {
         <div>
           <h4 className="text-lg font-semibold mb-2">Information</h4>
           <ul className="flex flex-col gap-1">
-            <Link to='' >About Us</Link>
+            <Link to='about' >About Us</Link>
             <Link to='' >Terms & Conditions</Link>
           </ul>
         </div>

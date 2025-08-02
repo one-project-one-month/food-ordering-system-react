@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { allowPaymentAccess, createOrder,setOrderId } from '../../features/order/orderSlice';
 import type { OrderRequestProps } from '../../types/orders.type';
+import { motion } from "framer-motion"
 
 export default function Cart() {
   const [carts, setCarts] = useState<any>([]);
@@ -92,7 +93,10 @@ export default function Cart() {
   }
 
   return (
-    <div className="flex container my-6 flex-col justify-center items-center w-full bg-white text-black ">
+    <motion.div className="flex container my-6 flex-col justify-center items-center w-full bg-white text-black "
+    initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
       <div className="mb-8">
         <h1 className="text-2xl text-primary">
           Your Carts- {carts.length} {carts.length === 1 ? 'item' : 'items'}
@@ -145,6 +149,6 @@ export default function Cart() {
         </div>
         : <Button type='button' onClick={()=>navigate('/restaurants')}>Browse Shop</Button>
       }
-    </div>
+    </motion.div>
   );
 }

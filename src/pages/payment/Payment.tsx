@@ -8,6 +8,8 @@ import { makePayment, uploadPaymentImage } from "../../features/order/orderSlice
 import { Button } from "../../components/ui/button";
 import { toast } from "react-toastify";
 import type { AppDispatch, RootState } from "../../store";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { motion } from "framer-motion"
 
 export default function Payment() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -15,6 +17,8 @@ export default function Payment() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const userId = Cookies.get("userId");
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (!orderId) {
@@ -34,6 +38,7 @@ export default function Payment() {
     };
 
     try {
+      setLoading(true)
       const result = await dispatch(makePayment(data));
       const payloadResult = result.payload;
       if (payloadResult.code === 201) {
@@ -45,7 +50,8 @@ export default function Payment() {
         if (uploadPayload.status === 200) {
           toast.success("Payment receipt uploaded successfully!");
           Cookies.remove("cartRestaurantId");
-          void navigate("/");
+          setShowSuccessMessage(true)
+          setLoading(false)
         }
       }
     } catch (e) {
@@ -54,25 +60,40 @@ export default function Payment() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-white text-black">
-      <h1 className="text-2xl text-primary font-bold mb-4">Please upload your payment screenshot</h1>
-      <div className="lg:w-[500px] h-[400px] overflow-hidden mb-8">
-        {selectedFile ? (
-          <img
-            src={URL.createObjectURL(selectedFile)}
-            alt="Selected"
-            className="h-full w-full object-cover rounded"
-          />
-        ) : (
-          <DropZoneMenuImage setDropDrown={(files) => {
-            setSelectedFile(files[0]);
-          }} />
-        )}
-      </div>
+    <motion.div className="flex flex-col mt-[100px] items-center bg-white text-black"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {showSuccessMessage ? <div className="text-center mt-[100px]">
+          <CheckCircle className="w-24 h-24 text-primary mx-auto mb-6" />
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">Payment Successful!</h2>
+          <p className="text-gray-500 mb-6">Thank you for your payment. Your order is being processed.</p>
+          <Button onClick={() => navigate("/")}>Back to Home</Button>
+        </div> : 
+      <>
+        <h1 className="text-2xl text-primary font-bold mb-6">Please upload your payment screenshot</h1>
+        <div className="lg:w-[500px] h-[400px] overflow-hidden mb-8">
+          {selectedFile ? (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="Selected"
+              className="h-full w-full object-cover rounded"
+            />
+          ) : (
+            <DropZoneMenuImage setDropDrown={(files) => {
+              setSelectedFile(files[0]);
+            }} />
+          )}
+        </div>
 
-      <Button disabled={!selectedFile} onClick={handleSubmit}>
-        Submit Payment
-      </Button>
-    </div>
+        <Button disabled={!selectedFile || loading} onClick={handleSubmit}>
+          {loading && (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            )}Submit Payment
+        </Button>
+      </>
+      }
+    </motion.div>
   );
 }

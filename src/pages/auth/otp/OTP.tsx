@@ -57,8 +57,8 @@ export default function OTP() {
 
 	const otpCheck = async (values:OtpProps)=>{
 		try{
-			const result = await dispatch(verifyAccount(values))
-			if(result.payload.code === 200){
+			const result:any = await dispatch(verifyAccount(values))
+			if(result.code === 200){
 				dispatch(setOtpVerified(true))
 				void navigate('/signup')
 			}

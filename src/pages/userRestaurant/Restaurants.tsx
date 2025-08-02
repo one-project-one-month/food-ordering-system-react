@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getAllRestaurant } from '../../features/restaurant/restaurantSlice';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../store';
+import { motion } from "framer-motion"
 
 export default function Restaurants() {
     const [restaurants, setRestaurants] = useState([]);
@@ -29,7 +30,9 @@ export default function Restaurants() {
     },[])
 
   return (
-    <div className="container p-8">
+    <motion.div className="container p-8" initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <h1 className="text-3xl text-primary font-bold mb-2">All restaurants</h1>
         <div className="grid gap-6 md:grid-cols-3 my-6 lg:grid-cols-4">
             {loading
@@ -49,6 +52,6 @@ export default function Restaurants() {
               />
             ))}
         </div>
-    </div>
+    </motion.div>
   );
 }

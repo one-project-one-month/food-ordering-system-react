@@ -5,6 +5,7 @@ import type { AppDispatch } from '../../store';
 import { useParams } from 'react-router-dom';
 import { getAllMenus } from '../../features/menu/userMenuSlice';
 import { getRestaurantDetail } from '../../features/restaurant/restaurantSlice';
+import { motion } from "framer-motion"
 
 export default function UserMenu() {
   const [menus, setMenus] = useState<any>([]);
@@ -49,7 +50,9 @@ export default function UserMenu() {
     },[])
 
   return (
-    <div className="container p-8">
+    <motion.div className="container p-8" initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div className="w-full h-64 relative mb-4 rounded-lg overflow-hidden border-b">
             <img
             src={restaurantDetail.restaurantImage?.replace(/^.*?(https:\/)/, 'https:/')}
@@ -82,6 +85,6 @@ export default function UserMenu() {
             ))}
             </>}
         </div>
-    </div>
+    </motion.div>
   );
 }

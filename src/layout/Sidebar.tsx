@@ -10,7 +10,8 @@ const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(true);
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
-        { href: "/orders", label: "Order Lists", icon: ListOrdered, roles: ["owner","delivery"] },
+        { href: "/orders", label: "Order Lists", icon: ListOrdered, roles: ["owner"] },
+        { href: "/delivery_orders", label: "Order Lists", icon: ListOrdered, roles: ["delivery"] },
         { href: "/restaurant", label: "My Restaurant", icon: Utensils, roles: ["owner"] },
         { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["owner"] },
         { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },

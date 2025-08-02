@@ -21,9 +21,9 @@ export function DialogToDelete({ open, onOpenChange, id, type, handleDeleteMenu 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Do you want to delete this {type}?</DialogTitle>
+          <DialogTitle className='mb-4'>Do you want to delete this {type}?</DialogTitle>
           <DialogDescription>
-            Are you sure to delete this {type}? You cannot redo this action.Be careful!
+            Are you sure you want to delete this {type}? You cannot redo this action. Be careful!
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

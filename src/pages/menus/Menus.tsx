@@ -8,6 +8,7 @@ import { getMenusThunk, getToMenus } from '../../features/menu/menuSlice';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import MenuCard from '../../components/menus/MenuCard';
 import type { Menu } from '../../types/menus.type';
+import { motion } from "framer-motion"
 
 export default function Menus() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -38,7 +39,9 @@ export default function Menus() {
       </div>
     );
     return (
-      <div className="flex flex-col w-full">
+      <motion.div className="flex flex-col w-full" initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div className="flex justify-end right-4">
           <Button
             onClick={() => {
@@ -49,7 +52,7 @@ export default function Menus() {
           </Button>
         </div>
         {items.length && <>
-          <div className="grid lg:grid-cols-3 h-full md:grid-cols-2 grid-cols-2 gap-4 mt-6 px-4 mx-auto">
+          <div className="grid w-full lg:grid-cols-3 h-full md:grid-cols-2 grid-cols-2 gap-4 mt-6 px-4 mx-auto">
           {items.map((item: Menu) => (
             <MenuCard
               key={item.id}
@@ -85,7 +88,7 @@ export default function Menus() {
           </Button>
         </div>
         </> }
-      <DialogBox
+        <DialogBox
           open={isOpened}
           onOpenChange={() => {
             handleCreateMenu({});
@@ -93,6 +96,6 @@ export default function Menus() {
           item={editData}
           formType="menu"
         />
-      </div>
+      </motion.div>
     );
 }

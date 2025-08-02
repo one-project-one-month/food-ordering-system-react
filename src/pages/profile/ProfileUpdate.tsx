@@ -56,8 +56,8 @@ export function ProfileUpdate() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10">
-      <ProfileForm onSubmit={handleUpdate as (formData: object | FormData) => void | Promise<void>} title="Update" defaultValues={profile as any} />
+    <div className="min-h-screen max-w-3xl mx-auto px-6 py-10">
+      <ProfileForm onSubmit={handleUpdate as (formData: object | FormData) => void | Promise<void>} title="Update" defaultValues={profile} />
     </div>
   );
 }

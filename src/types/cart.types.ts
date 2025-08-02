@@ -19,5 +19,6 @@ export interface CartItem extends Menu {
 export interface CartState {
   items: CartItem[];
   quantity: number;
+  detail?: RequestState<CartItem>;
   new: RequestState<CartItem[]>;
 }

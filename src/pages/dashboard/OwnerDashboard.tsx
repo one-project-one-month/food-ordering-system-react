@@ -1,3 +1,4 @@
+ 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from "react"
@@ -21,7 +22,6 @@ const OwnerDashboard = () => {
 
   useEffect(()=>{
     if(summaryAllData){
-      console.log("Summary data ", summaryAllData)
       const summaryData = summaryAllData.data as any;
         const bar = [
             { name: "Daily", Orders: summaryData?.summary?.noOfOrderPerDay },
@@ -38,16 +38,20 @@ const OwnerDashboard = () => {
         setBarData(bar);
         setPieData(pie);
 
-        const calcPercent = (value: number) => {
-          if (!summaryData?.summary?.noOfOrderPerMonth || summaryData?.summary?.noOfOrderPerMonth === 0) return "0%";
-          return `${Math.round((value / summaryData?.summary?.noOfOrderPerMonth) * 100)}%`;
+        const target = 20;
+        const calcPercent = (value: number | null | undefined): string => {
+          if (typeof value !== 'number' || isNaN(value)) {
+            return '0%';
+          }
+          return `${Math.round((value / target) * 100)}%`;
         };
+
         const stats = [
           {
             title: "Total Orders",
-            amount: summaryData?.summary?.totalOrders?.toString() ?? "0",
-            percent: calcPercent(summaryData?.summary?.totalOrders),
-            trend: summaryData?.summary?.totalOrders >= 50 ? "up" : "down",
+            amount: summaryData?.summary?.noOfOrderPerMonth?.toString() ?? "0",
+            percent: calcPercent(summaryData?.summary?.noOfOrderPerMonth),
+            trend: summaryData?.summary?.noOfOrderPerMonth >= target ? "up" : "down",
             image: <Package className="w-12 h-12 text-primary" />,
             roles: ["owner"]
           },
@@ -55,7 +59,7 @@ const OwnerDashboard = () => {
             title: "Total Delivered",
             amount: summaryData?.summary?.totalDelivered?.toString() ?? "0",
             percent: calcPercent(summaryData?.summary?.totalDelivered),
-            trend: summaryData?.summary?.totalDelivered >= 50 ? "up" : "down",
+            trend: summaryData?.summary?.totalDelivered >= target ? "up" : "down",
             image: <Truck className="w-12 h-12 text-primary" />,
             roles: ["owner"]
           },

@@ -67,6 +67,21 @@ export const removeAllCartItem = createAsyncThunk<string, any>(
   }
 );
 
+export const getOrderDetailByOrderId = createAsyncThunk<any,any>(
+  "cart/detailOrder",
+  async ({orderId}, { rejectWithValue }) => {
+    try {
+      const result = await api.get(`${cartUrl}/restaurantOwner/${String(orderId)}`);
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(
+        error?.response.data.data ?? "An error occurred during retrieving cart items"
+      );
+    }
+  }
+);
+
 const initialState: CartState = {
   items: [],
   new: {
