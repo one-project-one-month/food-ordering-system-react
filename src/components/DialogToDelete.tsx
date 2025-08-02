@@ -18,8 +18,9 @@ interface DialogBoxProps extends DialogProps {
 }
 export function DialogToDelete({ open, onOpenChange, id, type, handleDeleteMenu }: DialogBoxProps) {
   return (
+    <div className="absolute top-0 left-0 z-50">
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] z-[9999]">
         <DialogHeader>
           <DialogTitle className='mb-4'>Do you want to delete this {type}?</DialogTitle>
           <DialogDescription>
@@ -36,5 +37,6 @@ export function DialogToDelete({ open, onOpenChange, id, type, handleDeleteMenu 
         </DialogFooter>
       </DialogContent>
     </Dialog>
+      </div>
   );
 }

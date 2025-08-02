@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from 'react';
 import { type LatLngExpression } from 'leaflet';
 import { useMapEvents, Popup } from 'react-leaflet';
@@ -9,20 +10,22 @@ export default function LocationMarker() {
   const [address, setAddress] = useState<{ state: string; city: string; locality: string } | null>(
     null
   );
-  
+
   useEffect(() => {
     if (position) {
-      const latitude = position?.lat;
-      const longitude = position?.lng;
+      const latitude = position.lat;
+      const longitude = position.lng;
       async function fetchAddress() {
         try {
           const data = await getAddress({ latitude, longitude });
-          setAddress(data);
+          if (data) {
+            setAddress(data);
+          }
         } catch (error) {
           console.error('Error fetching address:', error);
         }
       }
-      fetchAddress();
+      void fetchAddress();
     }
   }, [position]);
   // Custom Location Marker
@@ -35,18 +38,22 @@ export default function LocationMarker() {
     },
   });
 
-  return position === null ? null : (
+  return position !== null ? (
     <div>
       <CustomMarker position={position}>
         <Popup>
-          <span>This is just only township and city.Sorry,we cannot guess your quarter.</span>
-          <p>
-            {address
-              ? `${address?.state},${address?.city} City,${address?.locality} Township`
-              : 'We cannot access you location.'}
-          </p>
+          {
+            <p>
+              {address
+                ? `${address.state},${address.city} City,${address.locality} Township`
+                : 'We cannot access your location.'}{' '}
+              <br />
+              {`Latitude: ${position.lat.toFixed(8)}`} <br />
+              {`Longitude: ${position.lng.toFixed(8)}`}
+            </p>
+          }
         </Popup>
       </CustomMarker>
     </div>
-  );
+  ) : null;
 }

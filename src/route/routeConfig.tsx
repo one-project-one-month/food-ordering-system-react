@@ -18,6 +18,8 @@ import RegisterGuard from '../pages/auth/RegisterGuard';
 import CheckMail from '../pages/auth/checkMail/CheckMail';
 import Restaurant from '../pages/restaurant/Restaurant';
 import Category from '../pages/category/Category';
+import Address from '../pages/address/Address';
+import CreateAddress from '../pages/address/child/CreateAddress';
 import { ProfileUpdate } from '../pages/profile/ProfileUpdate';
 import ProfileView from '../pages/profile/ProfileView';
 import { ProfileCreate } from '../pages/profile/ProfileCreate';
@@ -30,7 +32,6 @@ import Dashboard from '../pages/dashboard/Dashboard';
 import About from '../pages/about/About';
 import DeliveryOrderList from '../pages/orderList/DeliveryOrderList';
 import OrderDetail from '../pages/orderList/OrderDetail';
-
 
 export const routes = [
   {
@@ -113,6 +114,16 @@ export const routes = [
             path: 'menus',
             element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <Menus /> }],
+          },
+          {
+            path: 'my_address',
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            children: [
+              { index: true, element: <Address /> },
+              { path: 'create', element: <CreateAddress /> },
+              { path: ':id', element: <Address /> },
+              { path: 'update/:id', element: <CreateAddress /> },
+            ],
           },
           {
             path: 'restaurant',

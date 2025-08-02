@@ -10,7 +10,12 @@
     @apply font-poppins text-base min-h-screen text-black;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-poppins;
     color: #000;
   }
@@ -156,13 +161,9 @@
     @apply bg-background text-foreground;
   }
 }
-.leaflet-container {
-  height: 100vh;
-  width: 100wh;
-}
 .no-scrollbar {
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {

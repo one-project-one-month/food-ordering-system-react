@@ -11,6 +11,7 @@ import dashboardReducer from '../features/dashboard/dashboardSlice';
 import userMenuReducer from '../features/userMenu/userMenuSlice'
 import orderReducer from '../features/order/orderSlice'
 import deliveryReducer from '../features/delivery/deliverySlice'
+import addressReducer from '../features/address/addressSlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     profile: profileReducer,
     auth: authReducer,
     menu: menuReducer,
+    address: addressReducer,
     restaurant: restaurantReducer,
     categories: categoriesReducer,
     applyRestaurant: applyRestaurantReducer,
