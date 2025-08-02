@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useForm } from 'react-hook-form';
 import type { RestaurantFormPropsWithImage, restaurantProps } from '../../types/restaurant.types';
-import {
-  createRestaurant,
-  updateRestaurant,
-  uploadRestaurantImage,
-} from '../../features/restaurant/restaurantSlice';
+import { createRestaurant, updateRestaurant, uploadRestaurantImage } from "../../features/restaurant/restaurantSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store';
 import Cookies from 'js-cookie';
@@ -20,11 +16,7 @@ import DropZoneMenuImage from '../../components/menus/DropZoneMenuImge';
 
 type RestaurantFormType = z.infer<typeof restaurantFormSchema>;
 
-export default function RestaurantForm({
-  type,
-  defaultValues,
-  onDataUpdated,
-}: RestaurantFormPropsWithImage) {
+export default function RestaurantForm({ type, defaultValues, onDataUpdated }: RestaurantFormPropsWithImage) {
   const {
     register,
     handleSubmit,
@@ -34,35 +26,32 @@ export default function RestaurantForm({
     resolver: zodResolver(restaurantFormSchema),
     defaultValues: defaultValues ?? undefined,
   });
-  const ownerId = Cookies.get('userId');
-  const dispatch = useDispatch<AppDispatch>();
-  const [restaurantId, setRestaurantId] = useState<string>('');
-  const { loading: createdLoading } = useSelector((state: RootState) => state.restaurant.new);
-  const { loading } = useSelector((state: RootState) => state.restaurant.detailed);
-  const { loading: uploadImageDataLoading } = useSelector(
-    (state: RootState) => state.restaurant.imageData
-  );
-  const [restaurantPic, setRestaurantPic] = useState<string>('');
+    const ownerId = Cookies.get("userId")
+    const dispatch = useDispatch<AppDispatch>()
+    const [restaurantId,setRestaurantId] = useState<string>('');
+    const { loading: createdLoading } = useSelector((state:RootState) => state.restaurant.new);
+    const { loading } = useSelector((state:RootState) => state.restaurant.detailed);
+    const { loading: uploadImageDataLoading } = useSelector((state:RootState) => state.restaurant.imageData);
+    const [restaurantPic, setRestaurantPic] = useState<string>('')
 
-  useEffect(() => {
-    if (defaultValues) {
-      setRestaurantId(defaultValues.id ?? '');
-      const imageUrl = defaultValues.restaurantImage ?? '';
-      if (imageUrl !== '') {
-        const cleanedUrl = imageUrl.replace(/^.*?(https:\/)/, 'https:/');
-        setRestaurantPic(cleanedUrl);
-      }
-      reset(defaultValues);
-    }
-  }, [defaultValues, reset]);
-  const onFormSubmit = async (data: restaurantProps) => {
-    if (type === 'create') {
-      await createRestaurantHandler(data);
-    } else {
-      await updateRestaurantHandler(data);
-    }
-  };
-
+    useEffect(() => {
+        if (defaultValues) {
+        setRestaurantId(defaultValues.id ?? "")
+        const imageUrl = defaultValues.restaurantImage ?? '';
+        if(imageUrl !== ''){
+            const cleanedUrl = imageUrl.replace(/^.*?(https:\/)/, 'https:/');
+            setRestaurantPic(cleanedUrl)
+        }
+        reset(defaultValues);
+        }
+    }, [defaultValues, reset]);
+    const onFormSubmit = async(data: restaurantProps) => {
+        if(type==='create'){
+          await createRestaurantHandler(data)
+        }else{
+          await updateRestaurantHandler(data)
+        }
+    };
 
     const createRestaurantHandler = async(data:restaurantProps)=>{
         const payload = {
@@ -81,7 +70,6 @@ export default function RestaurantForm({
         console.log("error ", e)
         }
     }
-  };
 
     const updateRestaurantHandler = async(data:restaurantProps)=>{
         const payload = {
@@ -100,51 +88,26 @@ export default function RestaurantForm({
             console.log("error ", e)
         }
     }
-  };
 
     const handleImageUpload = async (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
 
-    try {
-      const result = await dispatch(uploadRestaurantImage({ formData, restaurantId }));
-      if (uploadRestaurantImage.fulfilled.match(result)) {
-        onDataUpdated?.();
-      }
-    } catch (e) {
-      console.log('error ', e);
-    }
-  };
+        try{
+        const result = await dispatch(uploadRestaurantImage({formData,restaurantId}))
+            if (uploadRestaurantImage.fulfilled.match(result)) {
+              onDataUpdated?.();
+            }
+        }catch(e){
+            console.log("error ", e)
+        }
+    };
 
-  const fields: {
-    label: string;
-    name: keyof RestaurantFormType;
-    placeholder: string;
-    type: string;
-    required?: boolean;
-  }[] = [
-    {
-      label: 'Restaurant Name',
-      name: 'restaurantName',
-      placeholder: 'Restaurant Name',
-      type: 'text',
-      required: true,
-    },
-    {
-      label: 'Contact Number',
-      name: 'contactNumber',
-      placeholder: '00000000000',
-      type: 'text',
-      required: true,
-    },
+  const fields: { label: string; name: keyof RestaurantFormType; placeholder: string; type: string; required?: boolean }[] = [
+    { label: 'Restaurant Name', name: 'restaurantName', placeholder: 'Restaurant Name', type: 'text', required: true },
+    { label: 'Contact Number', name: 'contactNumber', placeholder: '00000000000', type: 'text', required: true },
     { label: 'NRC', name: 'nrc', placeholder: '12/kamata(N)111111', type: 'text', required: true },
-    {
-      label: 'Kpay Number',
-      name: 'kpayNumber',
-      placeholder: '00000000000',
-      type: 'text',
-      required: true,
-    },
+    { label: 'Kpay Number', name: 'kpayNumber', placeholder: '00000000000', type: 'text', required: true }
   ];
 
   return (
@@ -199,34 +162,17 @@ export default function RestaurantForm({
                 <span className="text-red-500 text-xs mt-1">{errors[name].message ?? ''}</span>
               )}
             </div>
-          )}
+          ))}
         </div>
-        <form onSubmit={handleSubmit(onFormSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {fields.map(({ label, name, type, placeholder, required }) => (
-              <div key={name} className="flex flex-col">
-                <label className="text-sm font-medium text-gray-600 mb-2">{label}</label>
-                <input
-                  type={type}
-                  placeholder={placeholder}
-                  {...register(name, required ? { required: `Pls Enter Your ${label}` } : {})}
-                  className="px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {errors[name] && (
-                  <span className="text-red-500 text-xs mt-1">{errors[name].message ?? ''}</span>
-                )}
-              </div>
-            ))}
-          </div>
 
-          <div className="flex justify-center pt-6">
-            <Button type="submit" className="w-[200px]" disabled={loading || !isDirty}>
-              {(loading || createdLoading) && <Loader2 className="h-4 w-4 animate-spin" />}
-              {type === 'create' ? 'Create' : 'Update'}
-            </Button>
-          </div>
-        </form>
-      </div>
+        <div className="flex justify-center pt-6">
+          <Button type='submit' className='w-[200px]' disabled={loading|| !isDirty}>
+              {(loading || createdLoading) && (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}{type==='create'?'Create':'Update'}</Button>
+        </div>
+      </form>
+    </div>
     </>
   );
 }
