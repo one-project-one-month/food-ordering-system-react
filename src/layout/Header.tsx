@@ -17,8 +17,7 @@ export default function Header() {
   const isAuthenticated = !!Cookies.get('token');
   const [sheetOpen, setSheetOpen] = useState(false);
   const userRole = Cookies.get('role') ?? '';
-  const user = useSelector((state: RootState) => state.auth.user);
-  const userId = user.userId;
+  const userId = Cookies.get('userId');
   const userName = Cookies.get('email') ?? '';
 
   useEffect(() => {
@@ -174,7 +173,7 @@ export default function Header() {
               </div>
             </div>
           ) : (
-            <div className="flex gap-4 hidden lg:flex">
+            <div className="d-flex gap-4 hidden lg:flex">
               <Button
                 variant="default"
                 size="sm"

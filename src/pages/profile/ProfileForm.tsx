@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
-type ProfileFormProps = {
-  onSubmit: (formData: FormData | object) => void;
+interface ProfileFormProps {
+onSubmit: (formData: FormData | object) => void | Promise<void>;
   title: 'Create' | 'Update';
   defaultValues?: {
     name?: string;
@@ -11,8 +11,9 @@ type ProfileFormProps = {
     dob?: string;
     gender?: 'Male' | 'Female';
     address?: string;
+    profilePic?:string
   };
-};
+}
 
 export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileFormProps) {
   const {
@@ -29,7 +30,7 @@ export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileF
   }, [defaultValues, reset]);
 
   const handleFormSubmit = (data: any) => {
-    const { name, nrc, phone, dob, gender, address, profilePic } = data;
+    const { name, nrc, phone, dob, gender, address,profilePic } = data;
 
     if (title === 'Create') {
       const formData = new FormData();
@@ -51,26 +52,27 @@ export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileF
       formData.append('data', jsonBlob);
 
       if (profilePic?.[0]) {
-        formData.append('file', profilePic[0]);
+        formData.append('file', profilePic[0] as string);
       }
 
-      onSubmit(formData);
-      console.log(formData)
+     void onSubmit(formData);
     } else {
-      onSubmit({
+     void onSubmit({
         name,
         nrc,
         phone,
         dob,
         gender: gender.toUpperCase(),
-        address,
+        address
       });
     }
   };
 
   return (
     <form
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onSubmit={handleSubmit(handleFormSubmit)}
+  
       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-4"
     >
       <h2 className="text-xl font-bold">{title} Profile</h2>
@@ -110,8 +112,9 @@ export default function ProfileForm({ onSubmit, title, defaultValues }: ProfileF
           {...register('nrc', {
             required: 'NRC is required',
             pattern: {
-              value: /^\d{1,2}\/[A-Z]{3}\(N\)\d{6}$/,
-              message: 'NRC format must be like 12/ABC(N)123456',
+             value: /^(1[0-4]|[1-9])\/[A-Za-z]+\([A-Z]\)\d{6}$/,
+message: 'Invalid NRC format. Must be in the format 1-14/Word(A-Z)123456'
+
             },
           })}
           className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring focus:border-green-500"
