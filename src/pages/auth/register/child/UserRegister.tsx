@@ -37,7 +37,7 @@ import { toast } from "react-toastify";
 export default function UserRegister() {
 	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
-	const { loading } = useSelector((state: RootState) => state.auth.loginState);
+	const { loading,error } = useSelector((state: RootState) => state.auth.loginState);
 	const form = useForm<z.infer<typeof userRegisterFormSchema>>({
 		resolver: zodResolver(userRegisterFormSchema),
 		defaultValues: {
@@ -61,6 +61,8 @@ export default function UserRegister() {
 				setTimeout(() => {
 					dispatch(resetFlow());
 				}, 500);
+			}else if(result.type==='auth/signup/rejected'){
+				toast.error(result.payload as string)
 			}
 		}catch(error:any){
 			console.log(error)
@@ -128,7 +130,7 @@ export default function UserRegister() {
 						)}
 					/>
 					<Button className="w-full rounded-full" type="submit" disabled={loading}>
-						{loading && (
+						{loading&& !error && (
 						<Loader2 className="h-4 w-4 animate-spin" />
 						)}Continue
 					</Button>
