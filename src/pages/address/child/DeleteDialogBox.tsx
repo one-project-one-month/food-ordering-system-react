@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+ 
 import {
   Dialog,
   DialogClose,
@@ -26,9 +26,9 @@ export default function DeleteDialogBox({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[425px] z-[9999]">
           <DialogHeader>
-            <DialogTitle>Do you want to delete this address?</DialogTitle>
+            <DialogTitle className='mb-4'>Do you want to delete this address?</DialogTitle>
             <DialogDescription>
-              Are you sure to delete this address? You cannot redo this action.Be careful!
+              Are you sure you want to delete this address? You cannot redo this action. Be careful!
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

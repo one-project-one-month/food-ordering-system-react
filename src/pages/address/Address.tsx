@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -14,12 +15,14 @@ import { getAddress, deleteAddress } from '../../features/address/addressSlice';
 import { Card, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import Map from '../../components/map/Map';
 import DeleteDialogBox from './child/DeleteDialogBox';
+import { motion } from "framer-motion"
 
 export default function Address() {
   const [address, setAddress] = useState<Address | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isDeleteDia, setIsDeleteDia] = useState<boolean>(false);
   const navigate = useNavigate();
+  const userRole = Cookies.get('role')
   const handleCloseDialog = () => {
     setIsDeleteDia((prev) => !prev);
   };
@@ -60,16 +63,31 @@ export default function Address() {
   }, [dispatch, location.pathname]);
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex justify-end right-4">
-        {location.pathname.length > 11 ? (
-          <Button onClick={() => navigate(`/my_address/update/${String(param.id)}`)}>
-            Update Location
-          </Button>
-        ) : (
-          <Button onClick={() => navigate('create')}>Add Location</Button>
-        )}
-      </div>
+    <motion.div className={`flex flex-col w-full ${userRole==='customer' && 'container mt-8'}`} 
+    initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
+      {userRole === 'customer' ? <>
+        <div className="flex justify-end right-4">
+          {location.pathname.includes('/address/') ? (
+            <Button onClick={() => navigate(`/address/update/${String(param.id)}`)}>
+              Update Location
+            </Button>
+          ) : (
+            <Button onClick={() => navigate('create')}>Add Location</Button>
+          )}
+        </div>
+      </> : 
+        <div className="flex justify-end right-4">
+          {location.pathname.length > 11 ? (
+            <Button onClick={() => navigate(`/my_address/update/${String(param.id)}`)}>
+              Update Location
+            </Button>
+          ) : (
+            <Button onClick={() => navigate('create')}>Add Location</Button>
+          )}
+        </div>
+      }
       {param.id ? (
         loading ? (
           <div className="text-center mt-10 mx-auto">
@@ -77,7 +95,7 @@ export default function Address() {
           </div>
         ) : (
           address && (
-            <div className="flex flex-col items-center justify-center mt-10">
+            <div className={`flex flex-col items-center justify-center mt-10 ${userRole==='customer'?'container':''}`}>
               <Card className="w-8/12">
                 <CardHeader className="text-start w-full">
                   <div className="flex w-full justify-between items-center mb-4">
@@ -119,6 +137,6 @@ export default function Address() {
         onOpenChange={handleCloseDialog}
         handleDeleteAddress={handleDeleteAddress}
       />
-    </div>
+    </motion.div>
   );
 }

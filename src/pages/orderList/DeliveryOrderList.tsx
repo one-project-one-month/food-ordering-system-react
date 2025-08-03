@@ -9,6 +9,7 @@ import type { AppDispatch, RootState } from '../../store';
 import { getAssignedOrderByDelivery} from '../../features/delivery/deliverySlice';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { motion } from "framer-motion"
 
 const deliTableConfig: TableConfig = [
   { key: 'id', label: 'Order #', render: row => row.id.toString()},
@@ -111,7 +112,9 @@ const DeliveryOrderList = () => {
   // },[allOrdersData])
 
   return (
-    <div className="w-full mx-auto px-2 md:px-0">
+    <motion.div className="w-full mx-auto px-2 md:px-0" initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
       <h2 className="text-3xl font-bold text-gray-700">Orders</h2>
       <p className="text-sm pt-1">Organising your foods into categories allow you to more easily manage your foods</p>           
       <div className="bg-white rounded-lg shadow mt-6 pt-6">
@@ -137,7 +140,7 @@ const DeliveryOrderList = () => {
           </> : <div className="text-center text-gray-500 py-8">No orders to show.</div>
         }
       </div>
-    </div>
+    </motion.div>
   );
 };
 

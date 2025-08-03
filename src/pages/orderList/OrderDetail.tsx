@@ -5,6 +5,7 @@ import type { AppDispatch } from '../../store'
 import { getOrderDetailByOrderId } from '../../features/cart/cartSlice'
 import { Loader2 } from 'lucide-react'
 import Cookies from 'js-cookie'
+import { motion } from "framer-motion"
 
 const OrderDetail = () => {
     const {id}=useParams()
@@ -47,7 +48,9 @@ const OrderDetail = () => {
         )
     }
   return (
-    <div className=''>
+    <motion.div className='' initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <h2 className="text-3xl font-bold text-gray-700">Order Detail</h2> 
         <div className="min-w-full bg-white rounded-lg shadow text-sm mt-6 p-5">         
             <div className="flex gap-4">
@@ -66,7 +69,7 @@ const OrderDetail = () => {
                 </div>
              </div>
         </div>
-    </div>
+    </motion.div>
   )
 }
 

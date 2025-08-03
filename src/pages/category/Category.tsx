@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { CategoryDialog } from './CategoryDialog';
 import { DialogToDelete } from '../../components/DialogToDelete';
 import { toast } from 'react-toastify';
+import { motion } from "framer-motion"
 
 const Category = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -80,7 +81,9 @@ const Category = () => {
   }
 
   return (
-     <div>
+     <motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Categories</h2>
             <p className="text-sm pt-1">Organising your foods into categories allow you to more easily manage your foods</p>
@@ -118,7 +121,7 @@ const Category = () => {
                 </div>
               }
         </div>
-    </div>
+    </motion.div>
   )
 }
 

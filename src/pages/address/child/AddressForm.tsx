@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+ 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useDispatch, useSelector } from 'react-redux';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,6 +34,7 @@ import { getAddress } from '../../../features/address/addressSlice';
 import type { Address } from '../../../types/address.type';
 
 export default function AddressForm() {
+  const userRole = Cookies.get('role')
   const [address, setAddress] = useState<Address | null>(null);
   const id = useParams<{ id: string }>().id;
   const form = useForm<z.infer<typeof addressFormSchema>>({
@@ -85,7 +86,7 @@ export default function AddressForm() {
   const createAddressHandler = async (data: z.infer<typeof addressFormSchema>) => {
     try {
       if (data.entityType === 'RESTAURANT') {
-        data.entityId = Number(Cookies.get('restaurantId'));
+        data.entityId = Number(Cookies.get('userId'));
         console.log('Creating address for restaurant with data:', data);
       } else {
         data.entityId = Number(Cookies.get('userId'));
@@ -109,7 +110,11 @@ export default function AddressForm() {
       }
       if (result.payload.code === 200 && result.payload) {
         const id = result.payload.data.id;
-        await navigate(`/my_address/${String(id)}`);
+        if(userRole==='customer'){
+          await navigate(`/address/${String(id)}`);
+        }else{
+          await navigate(`/my_address/${String(id)}`);
+        }
       }
     } catch (e) {
       console.log('error ', e);
@@ -269,7 +274,7 @@ export default function AddressForm() {
             />
           </div>
           <Button type="submit">
-            {(loading || createdLoading) && <Loader2 className="h-4 w-4 animate-spin" />}
+            {(loading ?? createdLoading) && <Loader2 className="h-4 w-4 animate-spin" />}
             {id ? 'Update Address' : 'Create Address'}
           </Button>
         </form>
