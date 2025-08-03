@@ -80,13 +80,13 @@ export default function Address() {
         </div>
       </> : 
         <div className="flex justify-end right-4">
-          {location.pathname.length > 11 ? (
+          {/* {location.pathname.length > 11 ? (
             <Button onClick={() => navigate(`/my_address/update/${String(param.id)}`)}>
               Update Location
             </Button>
-          ) : (
-            <Button onClick={() => navigate('create')}>Add Location</Button>
-          )}
+          ) : ( */}
+          {userRole==='customer'?<Button onClick={() => navigate('/address/create')}>Add Location</Button>:<Button onClick={() => navigate('/my_address/create')}>Add Location</Button>}
+          {/* )} */}
         </div>
       }
       {param.id ? (

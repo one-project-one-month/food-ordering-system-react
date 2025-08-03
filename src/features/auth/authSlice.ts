@@ -120,6 +120,8 @@ export const authSlice = createSlice({
       Cookies.remove("refreshToken");
       Cookies.remove("restaurantId")
       Cookies.remove("logged_in")
+      Cookies.remove("userName")
+      Cookies.remove("userProfileImage")
     },
     setRedirectPath: (state, action) => {
       state.redirectPath = action.payload;

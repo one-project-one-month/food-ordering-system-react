@@ -103,7 +103,8 @@ export default function AddressForm() {
       const result = await dispatch(createAddress(payload));
       if (createAddress.fulfilled.match(result)) {
         toast.success('Address created successfully!');
-        // Cookies.set('addressId', String(result.payload.data.id));
+        console.log("Id", address)
+        Cookies.set('addressId', String(result.payload.data.id));
       } else if (createAddress.rejected.match(result)) {
         toast.error('Errors when creating address!');
       }
