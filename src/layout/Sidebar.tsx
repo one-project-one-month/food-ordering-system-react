@@ -28,7 +28,7 @@ const Sidebar = () => {
   const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
 
   return (
-    <div className="relative z-[99999]">
+    <div className="relative z-[10]">
       <button
         onClick={() => {
           setIsOpen(!isOpen);
