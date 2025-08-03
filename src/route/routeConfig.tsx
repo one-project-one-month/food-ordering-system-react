@@ -82,14 +82,24 @@ export const routes = [
               },
               { path: 'cart', element: <Cart /> },
               {
-              element: <PaymentGuard />,
-              children: [
-                {
-                  path: "payment",
-                  element: <Payment />
-                }
-              ]
-            }
+                element: <PaymentGuard />,
+                children: [
+                  {
+                    path: "payment",
+                    element: <Payment />
+                  }
+                ]
+              },
+              {
+                path: 'address',
+                element: <PrivateRoute allowedRoles={['customer']} deniedRoles={['']} />,
+                children: [
+                  { index: true, element: <Address /> },
+                  { path: 'create', element: <CreateAddress /> },
+                  { path: ':id', element: <Address /> },
+                  { path: 'update/:id', element: <CreateAddress /> },
+                ],
+              },
               // { path: 'deli_orders', element: <DeliOrderList /> },
             ],
           },
@@ -117,7 +127,7 @@ export const routes = [
           },
           {
             path: 'my_address',
-            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['']} />,
             children: [
               { index: true, element: <Address /> },
               { path: 'create', element: <CreateAddress /> },

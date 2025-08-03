@@ -17,18 +17,18 @@ const Sidebar = () => {
         { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["owner"] },
         { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
         { href: "/apply_restaurant", label: "Restaurants", icon: Utensils, roles: ["delivery"] },
-      {
-      href: addressId ? `/my_address/${addressId}` : '/my_address',
-      label: 'My Address',
-      icon: MapPinHouse,
-      roles: ['owner'],
-    },
+        {
+        href: addressId ? `/my_address/${addressId}` : '/my_address',
+        label: 'My Address',
+        icon: MapPinHouse,
+        roles: ['owner'],
+      },
     ];
 
   const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
 
   return (
-    <div className="relative">
+    <div className="relative z-[99999]">
       <button
         onClick={() => {
           setIsOpen(!isOpen);

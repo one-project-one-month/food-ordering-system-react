@@ -6,6 +6,7 @@ import { getSummaryByDelivery } from "../../features/dashboard/dashboardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store";
 import { Package, Truck } from "lucide-react";
+import { motion } from "framer-motion"
 
 const DeliveryDashboard = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -60,13 +61,15 @@ const DeliveryDashboard = () => {
     }
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Dashboard</h2>
             <p className="text-sm pt-1">Hi, John. Welcome back to SarMl dashboard.</p>
         </div>
         <DashboardCards stats={statsData}/>
-    </div>
+    </motion.div>
   )
 }
 

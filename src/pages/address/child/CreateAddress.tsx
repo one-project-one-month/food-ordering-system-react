@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { ChevronLeft, MapPin } from 'lucide-react';
 import MapWithLeaf from '../../../components/map/MapWithLeaf';
@@ -11,11 +12,17 @@ import {
 import AddressForm from './AddressForm';
 import { Button } from '../../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { motion } from "framer-motion"
 
 export default function CreateAddress() {
   const navigate = useNavigate();
+  const userRole = Cookies.get('role')
+
   return (
-    <div>
+    <motion.div className={`${userRole==='customer' && 'container mt-8'}`} initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
       <div className="flex justify-start">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <ChevronLeft className="mr-2" />
@@ -45,6 +52,6 @@ export default function CreateAddress() {
           <MapWithLeaf />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

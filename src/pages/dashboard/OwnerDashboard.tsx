@@ -12,6 +12,7 @@ import OrderBarChart from "../../components/charts/OrderBarChart"
 import OrderPieChart from "../../components/charts/OrderPieChart"
 import { getSummaryByOwner } from "../../features/dashboard/dashboardSlice"
 import { Package, Truck } from "lucide-react"
+import { motion } from "framer-motion"
 
 const OwnerDashboard = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -102,7 +103,9 @@ const OwnerDashboard = () => {
   },[])
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Dashboard</h2>
             <p className="text-sm pt-1">Hi, John. Welcome back to SarMl dashboard.</p>
@@ -128,7 +131,7 @@ const OwnerDashboard = () => {
             </CardContent>
           </Card>
         </div>
-    </div>
+    </motion.div>
   )
 }
 

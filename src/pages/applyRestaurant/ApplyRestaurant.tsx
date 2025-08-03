@@ -8,6 +8,7 @@ import { getAllRestaurant } from '../../features/restaurant/restaurantSlice';
 import { Button } from '../../components/ui/button';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import { motion } from "framer-motion"
 
 const ApplyRestaurant = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -72,7 +73,9 @@ const ApplyRestaurant = () => {
     }
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Start Delivering Today</h2>
             <p className="text-sm pt-1">If you haven’t applied to any restaurants yet, Browse and apply available restaurants to start delivering orders in your area.</p>           
@@ -153,7 +156,7 @@ const ApplyRestaurant = () => {
                 }
             </Card>
         </div>
-    </div>
+    </motion.div>
   )
 }
 

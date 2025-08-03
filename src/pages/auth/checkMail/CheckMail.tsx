@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../../../store";
 import { setEmailSubmitted, verifyEmail } from "../../../features/auth/authSlice";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion"
 
 export default function CheckMail() {
 	const navigate = useNavigate();
@@ -57,7 +58,9 @@ export default function CheckMail() {
 	}
 
 	return (
-        <div className="flex justify-center items-center">
+        <motion.div className="flex justify-center items-center" initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
             <Card className="mx-3 my-12 md:px-10">
                 <CardContent className="flex mt-5 flex-col items-center">
                     <div className="mb-8 text-center">
@@ -90,6 +93,6 @@ export default function CheckMail() {
                     </Form>
                 </CardContent>
             </Card>
-        </div>
+        </motion.div>
 	);
 }
