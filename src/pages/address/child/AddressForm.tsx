@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
  
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -65,12 +66,11 @@ export default function AddressForm() {
     }
   }
   useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
+    const fetchData = async () => {  
         const result = await dispatch(getAddress({ id: Number(id) }));
         console.log('Fetched address result:', result);
-        if (result.payload.code === 200 && result.payload.data.addressDetail) {
-          const addressData = result.payload.data.addressDetail;
+        if (result.payload.code === 200 && result.payload.data[0]) {
+          const addressData = result.payload.data[0];
           setAddress(addressData);
           form.reset({
             ...addressData,
@@ -78,10 +78,9 @@ export default function AddressForm() {
             longitude: String(addressData.longitude),
           });
         }
-      }
     };
-    void fetchData();
-  }, [dispatch, id]);
+    fetchData();
+  }, []);
 
   const createAddressHandler = async (data: z.infer<typeof addressFormSchema>) => {
     try {
@@ -104,7 +103,7 @@ export default function AddressForm() {
       const result = await dispatch(createAddress(payload));
       if (createAddress.fulfilled.match(result)) {
         toast.success('Address created successfully!');
-        Cookies.set('addressId', String(result.payload.data.id));
+        // Cookies.set('addressId', String(result.payload.data.id));
       } else if (createAddress.rejected.match(result)) {
         toast.error('Errors when creating address!');
       }

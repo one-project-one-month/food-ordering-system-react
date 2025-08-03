@@ -121,7 +121,7 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
             <label className="text-sm font-medium text-gray-600 mb-2">
               Upload Restaurant Image
             </label>
-            <div className='lg:w-[500px]'>
+            <div className='lg:w-[100%]'>
               <DropZoneMenuImage setDropDrown={(files) => {
                 void handleImageUpload(files[0]);
               }} />
@@ -129,7 +129,7 @@ export default function RestaurantForm({ type, defaultValues, onDataUpdated }: R
           </div>
         }
         {restaurantPic !== '' && (
-          <div className="w-full lg:w-[500px] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg">
+          <div className="w-full lg:w-[100%] h-[300px] mt-2 overflow-hidden border border-gray-200 rounded-lg">
             {uploadImageDataLoading ? (
               <div className="flex h-full justify-center items-center">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />

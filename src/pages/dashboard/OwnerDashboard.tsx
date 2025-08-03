@@ -16,6 +16,7 @@ import { motion } from "framer-motion"
 
 const OwnerDashboard = () => {
     const dispatch = useDispatch<AppDispatch>()
+    const proflie = useSelector((state: RootState) => state.profile.profile);
     const {data: summaryAllData } = useSelector(((state:RootState) => state.dashboard.ownerSummaryData)) 
     const [barData, setBarData] = useState<any>([]);
     const [pieData, setPieData] = useState<any>([]);
@@ -108,7 +109,7 @@ const OwnerDashboard = () => {
       transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Dashboard</h2>
-            <p className="text-sm pt-1">Hi, John. Welcome back to SarMl dashboard.</p>
+            <p className="text-sm pt-1">{`Hi, ${proflie?.name ?? 'John'}. Welcome back to SarMal dashboard.`}</p>
         </div>
         <DashboardCards stats={statsData}/>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

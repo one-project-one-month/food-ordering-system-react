@@ -58,6 +58,21 @@ export const getAssignedOrderByDelivery = createAsyncThunk<any,any>(
   }
 );
 
+export const changeDeliveryStatusByDelivery = createAsyncThunk<any,any>(
+  "delivery/changeDeliveryStatus",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await api.patch(`${deliveryUrl}/changeDeliveryStatus`,{
+        ...payload,
+      });
+      return result.data;
+
+    } catch (error:any) {
+      return rejectWithValue(error.response?.data ?? error.message ?? "Failed to fetch");
+    }
+  }
+);
+
 const initialState: RestaurantState = {
   new: {
     data: [],
@@ -99,6 +114,18 @@ export const deliverySlice = createSlice({
     builder.addCase(getDeliveryByRestaurant.rejected, (state) => {
         state.searched.loading = false;
         state.searched.error = true;
+    });
+    builder.addCase(getAssignedOrderByDelivery.fulfilled, (state: any, action) => {
+      state.searched.data = action.payload.data;
+      state.searched.loading = false;
+    });
+    builder.addCase(getAssignedOrderByDelivery.pending, (state) => {
+      state.searched.loading = true;
+      state.searched.error = false;
+    });
+    builder.addCase(getAssignedOrderByDelivery.rejected, (state) => {
+      state.searched.loading = false;
+      state.searched.error = false;
     });
    }
 });

@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 
 const DeliveryDashboard = () => {
     const dispatch = useDispatch<AppDispatch>()
+    const proflie = useSelector((state: RootState) => state.profile.profile);
     const {data: summaryAllData } = useSelector(((state:RootState) => state.dashboard.deliverySummaryData)) 
     const [summaryData, setSummaryData] = useState<any>(null)
     const [statsData, setStatsData] = useState<any[]>([]);
@@ -66,7 +67,7 @@ const DeliveryDashboard = () => {
       transition={{ duration: 0.6 }}>
         <div>
             <h2 className="text-3xl font-bold text-gray-700">Dashboard</h2>
-            <p className="text-sm pt-1">Hi, John. Welcome back to SarMl dashboard.</p>
+            <p className="text-sm pt-1">{`Hi, ${proflie?.name ?? 'John'}. Welcome back to SarMal dashboard.`}</p>
         </div>
         <DashboardCards stats={statsData}/>
     </motion.div>

@@ -10,6 +10,8 @@ import UserAvatarMenu from "../components/UserAvatarMenu";
 const PrivateLayout = () => {
   const [orderCount, ] = useState<number>(0)
   const userId = Cookies.get('userId')
+  const userName = Cookies.get('userName')
+  const profilePic = Cookies.get('userProfileImage')
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -24,7 +26,7 @@ const PrivateLayout = () => {
                 }
               </div>
               <span className="inline-block w-[2px] h-5 bg-gray-300 mx-4" />
-                <UserAvatarMenu userId={String(userId)} name="John" />
+                <UserAvatarMenu userId={String(userId)} name={userName ?? 'John'} image={profilePic?.replace(/^.*?(https:\/)/, 'https:/') ?? ''} />
             </div>
           </nav>
           <div className="my-6 px-6">
