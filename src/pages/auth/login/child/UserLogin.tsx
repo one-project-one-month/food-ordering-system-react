@@ -19,6 +19,7 @@ import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { userLoginFormSchema } from "../../../../schemas/auth/loginSchema";
+import { motion } from "framer-motion"
 
 export default function UserLogin() {
 	const navigate = useNavigate();
@@ -37,7 +38,9 @@ export default function UserLogin() {
 	}
 
 	return (
-		<>
+		<motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
 			<Form {...form}>
 				<form className="w-full md:w-[400px]" onSubmit={void form.handleSubmit(onSubmit)}>
 					<CardContent className="flex flex-col items-center">
@@ -77,6 +80,6 @@ export default function UserLogin() {
 					</CardFooter>
 				</form>
 			</Form>
-		</>
+		</motion.div>
 	);
 }

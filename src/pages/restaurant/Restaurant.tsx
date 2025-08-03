@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { type AppDispatch } from '../../store';
 import { getOwnerRestaurant } from '../../features/restaurant/restaurantSlice';
 import type { restaurantProps } from '../../types/restaurant.types';
+import { motion } from "framer-motion"
 
 const Restaurant = () => {
   const [formType, setFormType] = useState('create');
@@ -38,13 +39,13 @@ const Restaurant = () => {
   };
 
   return (
-     <div>
-        <div>
+        <motion.div initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}>
             <h2 className="text-3xl font-bold text-gray-700">{formType==='create'? 'You Haven’t Opened a Restaurant Yet' : 'Restaurant details'}</h2>
             <p className="text-sm pt-1">Start managing your business online. Create your restaurant profile to begin accepting orders, updating menus, and tracking performance.</p>
             <RestaurantForm type={formType} defaultValues={detailData} onDataUpdated={handleDataUpdated}/>
-        </div>
-    </div>
+        </motion.div>
   )
 }
 
