@@ -70,7 +70,7 @@ const DeliOrderList = () => {
         setAssignStatus(!assignStatus)
         toast.success('Successfully assigned delivery')
       }else if(result.type==='delivery/assignDeliveryByRestaurant/rejected'){
-        toast.error(result.payload.data)
+        toast.error(result.payload.message)
       }
     }catch(e){
       console.log("error ", e)

@@ -127,7 +127,7 @@ export const routes = [
           },
           {
             path: 'my_address',
-            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['']} />,
+            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['']} />,
             children: [
               { index: true, element: <Address /> },
               { path: 'create', element: <CreateAddress /> },
@@ -152,7 +152,7 @@ export const routes = [
           },
           {
             path: 'orders/:id',
-            element: <PrivateRoute allowedRoles={['owner']} deniedRoles={['customer']} />,
+            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <OrderDetail /> }],
           },
           {

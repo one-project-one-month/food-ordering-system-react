@@ -13,7 +13,7 @@ export default function DropZoneMenuImage({ setDropDrown }: DropZoneMenuImagePro
       }}
     >
       {({ getRootProps, getInputProps }) => (
-        <section>
+        <section className='w-[80%]'>
           <div
             {...getRootProps()}
             className="h-28 w-full flex justify-center items-center text-center mt-4 border-dashed border-[4px]"
@@ -21,7 +21,7 @@ export default function DropZoneMenuImage({ setDropDrown }: DropZoneMenuImagePro
             <input {...getInputProps()} />
             <div className="text-center">
               <CameraIcon className="mx-auto" />
-              <p className="text-sm">Upload menu photo.</p>
+              <p className="text-sm">Upload photo.</p>
             </div>
           </div>
         </section>

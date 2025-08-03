@@ -38,7 +38,7 @@ export interface OrderRequestProps{
 };
 
 export type OrderState = Record<string, unknown>;
-export type OrderStatus = 'completed' | 'pending' | 'canceled';
+export type OrderStatus = 'delivered' | 'pending' | 'canceled';
 
 export type DeliveryStatus = 'pending' | 'delivered' | 'canceled';
 

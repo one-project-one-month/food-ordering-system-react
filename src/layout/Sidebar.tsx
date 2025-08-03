@@ -7,7 +7,7 @@ import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
 
 const Sidebar = () => {
     const userRole = Cookies.get("role");
-    const addressId = Cookies.get('addressId');
+    const userId = Cookies.get('userId');
     const [isOpen, setIsOpen] = useState(true);
     const links = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
@@ -18,10 +18,10 @@ const Sidebar = () => {
         { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
         { href: "/apply_restaurant", label: "Restaurants", icon: Utensils, roles: ["delivery"] },
         {
-        href: addressId ? `/my_address/${addressId}` : '/my_address',
+        href: userId ? `/my_address/${userId}` : '/my_address',
         label: 'My Address',
         icon: MapPinHouse,
-        roles: ['owner'],
+        roles: ['owner','delivery'],
       },
     ];
 
@@ -49,7 +49,7 @@ const Sidebar = () => {
           <Link to="/">
             <img src={Logo} alt="logo" />
           </Link>
-          <p className="text-sm pt-1 text-gray-500">Admin Dashboard</p>
+          <p className="text-sm pt-1 text-gray-500">{userRole==='owner'?'Owner Dashboard':userRole==='delivery'?'Delivery Dashboard':'Admin Dashboard'}</p>
         </div>
         <nav className="space-y-2 pt-10">
           {visibleLinks.map(({ href, label, icon: Icon }) => (
