@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const addressId = Cookies.get('addressId');
+const userId = Cookies.get('userId');
 const links = [
   { href: "/", label: "Home" },
   { href: "/order_list", label: "Orders", roles: ["customer"] },
   { href: "/restaurants", label: "Restaurants", roles: ["customer"] },
   {
-    href: addressId ? `/address/${addressId}` : '/address',
+    href: userId ? `/address/${userId}` : '/address',
       label: 'My Address',
       roles: ['customer'],
   },

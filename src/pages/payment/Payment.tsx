@@ -69,7 +69,7 @@ export default function Payment() {
           <CheckCircle className="w-24 h-24 text-primary mx-auto mb-6" />
           <h2 className="text-2xl font-semibold text-gray-700 mb-2">Payment Successful!</h2>
           <p className="text-gray-500 mb-6">Thank you for your payment. Your order is being processed.</p>
-          <Button onClick={() => navigate("/")}>Back to Home</Button>
+          <Button onClick={() => navigate("/order_list")}>Check Orders</Button>
         </div> : 
       <>
         <h1 className="text-2xl text-primary font-bold mb-6">Please upload your payment screenshot</h1>

@@ -10,7 +10,7 @@ import type { AppDispatch } from '../../store';
 import { getAllOrdersByCustomer } from '../../features/order/orderSlice';
 
 const TABS: { key: OrderStatus; label: string }[] = [
-  { key: 'completed', label: 'Completed' },
+  { key: 'delivered', label: 'Completed' },
   { key: 'pending', label: 'Ongoing' },
   { key: 'canceled', label: 'Canceled' },
 ];
@@ -73,7 +73,7 @@ const OrderList = () => {
                 <span className="font-bold">
                   Order #{order.id}
                 </span>
-                <span className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'completed' ? 'bg-green-100 text-green-700' : order.status === 'ongoing' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+                <span className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.deliveryStatus === 'DELIVERED' ? 'bg-green-100 text-green-700' : order.deliveryStatus === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
                   {order?.deliveryStatus?.charAt(0).toUpperCase() + order?.deliveryStatus?.slice(1)}
                 </span>
               </CardTitle>
@@ -94,7 +94,7 @@ const OrderList = () => {
                 <div className="text-sm text-muted-foreground mb-1">
                   Delivery Status
                 </div>
-                <div className={`font-medium ${order.deliveryStatus === 'delivered' ? 'text-green-600' : order.deliveryStatus === 'pending' ? 'text-yellow-600' : 'text-red-600'}`}>
+                <div className={`font-medium ${order.deliveryStatus === 'DELIVERED' ? 'text-green-600' : order.deliveryStatus === 'PENDING' ? 'text-yellow-600' : 'text-red-600'}`}>
                   {order.deliveryStatus.charAt(0).toUpperCase() + order.deliveryStatus.slice(1)}
                 </div>
               </div>

@@ -19,16 +19,16 @@ import { motion } from "framer-motion"
 
 export default function Address() {
   const [address, setAddress] = useState<Address | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [isDeleteDia, setIsDeleteDia] = useState<boolean>(false);
   const navigate = useNavigate();
   const userRole = Cookies.get('role')
+  const [addressType, setAddressType] = useState('')
   const handleCloseDialog = () => {
     setIsDeleteDia((prev) => !prev);
   };
   const handleDeleteAddress = async () => {
-    const result = await dispatch(deleteAddress(Number(param.id)));
-    console.log('Delete result:', result);
+    const result = await dispatch(deleteAddress(param.id as any));
     if (result) {
       setAddress(null);
       setLoading(false);
@@ -46,12 +46,13 @@ export default function Address() {
       if (param) {
         const id = Number(param.id);
         const result = await dispatch(getAddress({ id }));
-        setLoading(true);
         if (result.payload.code === 200 && result.payload) {
-          const addressData = result.payload.data.addressDetail;
-          if (addressData) {
+          const addressData = result.payload.data.length!==0 ? result.payload.data[0] : result.payload.data;
+          if (addressData.length!==0) {
             setLoading(false);
             setAddress(addressData);
+          }else{
+            setAddressType('create')
           }
         }
       } else {
@@ -69,12 +70,12 @@ export default function Address() {
       transition={{ duration: 0.6 }}>
       {userRole === 'customer' ? <>
         <div className="flex justify-end right-4">
-          {location.pathname.includes('/address/') ? (
+          {location.pathname.includes('/address/') && addressType!=='create' ? (
             <Button onClick={() => navigate(`/address/update/${String(param.id)}`)}>
               Update Location
             </Button>
           ) : (
-            <Button onClick={() => navigate('create')}>Add Location</Button>
+            <Button onClick={() => navigate('/address/create')}>Add Location</Button>
           )}
         </div>
       </> : 

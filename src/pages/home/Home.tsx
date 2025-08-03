@@ -14,7 +14,7 @@ const Home = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}>
       <Banner/>
-      {userRole !== '' ?  <ShopList /> : <SignUpOptions/>}
+      {userRole === 'customer' ?  <ShopList /> : <SignUpOptions/>}
       <Feature/>
       <Cities/>  
     </motion.div>

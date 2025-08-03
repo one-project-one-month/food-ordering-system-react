@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Profile } from '../../types/ProfileType';
 import {
@@ -7,6 +8,7 @@ import {
   updateProfile,
   updateProfilePic,
 } from '../../schemas/profileSchema';
+import Cookies from 'js-cookie';
 
 interface ProfileState {
   profile: Profile | null;
@@ -38,15 +40,17 @@ const profileSlice = createSlice({
       })
       .addCase(addProfile.fulfilled, (state, action: PayloadAction<{ success: number, data: Profile, message?: string }>) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (action.payload.success === 1 && action.payload.data) {
-    state.profile = action.payload.data;
-    state.loading = false;
-  } else {
-    state.profile = null;
-    state.error = action.payload.message ?? 'Profile creation failed';
-    state.loading = false;
-  }
-})
+      if (action.payload.success === 1 && action.payload.data) {
+        state.profile = action.payload.data as any;
+        state.loading = false;
+        Cookies.set('userName',action.payload.data.name)
+        Cookies.set('userProfileImage',action.payload.data.profilePic as string)
+      } else {
+        state.profile = null;
+        state.error = action.payload.message ?? 'Profile creation failed';
+        state.loading = false;
+      }
+    })
 
       .addCase(addProfile.rejected, (state, action) => {
         state.loading = false;

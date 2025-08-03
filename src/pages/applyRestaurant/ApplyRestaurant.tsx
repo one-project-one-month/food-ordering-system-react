@@ -45,11 +45,11 @@ const ApplyRestaurant = () => {
                     toast.success('Applied restaurant successfully!');
                     setAppliedStatus(!appliedStatus)
                 } else if (applyRestaurant.rejected.match(result)) {
-                    toast.error('Errors when updating category!');
+                    toast.error(`Make sure you already created address! ${result.payload as string}`);
                 }
             }catch(e){
-                    console.log("error ", e)
-            }
+                console.log("error ", e)
+        }
     }
 
     const getAppliedRestaurantList = async()=>{

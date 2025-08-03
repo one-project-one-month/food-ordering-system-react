@@ -13,6 +13,8 @@ import UserAvatarMenu from '../components/UserAvatarMenu';
 
 export default function Header() {
   const cartQuantity = useSelector((state: RootState) => state.cart.quantity);
+  const userName = Cookies.get('userName')
+  const profilePic = Cookies.get('userProfileImage')
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = !!Cookies.get('token');
@@ -135,23 +137,7 @@ export default function Header() {
             </div>
           )}
           {isAuthenticated ? (
-            // <div className="flex gap-4 items-center">
-            //   <Button
-            //     variant="outline"
-            //     size="sm"
-            //     className="text-base rounded-full h-[36px] hidden lg:flex"
-            //     onClick={() => dispatch(logout())}
-            //   >
-            //     Logout
-            //   </Button>
-            //   <p>{userName}</p>
-            //   <div className="w-50 h-50 flex items-center justify-center rounded-full bg-primary text-white">
-            //     <Link to={`/view/${String(userId)}`}>
-            //       <PersonStanding size={50} />
-            //     </Link>
-            //   </div>
-            // </div>
-            <UserAvatarMenu userId={String(userId)} name="John" />
+            <UserAvatarMenu userId={String(userId)} name={userName ?? 'John'} image={profilePic?.replace(/^.*?(https:\/)/, 'https:/') ?? ''}/>
           ) : (
             <div className="d-flex gap-4 hidden lg:flex">
               <Button

@@ -3,8 +3,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../config/axios';
 import type { Address, AddressesState } from '../../types/address.type';
+import Cookies from 'js-cookie';
 
-const addressUrl = '/api/v1/auth/address';
+const addressUrl = 'api/v1/auth/address';
 
 export const createAddress = createAsyncThunk<any, Address>(
   'address/createAddress',
@@ -64,9 +65,8 @@ export const getAddress = createAsyncThunk<any, { id: number }>(
   async ({ id }, { rejectWithValue }) => {
     console.log('Fetching address with ID:', Number(id));
     try {
-      console.log(id);
-      const result = await api.get(`${addressUrl}/${id}`);
-      console.log('Fetched address data:', result.data);
+      const userId = Cookies.get('userId')
+      const result = await api.get(`${addressUrl}/getAll/${userId}`);
       return result.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data ?? error.message ?? 'Failed to fetch');
@@ -122,7 +122,6 @@ export const restaurantSlice = createSlice({
       state.detailed.error = true;
     });
     builder.addCase(getAddress.fulfilled, (state: any, action) => {
-      console.log('Address fetched successfully:', action.payload);
       state.searched.data = action.payload;
       state.detailed.loading = false;
     });

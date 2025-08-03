@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store";
 import { logout } from "../features/auth/authSlice";
 
-const UserAvatarMenu = ({ userId, name = "Name" }: { userId: string; name?: string }) => {
+const UserAvatarMenu = ({ userId, name = "Name", image }: { userId: string; name?: string; image: string }) => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
@@ -25,8 +25,8 @@ const UserAvatarMenu = ({ userId, name = "Name" }: { userId: string; name?: stri
     <div className="flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="cursor-pointer">
-            <AvatarImage src="https://github.com/shadcn.png" />
+          <Avatar className="cursor-pointer border border-lightGray">
+            {image!==''&&image!==null ?<img src={image} alt={name}/> : <AvatarImage src="https://github.com/shadcn.png" />}
             <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
