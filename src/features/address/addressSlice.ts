@@ -1,23 +1,21 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import api from '../../config/axios';
 import type { Address, AddressesState } from '../../types/address.type';
-import Cookies from 'js-cookie';
 
 const addressUrl = 'api/v1/auth/address';
 
 export const createAddress = createAsyncThunk<any, Address>(
   'address/createAddress',
   async (payload, { rejectWithValue }) => {
-    console.log('Creating address with payload:', payload);
     try {
       const result = await api.post(addressUrl, {
         ...payload,
         lat: Number(payload.lat),
         longitude: Number(payload.longitude),
       });
-      console.log('Address created successfully:', result.data);
       return result.data;
     } catch (error: any) {
       console.error('Error creating address:', error);
@@ -31,14 +29,12 @@ export const createAddress = createAsyncThunk<any, Address>(
 export const updateAddress = createAsyncThunk<any, Address>(
   'address/updateAddress',
   async (payload: any, { rejectWithValue }) => {
-    console.log('Updating address with payload:', payload);
     try {
       const result = await api.put(`${addressUrl}/${payload.id}`, {
         ...payload,
         lat: Number(payload.lat),
         longitude: Number(payload.longitude),
       });
-      console.log('Address updated successfully:', result.data);
       return result.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -60,12 +56,25 @@ export const deleteAddress = createAsyncThunk<any, Address>(
   }
 );
 
+export const getAddressById = createAsyncThunk<any, { id: number }>(
+  'address/getAddressById',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const reuslt = await api.get(`${addressUrl}/${Number(id)}`);
+      return reuslt.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.response.data.data ?? 'An error occurred during get address by id'
+      );
+    }
+  }
+);
+
 export const getAddress = createAsyncThunk<any, { id: number }>(
   'address/getAddress',
-  async ({ id }, { rejectWithValue }) => {
-    console.log('Fetching address with ID:', Number(id));
+  async (_, { rejectWithValue }) => {
     try {
-      const userId = Cookies.get('userId')
+      const userId = Cookies.get('userId');
       const result = await api.get(`${addressUrl}/getAll/${userId}`);
       return result.data;
     } catch (error: any) {

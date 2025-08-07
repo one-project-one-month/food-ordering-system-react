@@ -1,29 +1,35 @@
-import { Link, NavLink} from "react-router-dom";
-import Logo from "../assets/logo.png";
-import Cookies from "js-cookie";
-import { LayoutDashboard, ListOrdered, Menu, MapPinHouse, Utensils, LayoutGrid } from "lucide-react";
-import { useState } from "react";
-import { PanelLeftClose ,PanelRightClose  } from "lucide-react";
+import { Link, NavLink } from 'react-router-dom';
+import Logo from '../assets/logo.png';
+import Cookies from 'js-cookie';
+import {
+  LayoutDashboard,
+  ListOrdered,
+  Menu,
+  MapPinHouse,
+  Utensils,
+  LayoutGrid,
+} from 'lucide-react';
+import { useState } from 'react';
+import { PanelLeftClose, PanelRightClose } from 'lucide-react';
 
 const Sidebar = () => {
-    const userRole = Cookies.get("role");
-    const userId = Cookies.get('userId');
-    const [isOpen, setIsOpen] = useState(true);
-    const links = [
-        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, },
-        { href: "/orders", label: "Order Lists", icon: ListOrdered, roles: ["owner"] },
-        { href: "/delivery_orders", label: "Order Lists", icon: ListOrdered, roles: ["delivery"] },
-        { href: "/restaurant", label: "My Restaurant", icon: Utensils, roles: ["owner"] },
-        { href: "/categories", label: "Categories", icon: LayoutGrid, roles: ["owner"] },
-        { href: "/menus", label: "Menus", icon: Menu, roles: ["owner"] },
-        { href: "/apply_restaurant", label: "Restaurants", icon: Utensils, roles: ["delivery"] },
-        {
-        href: userId ? `/my_address/${userId}` : '/my_address',
-        label: 'My Address',
-        icon: MapPinHouse,
-        roles: ['owner','delivery'],
-      },
-    ];
+  const userRole = Cookies.get('role');
+  const [isOpen, setIsOpen] = useState(true);
+  const links = [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/orders', label: 'Order Lists', icon: ListOrdered, roles: ['owner'] },
+    { href: '/delivery_orders', label: 'Order Lists', icon: ListOrdered, roles: ['delivery'] },
+    { href: '/restaurant', label: 'My Restaurant', icon: Utensils, roles: ['owner'] },
+    { href: '/categories', label: 'Categories', icon: LayoutGrid, roles: ['owner'] },
+    { href: '/menus', label: 'Menus', icon: Menu, roles: ['owner'] },
+    { href: '/apply_restaurant', label: 'Restaurants', icon: Utensils, roles: ['delivery'] },
+    {
+      href: '/my_address',
+      label: 'My Address',
+      icon: MapPinHouse,
+      roles: ['owner', 'delivery'],
+    },
+  ];
 
   const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
 
@@ -49,7 +55,13 @@ const Sidebar = () => {
           <Link to="/">
             <img src={Logo} alt="logo" />
           </Link>
-          <p className="text-sm pt-1 text-gray-500">{userRole==='owner'?'Owner Dashboard':userRole==='delivery'?'Delivery Dashboard':'Admin Dashboard'}</p>
+          <p className="text-sm pt-1 text-gray-500">
+            {userRole === 'owner'
+              ? 'Owner Dashboard'
+              : userRole === 'delivery'
+                ? 'Delivery Dashboard'
+                : 'Admin Dashboard'}
+          </p>
         </div>
         <nav className="space-y-2 pt-10">
           {visibleLinks.map(({ href, label, icon: Icon }) => (

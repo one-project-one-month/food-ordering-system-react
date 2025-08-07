@@ -1,26 +1,25 @@
-import { Link, useLocation } from "react-router-dom";
-import Cookies from "js-cookie";
+import { Link, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const userId = Cookies.get('userId');
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/order_list", label: "Orders", roles: ["customer"] },
-  { href: "/restaurants", label: "Restaurants", roles: ["customer"] },
+  { href: '/', label: 'Home' },
+  { href: '/order_list', label: 'Orders', roles: ['customer'] },
+  { href: '/restaurants', label: 'Restaurants', roles: ['customer'] },
+
   {
     href: userId ? `/address/${userId}` : '/address',
-      label: 'My Address',
-      roles: ['customer'],
+    label: 'My Address',
+    roles: ['customer'],
   },
-  { href: "/dashboard", label: "Dashboard", roles: ["owner","delivery","admin"] },
+  { href: '/dashboard', label: 'Dashboard', roles: ['owner', 'delivery', 'admin'] },
 ];
 
 export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
   const { pathname } = useLocation();
-  const userRole = Cookies.get("role");
+  const userRole = Cookies.get('role');
 
-  const visibleLinks = links.filter(
-        ({ roles }) => !roles || roles.includes(userRole ?? "")
-    );
+  const visibleLinks = links.filter(({ roles }) => !roles || roles.includes(userRole ?? ''));
 
   const renderLinks = (isMobile: boolean) =>
     visibleLinks.map((link) => {
@@ -31,8 +30,8 @@ export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
           key={link.href}
           to={link.href}
           className={`relative text-base font-medium transition-colors ${
-            isActive ? "text-primary" : "hover:text-primary"
-          } ${isMobile ? "w-fit" : ""}`}
+            isActive ? 'text-primary' : 'hover:text-primary'
+          } ${isMobile ? 'w-fit' : ''}`}
           onClick={() => {
             if (onLinkClick) onLinkClick();
           }}
@@ -42,7 +41,5 @@ export default function Nav({ onLinkClick }: { onLinkClick?: () => void }) {
       );
     });
 
-  return (
-      <div className="flex flex-col gap-4 mt-10">{renderLinks(true)}</div>
-  );
+  return <div className="flex flex-col gap-4 mt-10">{renderLinks(true)}</div>;
 }

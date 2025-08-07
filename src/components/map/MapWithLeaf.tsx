@@ -14,11 +14,11 @@ export default function MapWithLeaf() {
     null
   );
   const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+
   const getCoordinate = (p: GeolocationPosition) => {
     setPosition({ lat: p.coords.latitude, lng: p.coords.longitude });
     return position;
   };
-  console.log(position);
 
   const getCoordinates = (p: GeolocationPosition) => {
     return getCoordinate(p);
@@ -47,21 +47,19 @@ export default function MapWithLeaf() {
   };
 
   return (
-    <div className="relative">
-      <div id="map" className=" h-56 w-full  lg:mt-0 mt-64 mb-10 ">
-        <div className="flex justify-between">
-          <div className="mb-3">
-            <h1 className="text-2xl font-bold mb-4">Select Location.</h1>
-            <span className="text-sm italic underline text-yellow-500">
-              By clicking the mark,get your latitude and longitude .
-            </span>
-          </div>
-          <Button onClick={locateUser}>
-            <LocateIcon /> Get Location
-          </Button>
+    <div id="map" className=" h-56 lg:w-10/12 w-full  lg:mt-0 p-4 mt-72 mb-14">
+      <div className="flex justify-between">
+        <div className="mb-3">
+          <h1 className="text-2xl font-bold mb-4">Select Location.</h1>
+          <span className="text-sm italic underline text-yellow-500">
+            By clicking the mark,get your latitude and longitude .
+          </span>
         </div>
-        <Map position={position} address={address} type={'toCreate'} />
+        <Button onClick={locateUser} className=" mr-20">
+          <LocateIcon /> Get Location
+        </Button>
       </div>
+      <Map position={position} address={address} type={'toCreate'} />
     </div>
   );
 }
