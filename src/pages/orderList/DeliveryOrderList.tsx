@@ -84,8 +84,6 @@ const DeliveryOrderList = () => {
       await dispatch(getAssignedOrderByDelivery({page,size,status}))
     }catch(e){
       console.log("error ", e)
-    }finally{
-      setOrdersData([]);
     }
   }
 
