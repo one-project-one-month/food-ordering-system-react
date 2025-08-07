@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
-import { string, z } from 'zod';
+import { z } from 'zod';
 import { toast } from 'react-toastify';
 import {
   Form,
