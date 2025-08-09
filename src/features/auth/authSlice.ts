@@ -169,6 +169,8 @@ export const authSlice = createSlice({
       Cookies.set("userId", action.payload.data.userId, {
         expires: 1,
       });
+      Cookies.set('userName',action.payload.data?.profile?.name)
+      Cookies.set('userProfileImage',action.payload.data.profile?.profilePic as string)
     });
     builder.addCase(login.pending, (state) => {
       state.loginState.loading = true;
