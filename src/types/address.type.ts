@@ -1,4 +1,5 @@
 export interface Address {
+  addressId?: number;
   region: string;
   city: string;
   township: string;
@@ -6,7 +7,7 @@ export interface Address {
   street: string;
   lat?: number;
   longitude?: number;
-  entityType: 'RESTAURANT' | 'USER';
+  entityType: 'RESTAURANT' | 'CUSTOMER';
   entityId: number;
 }
 export interface AddressesState {

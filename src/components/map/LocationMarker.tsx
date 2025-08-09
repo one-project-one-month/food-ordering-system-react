@@ -33,7 +33,6 @@ export default function LocationMarker() {
     click(e: { latlng: LatLngExpression }) {
       const latlng = e.latlng as { lat: number; lng: number };
       setPosition({ lat: latlng.lat, lng: latlng.lng });
-      console.log('Clicked position:', e.latlng);
       map.flyTo(e.latlng, map.getZoom());
     },
   });

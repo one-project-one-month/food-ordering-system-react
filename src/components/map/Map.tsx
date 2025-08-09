@@ -12,12 +12,18 @@ export default function Map({ position, address, type }: MapProps) {
     <MapContainer
       center={
         type === 'toCreate'
-          ? [16.23467, 100.302323]
+          ? [16.82187719, 96.1296443]
           : [Number(position?.lat), Number(position?.lng)]
       }
       zoom={15}
       scrollWheelZoom={true}
-      style={{ width: '100%', height: '400px', marginBottom: '20px', borderRadius: '8px' }}
+      style={{
+        width: '100%',
+        height: '400px',
+        marginBottom: '20px',
+        borderRadius: '8px',
+        zIndex: 1,
+      }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -8,6 +8,6 @@ export const addressFormSchema = z.object({
   street: z.string().min(2, { message: 'Street name must be at least 2 characters.' }),
   lat: z.string(),
   longitude: z.string(),
-  entityType: z.enum(['RESTAURANT', 'USER']),
+  entityType: z.enum(['RESTAURANT', 'CUSTOMER']),
   entityId: z.number().optional(),
 });

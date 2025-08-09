@@ -32,6 +32,7 @@ import Dashboard from '../pages/dashboard/Dashboard';
 import About from '../pages/about/About';
 import DeliveryOrderList from '../pages/orderList/DeliveryOrderList';
 import OrderDetail from '../pages/orderList/OrderDetail';
+import Addresses from '../pages/address/Addresses';
 
 export const routes = [
   {
@@ -85,18 +86,17 @@ export const routes = [
                 element: <PaymentGuard />,
                 children: [
                   {
-                    path: "payment",
-                    element: <Payment />
-                  }
-                ]
+                    path: 'payment',
+                    element: <Payment />,
+                  },
+                ],
               },
               {
                 path: 'address',
                 element: <PrivateRoute allowedRoles={['customer']} deniedRoles={['']} />,
                 children: [
-                  { index: true, element: <Address /> },
-                  { path: 'create', element: <CreateAddress /> },
                   { path: ':id', element: <Address /> },
+                  { path: 'create', element: <CreateAddress /> },
                   { path: 'update/:id', element: <CreateAddress /> },
                 ],
               },
@@ -127,11 +127,11 @@ export const routes = [
           },
           {
             path: 'my_address',
-            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['']} />,
+            element: <PrivateRoute allowedRoles={['owner', 'delivery']} deniedRoles={['']} />,
             children: [
-              { index: true, element: <Address /> },
-              { path: 'create', element: <CreateAddress /> },
+              { index: true, element: <Addresses /> },
               { path: ':id', element: <Address /> },
+              { path: 'create', element: <CreateAddress /> },
               { path: 'update/:id', element: <CreateAddress /> },
             ],
           },
@@ -152,14 +152,16 @@ export const routes = [
           },
           {
             path: 'orders/:id',
-            element: <PrivateRoute allowedRoles={['owner','delivery']} deniedRoles={['customer']} />,
+            element: (
+              <PrivateRoute allowedRoles={['owner', 'delivery']} deniedRoles={['customer']} />
+            ),
             children: [{ index: true, element: <OrderDetail /> }],
           },
           {
             path: 'delivery_orders',
             element: <PrivateRoute allowedRoles={['delivery']} deniedRoles={['customer']} />,
             children: [{ index: true, element: <DeliveryOrderList /> }],
-          }, 
+          },
           {
             path: 'apply_restaurant',
             element: <PrivateRoute allowedRoles={['delivery']} deniedRoles={['customer']} />,
