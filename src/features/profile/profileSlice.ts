@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
+ 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Profile } from '../../types/ProfileType';
 import {
@@ -8,7 +8,6 @@ import {
   updateProfile,
   updateProfilePic,
 } from '../../schemas/profileSchema';
-import Cookies from 'js-cookie';
 
 interface ProfileState {
   profile: Profile | null;
@@ -43,8 +42,6 @@ const profileSlice = createSlice({
       if (action.payload.success === 1 && action.payload.data) {
         state.profile = action.payload.data as any;
         state.loading = false;
-        Cookies.set('userName',action.payload.data.name)
-        Cookies.set('userProfileImage',action.payload.data.profilePic as string)
       } else {
         state.profile = null;
         state.error = action.payload.message ?? 'Profile creation failed';
